@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -699,9 +698,9 @@ function renderTable(root, leads) {
         <td style="padding:10px;">
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; min-width:160px;">
             <button type="button" data-edit="${l.id}" style="background:#1A1A2E; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">Edit</button>
-            <button type="button" data-pay="${l.id}" style="background:#FF6B35; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">💳 Pay</button>
-            <button type="button" data-booked="${l.id}" style="background:${l.status==='Booked'?'#246b3a':'#FF6B35'}; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">${l.status==="Booked" ? "Unbook" : "Booked"}</button>
-            <button type="button" data-lost="${l.id}" style="background:#fff; color:${l.status==='Lost'?'#991b1b':'#1A1A2E'}; border:1px solid ${l.status==='Lost'?'#991b1b':'rgba(26,26,46,.25)'}; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">${l.status==="Lost" ? "Undo" : "Lost"}</button>
+            <button type="button" data-pay="${l.id}" style="background:#FF6B35; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">&#x1F4B3; Pay</button>
+            <button type="button" data-booked="${l.id}" style="background:${l.status==="Booked"?"#246b3a":"#FF6B35"}; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">${l.status==="Booked" ? "Unbook" : "Booked"}</button>
+            <button type="button" data-lost="${l.id}" style="background:#fff; color:${l.status==="Lost"?"#991b1b":"#1A1A2E"}; border:1px solid ${l.status==="Lost"?"#991b1b":"rgba(26,26,46,.25)"}; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">${l.status==="Lost" ? "Undo" : "Lost"}</button>
             <button type="button" data-del="${l.id}" style="grid-column:1/-1; background:#fff; color:#991b1b; border:1px solid #991b1b; padding:6px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:12px;">Delete</button>
           </div>
         </td>
