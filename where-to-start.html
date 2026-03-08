@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -6,9 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 // ── WIRE UP BUTTONS ────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function() {
-  const el = id => document.getElementById(id);
-  const on = (id, fn) => { const e = el(id); if(e) e.addEventListener('click', fn); };
+function wireButtons() {
+  const on = (id, fn) => { const e = document.getElementById(id); if(e) { e.onclick = fn; } };
   on('tab-in-btn', () => switchTab('in'));
   on('tab-up-btn', () => switchTab('up'));
   on('signin-btn', signIn);
@@ -16,7 +16,10 @@ document.addEventListener('DOMContentLoaded', function() {
   on('signout-btn', signOut);
   on('start-btn',  startAssessment);
   on('retake-btn', resetAssessment);
-});
+}
+setTimeout(wireButtons, 100);
+setTimeout(wireButtons, 500);
+setTimeout(wireButtons, 1500);
 
 })(); // end IIFE
 
@@ -1050,9 +1053,8 @@ function showResults(scores, ans, returning) {
 }
 
 // ── WIRE UP BUTTONS ────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function() {
-  const el = id => document.getElementById(id);
-  const on = (id, fn) => { const e = el(id); if(e) e.addEventListener('click', fn); };
+function wireButtons() {
+  const on = (id, fn) => { const e = document.getElementById(id); if(e) { e.onclick = fn; } };
   on('tab-in-btn', () => switchTab('in'));
   on('tab-up-btn', () => switchTab('up'));
   on('signin-btn', signIn);
@@ -1060,7 +1062,10 @@ document.addEventListener('DOMContentLoaded', function() {
   on('signout-btn', signOut);
   on('start-btn',  startAssessment);
   on('retake-btn', resetAssessment);
-});
+}
+setTimeout(wireButtons, 100);
+setTimeout(wireButtons, 500);
+setTimeout(wireButtons, 1500);
 
 })(); // end IIFE
 
