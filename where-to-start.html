@@ -487,13 +487,13 @@ input[type=range]::-webkit-slider-thumb {
     <div id="form-in">
       <div class="auth-field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com"></div>
       <div class="auth-field"><label>Password</label><input type="password" id="in-pass" placeholder="Your password"></div>
-      <button class="auth-btn" id="in-btn" id="signin-btn">Sign In</button>
+      <button class="auth-btn" id="signin-btn">Sign In</button>
       <div class="auth-msg" id="in-msg"></div>
     </div>
     <div id="form-up" style="display:none;">
       <div class="auth-field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
       <div class="auth-field"><label>Password</label><input type="password" id="up-pass" placeholder="Choose a password (min 6 chars)"></div>
-      <button class="auth-btn" id="up-btn" id="signup-btn">Create Account</button>
+      <button class="auth-btn" id="signup-btn">Create Account</button>
       <div class="auth-msg" id="up-msg"></div>
     </div>
   </div>
@@ -505,7 +505,7 @@ input[type=range]::-webkit-slider-thumb {
     <div class="top-brand">WBW <span>Tools</span></div>
     <div style="display:flex;align-items:center;gap:12px;">
       <div style="font-size:12px;font-weight:700;opacity:.75;" id="user-email"></div>
-      <button id="signout-btn" id="signout-btn">Sign out</button>
+      <button id="signout-btn">Sign out</button>
     </div>
   </div>
 
@@ -577,7 +577,7 @@ async function signIn() {
   const email = document.getElementById('in-email').value.trim();
   const pass = document.getElementById('in-pass').value;
   const msg = document.getElementById('in-msg');
-  const btn = document.getElementById('in-btn');
+  const btn = document.getElementById('signin-btn');
   if (!email||!pass) { showMsg(msg,'Please enter email and password.','error'); return; }
   btn.disabled=true; btn.textContent='Signing in…';
   const {error} = await sb.auth.signInWithPassword({email,password:pass});
@@ -588,7 +588,7 @@ async function signUp() {
   const email = document.getElementById('up-email').value.trim();
   const pass = document.getElementById('up-pass').value;
   const msg = document.getElementById('up-msg');
-  const btn = document.getElementById('up-btn');
+  const btn = document.getElementById('signup-btn');
   if (!email||!pass) { showMsg(msg,'Please enter email and password.','error'); return; }
   if (pass.length<6) { showMsg(msg,'Password must be at least 6 characters.','error'); return; }
   btn.disabled=true; btn.textContent='Creating account…';
