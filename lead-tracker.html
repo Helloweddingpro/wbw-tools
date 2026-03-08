@@ -1,3 +1,10 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>WBW Lead Tracker</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -6,13 +13,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Montserrat, sans-serif; background: #FFFBF7; color: #1A1A2E; }
 
-  /* Zenler reset */
-  #lt-root {
-    margin: -40px -20px 0 -20px !important;
-    padding: 0 !important;
-    width: calc(100% + 40px) !important;
-    max-width: none !important;
-  }
+
 
   /* AUTH SCREEN */
   #auth-screen {
@@ -102,6 +103,9 @@
   }
   input, select, button { font-family: Montserrat, sans-serif; }
 </style>
+</head>
+<body>
+
 
 <!-- AUTH SCREEN -->
 <div id="lt-root">
@@ -174,7 +178,7 @@
     </div>
 
     <!-- ADD LEAD -->
-    <div style="background:#F9E8ED; padding:16px; border-radius:14px; margin-top:16px;">
+    <div style="background:#FFF0E8; padding:16px; border-radius:14px; margin-top:16px;">
       <h3 style="margin:0 0 12px 0; font-size:19px;">Add a Lead</h3>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
         <div>
@@ -252,8 +256,6 @@
               <th style="padding:10px;">Wedding</th>
               <th style="padding:10px;">Next follow-up</th>
               <th style="padding:10px;">Quoted</th>
-              <th style="padding:10px;">Deposit</th>
-              <th style="padding:10px;">Instalments</th>
               <th style="padding:10px;">Paid</th>
               <th style="padding:10px;">Balance</th>
               <th style="padding:10px;">Actions</th>
@@ -307,7 +309,7 @@
           <div style="opacity:.85; font-size:14px; font-weight:800;">Net earnings = cash received so far (deposit + instalments).</div>
         </div>
         <div style="display:flex; gap:12px; flex-wrap:wrap;">
-          <div style="padding:12px; border-radius:16px; min-width:190px; background:#F9E8ED;">
+          <div style="padding:12px; border-radius:16px; min-width:190px; background:#FFF0E8;">
             <div style="opacity:.85; font-size:12px; font-weight:900;">Total booked value</div>
             <div class="lt_totalBooked" style="font-weight:950; font-size:18px;">€0</div>
           </div>
@@ -542,9 +544,10 @@ function dueDateForStep(lead, step) {
 
 function chip(status) {
   const map = {
-    Replied: {bg:"#E9EEFF", fg:"#1A1A2E"},
-    Booked: {bg:"#EAF6EF", fg:"#246b3a"},
-    Lost: {bg:"#FBEAEA", fg:"#8a2a2a"}
+    Replied:        {bg:"#E9EEFF", fg:"#1A1A2E"},
+    'Deposit Paid': {bg:"#FFF0E8", fg:"#C45000"},
+    Booked:         {bg:"#EAF6EF", fg:"#246b3a"},
+    Lost:           {bg:"#FBEAEA", fg:"#8a2a2a"}
   };
   const c = map[status] || map.Replied;
   return `<span style="display:inline-block; padding:6px 10px; border-radius:999px; background:${c.bg}; color:${c.fg}; font-weight:950; font-size:12px;">${esc(status)}</span>`;
@@ -637,19 +640,19 @@ function renderTasks(root, leads) {
 
   tasks.sort((a,b) => a.dueDate.localeCompare(b.dueDate));
 
+  const todayPretty = fmtDatePretty(today);
   wrap.innerHTML = !tasks.length
-    ? `<div style="opacity:.85; font-weight:800;">No follow-ups due today 🎉</div>`
-    : tasks.map(t => `
-      <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; padding:12px; border:1px solid rgba(26,26,46,.12); border-radius:14px; margin-top:10px;">
-        <div>
+    ? `<div style="background:#EAF6EF; border-radius:12px; padding:12px 16px; font-weight:800; color:#246b3a;">✅ No follow-ups due today — you're all caught up!</div>`
+    : `<div style="font-size:13px; font-weight:800; color:#888; margin-bottom:8px;">Today is ${todayPretty}</div>` +
+      tasks.map(t => `
+      <div class="followup-card" style="display:flex; justify-content:space-between; gap:12px; align-items:center; padding:14px; border:2px solid #FF6B35; border-radius:14px; margin-top:10px; background:#FFFBF7;">
+        <div style="flex:1;">
           <div style="font-weight:950; font-size:16px;">${esc(t.name || "Unnamed lead")}</div>
-          <div style="opacity:.92; font-size:14px; font-weight:850;">
-            Follow-up #${t.step} due <b>${fmtDatePretty(t.dueDate)}</b>
-            <span style="opacity:.85;">(see follow-up template for #${t.step})</span>
-            ${t.venue ? `• ${esc(t.venue)}` : ""}
-          </div>
+          <div style="font-size:13px; font-weight:850; color:#FF6B35; margin-top:2px;">Follow-up #${t.step} — due ${fmtDatePretty(t.dueDate)}</div>
+          ${t.venue ? `<div style="opacity:.75; font-size:13px; font-weight:700; margin-top:2px;">📍 ${esc(t.venue)}</div>` : ""}
+          <div class="fu-done-msg-${t.id}" style="font-size:13px; font-weight:800; color:#246b3a; margin-top:4px; display:none;"></div>
         </div>
-        <button type="button" data-followup="${t.id}" style="background:#FF6B35; color:#fff; border:none; padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:950;">Mark done</button>
+        <button type="button" data-followup="${t.id}" style="background:#FF6B35; color:#fff; border:none; padding:10px 16px; border-radius:12px; cursor:pointer; font-weight:950; white-space:nowrap; flex-shrink:0;">Mark done ✓</button>
       </div>
     `).join("");
 }
@@ -659,7 +662,7 @@ function renderTable(root, leads) {
   if (!tbody) return;
 
   if (!leads.length) {
-    tbody.innerHTML = `<tr><td colspan="12" style="padding:14px; opacity:.85; font-weight:800;">No leads yet — add your first enquiry above.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9" style="padding:14px; opacity:.85; font-weight:800;">No leads yet — add your first enquiry above.</td></tr>`;
     return;
   }
 
@@ -686,20 +689,21 @@ function renderTable(root, leads) {
         <td style="padding:10px; font-weight:850;">${fmtDatePretty(l.enquiryDate)}</td>
         <td style="padding:10px; font-weight:850;">${fmtDatePretty(l.weddingDate)}</td>
         <td style="padding:10px; font-weight:850;">${l.nextFollowUp ? fmtDatePretty(l.nextFollowUp) : ""}</td>
-        <td style="padding:10px; font-weight:850;">${l.priceQuoted ? fmtEuro(l.priceQuoted) : ""}</td>
-        <td style="padding:10px; font-weight:850;">${l.depositPaid ? fmtEuro(l.depositPaid) : ""}</td>
+        <td style="padding:10px; font-weight:850;">${l.priceQuoted ? fmtEuro(l.priceQuoted) : "—"}</td>
         <td style="padding:10px; font-weight:850;">
-          ${instTotal ? fmtEuro(instTotal) : ""}
-          ${instLabel ? `<div style="opacity:.8; font-size:12px; font-weight:850;">${instLabel}</div>` : ""}
+          ${paid > 0 ? fmtEuro(paid) : "—"}
+          ${l.depositPaid > 0 ? `<div style="opacity:.7; font-size:11px; font-weight:800;">dep: ${fmtEuro(l.depositPaid)}</div>` : ""}
+          ${instLabel ? `<div style="opacity:.7; font-size:11px; font-weight:800;">${instLabel}</div>` : ""}
         </td>
-        <td style="padding:10px; font-weight:850;">${l.status==="Booked" ? fmtEuro(paid) : ""}</td>
-        <td style="padding:10px; font-weight:850;">${l.status==="Booked" ? fmtEuro(bal) : ""}</td>
-        <td style="padding:10px; white-space:nowrap;">
-          <button type="button" data-edit="${l.id}" style="background:#1A1A2E; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950;">Edit</button>
-          <button type="button" data-booked="${l.id}" style="background:#FF6B35; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; margin-left:8px;">${l.status==="Booked" ? "Unbook" : "Booked"}</button>
-          <button type="button" data-pay="${l.id}" style="background:#FF6B35; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; margin-left:8px;">Add payment</button>
-          <button type="button" data-lost="${l.id}" style="background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; margin-left:8px;">${l.status==="Lost" ? "Undo Lost" : "Lost"}</button>
-          <button type="button" data-del="${l.id}" style="background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; margin-left:8px;">Delete</button>
+        <td style="padding:10px; font-weight:950; color:${bal > 0 ? '#C45000' : '#246b3a'};">${l.priceQuoted > 0 ? fmtEuro(bal) : "—"}</td>
+        <td style="padding:10px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; min-width:160px;">
+            <button type="button" data-edit="${l.id}" style="background:#1A1A2E; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">Edit</button>
+            <button type="button" data-pay="${l.id}" style="background:#FF6B35; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">💳 Pay</button>
+            <button type="button" data-booked="${l.id}" style="background:${l.status==='Booked'?'#246b3a':'#FF6B35'}; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">${l.status==="Booked" ? "Unbook" : "Booked"}</button>
+            <button type="button" data-lost="${l.id}" style="background:#fff; color:${l.status==='Lost'?'#991b1b':'#1A1A2E'}; border:1px solid ${l.status==='Lost'?'#991b1b':'rgba(26,26,46,.25)'}; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">${l.status==="Lost" ? "Undo" : "Lost"}</button>
+            <button type="button" data-del="${l.id}" style="grid-column:1/-1; background:#fff; color:#991b1b; border:1px solid #991b1b; padding:6px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:12px;">Delete</button>
+          </div>
         </td>
       </tr>
     `;
@@ -783,7 +787,15 @@ async function markFollowupDone(root, id) {
   lead.followupStep += 1;
   lead.nextFollowUp = dueDateForStep(lead, lead.followupStep);
   save(leads);
-  msg(root, `Follow-up done. Next: #${lead.followupStep} due ${fmtDatePretty(lead.nextFollowUp)}`, true);
+  msg(root, `Follow-up done for ${lead.name}. Next follow-up: ${fmtDatePretty(lead.nextFollowUp)}`, true);
+  // Show confirmation on the card itself without full re-render
+  const doneMsg = root.querySelector(`.fu-done-msg-${id}`);
+  if (doneMsg) {
+    doneMsg.style.display = 'block';
+    doneMsg.textContent = `✓ Done! Next follow-up: ${fmtDatePretty(lead.nextFollowUp)}`;
+    const btn = root.querySelector(`[data-followup="${id}"]`);
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; btn.textContent = 'Done ✓'; }
+  }
   render(root);
   await saveLeadToCloud(lead);
 }
@@ -946,38 +958,95 @@ async function editLead(root, id) {
   const lead = leads.find(l => l.id === id);
   if (!lead) return;
 
-  const newName = prompt("Couple name:", lead.name || "");
-  if (newName === null) return;
-  const newVenue = prompt("Venue:", lead.venue || "");
-  if (newVenue === null) return;
-  const newEmail = prompt("Email:", lead.email || "");
-  if (newEmail === null) return;
-  const newSource = prompt("Lead source:", lead.source || "Instagram");
-  if (newSource === null) return;
-  const newStatus = prompt("Status (Replied / Booked / Lost):", lead.status || "Replied");
-  if (newStatus === null) return;
+  const overlay = document.createElement("div");
+  overlay.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; padding:18px; z-index:99999;";
 
-  lead.name = newName.trim();
-  lead.venue = newVenue.trim();
-  lead.email = newEmail.trim();
-  lead.source = (newSource.trim() || lead.source);
-  const cleanStatus = newStatus.trim();
-  if (["Replied","Booked","Lost"].includes(cleanStatus)) lead.status = cleanStatus;
+  const modal = document.createElement("div");
+  modal.style.cssText = "background:#FFFBF7; color:#1A1A2E; width:min(560px, 100%); border-radius:18px; padding:20px; box-shadow:0 18px 60px rgba(0,0,0,.25); font-family:Montserrat, sans-serif; max-height:90vh; overflow-y:auto;";
+  modal.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:16px;">
+      <div style="font-weight:950; font-size:18px;">Edit Lead</div>
+      <button type="button" class="e-close" style="border:none; background:#fff; border-radius:12px; padding:8px 10px; font-weight:950; cursor:pointer;">✕</button>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div style="grid-column:1/-1;">
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Couple name</label>
+        <input class="e-name" type="text" value="${(lead.name||'').replace(/"/g,'&quot;')}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Venue</label>
+        <input class="e-venue" type="text" value="${(lead.venue||'').replace(/"/g,'&quot;')}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Email</label>
+        <input class="e-email" type="email" value="${(lead.email||'').replace(/"/g,'&quot;')}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Lead source</label>
+        <select class="e-source" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; background:#fff; font-family:Montserrat,sans-serif;">
+          ${['Instagram','Website','Referral','Venue','Vendor','Facebook','TikTok','Other'].map(s => `<option value="${s}" ${lead.source===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Status</label>
+        <select class="e-status" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; background:#fff; font-family:Montserrat,sans-serif;">
+          <option value="Replied" ${lead.status==='Replied'?'selected':''}>Replied</option>
+          <option value="Deposit Paid" ${lead.status==='Deposit Paid'?'selected':''}>Deposit Paid</option>
+          <option value="Booked" ${lead.status==='Booked'?'selected':''}>Booked</option>
+          <option value="Lost" ${lead.status==='Lost'?'selected':''}>Lost</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Next follow-up date</label>
+        <input class="e-followup" type="date" value="${lead.nextFollowUp||''}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Wedding date</label>
+        <input class="e-wedding" type="date" value="${lead.weddingDate||''}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+      </div>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
+      <button type="button" class="e-save" style="flex:1; min-width:140px; background:#FF6B35; color:#fff; border:none; padding:13px; border-radius:14px; cursor:pointer; font-weight:950; font-size:15px; font-family:Montserrat,sans-serif;">Save changes</button>
+      <button type="button" class="e-payments" style="flex:1; min-width:140px; background:#1A1A2E; color:#fff; border:none; padding:13px; border-radius:14px; cursor:pointer; font-weight:950; font-size:15px; font-family:Montserrat,sans-serif;">💳 Payments</button>
+      <button type="button" class="e-cancel" style="flex:1; min-width:140px; background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:13px; border-radius:14px; cursor:pointer; font-weight:950; font-size:15px; font-family:Montserrat,sans-serif;">Cancel</button>
+    </div>
+  `;
 
-  if (lead.status === "Booked") {
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  function close() { overlay.remove(); }
+  modal.querySelector(".e-close").addEventListener("click", close);
+  modal.querySelector(".e-cancel").addEventListener("click", close);
+  modal.querySelector(".e-payments").addEventListener("click", () => { close(); openPaymentsModal(root, id); });
+
+  modal.querySelector(".e-save").addEventListener("click", async () => {
+    lead.name = modal.querySelector(".e-name").value.trim();
+    lead.venue = modal.querySelector(".e-venue").value.trim();
+    lead.email = modal.querySelector(".e-email").value.trim();
+    lead.source = modal.querySelector(".e-source").value;
+    const newStatus = modal.querySelector(".e-status").value;
+    const newFollowup = modal.querySelector(".e-followup").value;
+    const newWedding = modal.querySelector(".e-wedding").value;
+
+    lead.status = newStatus;
+    lead.weddingDate = newWedding;
+
+    if (newStatus === "Lost") {
+      lead.followupStep = 0; lead.nextFollowUp = "";
+    } else if (newStatus === "Booked") {
+      lead.followupStep = 0; lead.nextFollowUp = "";
+    } else {
+      lead.nextFollowUp = newFollowup || dueDateForStep(lead, Math.max(1, Number(lead.followupStep||1)));
+    }
+
     save(leads);
-    openPaymentsModal(root, id);
-    return;
-  }
-  if (lead.status === "Lost") {
-    lead.followupStep = 0; lead.nextFollowUp = "";
-  } else {
-    lead.followupStep = Math.max(1, Number(lead.followupStep || 1));
-    lead.nextFollowUp = dueDateForStep(lead, lead.followupStep);
-  }
-  save(leads);
-  render(root);
-  await saveLeadToCloud(lead);
+    close();
+    render(root);
+    await saveLeadToCloud(lead);
+
+    if (newStatus === "Booked") openPaymentsModal(root, id);
+  });
 }
 
 function exportCSV() {
@@ -1052,3 +1121,4 @@ function bindTool(root) {
 </script>
 
 </div><!-- end lt-root -->
+</html>
