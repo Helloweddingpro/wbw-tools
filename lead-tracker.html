@@ -401,6 +401,15 @@ async function addLead() {
   const name = document.getElementById("f-name").value.trim();
   if (!name) { setAddMsg("Please enter a couple name.", false); return; }
 
+  const enquiry = document.getElementById("f-enquiry").value || todayISO();
+  const wedding = document.getElementById("f-wedding").value;
+  const venue = document.getElementById("f-venue").value.trim();
+  const email = document.getElementById("f-email").value.trim();
+  const phone = document.getElementById("f-phone").value.trim();
+  const source = document.getElementById("f-source").value;
+  const status = document.getElementById("f-status").value;
+  const price = Number(document.getElementById("f-price").value) || 0;
+
   // Check for wedding date clash
   if (wedding) {
     const clashes = leads.filter(l =>
@@ -410,22 +419,13 @@ async function addLead() {
     if (clashes.length > 0) {
       const names = clashes.map(l => l.name).join(", ");
       const proceed = confirm(
-        "⚠️ You already have " + clashes.length + " booking(s) on this date:\n" +
-        names + "\n\n" +
-        "Do you want to continue and book 2 weddings on the same date?\n\n" +
-        "Click OK to continue, or Cancel — you may be unavailable for this date."
+        "You already have " + clashes.length + " booking(s) on this date: " +
+        names + ". Do you want to continue and book 2 weddings on the same date? " +
+        "Click OK to continue, or Cancel if you are unavailable for this date."
       );
       if (!proceed) return;
     }
   }
-  const enquiry = document.getElementById("f-enquiry").value || todayISO();
-  const wedding = document.getElementById("f-wedding").value;
-  const venue = document.getElementById("f-venue").value.trim();
-  const email = document.getElementById("f-email").value.trim();
-  const phone = document.getElementById("f-phone").value.trim();
-  const source = document.getElementById("f-source").value;
-  const status = document.getElementById("f-status").value;
-  const price = Number(document.getElementById("f-price").value) || 0;
   const followup = dueDateFromEnquiry(enquiry, FOLLOWUP_DAYS[0]);
 
   const lead = {
