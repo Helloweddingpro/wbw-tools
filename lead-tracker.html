@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>WBW Lead Tracker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Montserrat, sans-serif; background: #FFFBF7; color: #1A1A2E; }
+
+
+
+  /* AUTH SCREEN */
+  #auth-screen {
+    min-height: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #FFFBF7;
+  }
+  .auth-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 8px 40px rgba(26,26,46,0.10);
+  }
+  .auth-box h1 { font-size: 24px; font-weight: 900; color: #FF6B35; margin-bottom: 6px; }
+  .auth-box p { font-size: 14px; font-weight: 600; opacity: .75; margin-bottom: 24px; }
+  .auth-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+  .auth-tab {
+    flex: 1; padding: 10px; border-radius: 12px; border: 1px solid rgba(26,26,46,.2);
+    background: #fff; color: #1A1A2E; font-weight: 800; font-size: 14px;
+    cursor: pointer; transition: all .2s;
+  }
+  .auth-tab.active { background: #FF6B35; color: #fff; border-color: #FF6B35; }
+  .auth-field { margin-bottom: 14px; }
+  .auth-field label { display: block; font-weight: 800; font-size: 13px; margin-bottom: 6px; }
+  .auth-field input {
+    width: 100%; padding: 12px 14px; border-radius: 12px;
+    border: 1px solid #ddd; font-size: 15px; font-weight: 600;
+    font-family: Montserrat, sans-serif; outline: none;
+    transition: border-color .2s;
+  }
+  .auth-field input:focus { border-color: #FF6B35; }
+  .auth-btn {
+    width: 100%; padding: 13px; background: #FF6B35; color: #fff;
+    border: none; border-radius: 14px; font-size: 16px; font-weight: 900;
+    cursor: pointer; margin-top: 6px; transition: opacity .2s;
+    font-family: Montserrat, sans-serif;
+  }
+  .auth-btn:hover { opacity: .88; }
+  .auth-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .auth-msg { margin-top: 12px; font-size: 13px; font-weight: 700; text-align: center; min-height: 20px; }
+  .auth-msg.error { color: #8a2a2a; }
+  .auth-msg.success { color: #246b3a; }
+
+  /* TOP BAR */
+  #top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; background: #FF6B35; color: #fff;
+    font-family: Montserrat, sans-serif;
+  }
+  #top-bar .brand { font-weight: 900; font-size: 16px; }
+  #top-bar .user-info { font-size: 13px; font-weight: 700; opacity: .85; }
+  #sign-out-btn {
+    background: rgba(255,255,255,.15); color: #fff; border: none;
+    padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 13px;
+    cursor: pointer; font-family: Montserrat, sans-serif;
+  }
+  #sign-out-btn:hover { background: rgba(255,255,255,.25); }
+
+  /* MAIN APP */
+  #app-screen { display: none; }
+
+  /* SAVE STATUS */
+  #save-status {
+    position: fixed; bottom: 20px; right: 20px;
+    background: #246b3a; color: #fff;
+    padding: 10px 16px; border-radius: 12px;
+    font-size: 13px; font-weight: 800;
+    opacity: 0; transition: opacity .3s;
+    z-index: 9999;
+    font-family: Montserrat, sans-serif;
+  }
+  #save-status.show { opacity: 1; }
+  #save-status.error { background: #8a2a2a; }
+
+  /* TOOL STYLES (existing) */
+  .wbw-lead-tracker {
+    font-family: Montserrat, sans-serif;
+    font-size: 17px; font-weight: 650; line-height: 1.5;
+    background: #FFFBF7; color: #1A1A2E;
+    padding: 22px; border-radius: 16px;
+    max-width: 1100px; margin: auto;
+  }
+  input, select, button { font-family: Montserrat, sans-serif; }
+</style>
+</head>
+<body>
+
+
+<!-- AUTH SCREEN -->
+<div id="lt-root">
+
+<div id="auth-screen">
+  <div class="auth-box">
+    <h1>WBW Lead Tracker</h1>
+    <p>Your leads, saved securely in the cloud.</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Create Account</button>
+    </div>
+
+    <div id="form-signin">
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" id="signin-email" placeholder="you@example.com">
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input type="password" id="signin-password" placeholder="Your password">
+      </div>
+      <button class="auth-btn" id="signin-btn" onclick="signIn()">Sign In</button>
+      <div class="auth-msg" id="signin-msg"></div>
+    </div>
+
+    <div id="form-signup" style="display:none;">
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" id="signup-email" placeholder="you@example.com">
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input type="password" id="signup-password" placeholder="Choose a password (min 6 chars)">
+      </div>
+      <button class="auth-btn" id="signup-btn" onclick="signUp()">Create Account</button>
+      <div class="auth-msg" id="signup-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP SCREEN -->
+<div id="app-screen">
+  <div id="top-bar">
+    <div class="brand">WBW Lead Tracker</div>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div class="user-info" id="user-email-display"></div>
+      <button id="sign-out-btn" onclick="signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <!-- LEAD TRACKER TOOL (your original, unchanged) -->
+  <div class="wbw-lead-tracker">
+
+    <!-- HEADER -->
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+      <div>
+        <h2 style="margin:0 0 6px 0; font-size:28px;">Lead Tracker</h2>
+        <div style="opacity:.92; font-weight:650;">Track enquiries, follow up on time, and see where your best leads come from.</div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="button" class="lt-export-csv" style="background:#FF6B35; color:#fff; border:none; padding:10px 12px; border-radius:12px; font-weight:900; cursor:pointer;">Export CSV</button>
+        <button type="button" class="lt-export-json" style="background:#1A1A2E; color:#fff; border:none; padding:10px 12px; border-radius:12px; font-weight:900; cursor:pointer;">Backup</button>
+        <label style="background:#1A1A2E; color:#fff; padding:10px 12px; border-radius:12px; font-weight:900; cursor:pointer; display:inline-block;">
+          Restore <input class="lt-import" type="file" accept="application/json" style="display:none;">
+        </label>
+        <button type="button" class="lt-clear" style="background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:10px 12px; border-radius:12px; font-weight:900; cursor:pointer;">Clear All</button>
+      </div>
+    </div>
+
+    <!-- ADD LEAD -->
+    <div style="background:#FFF0E8; padding:16px; border-radius:14px; margin-top:16px;">
+      <h3 style="margin:0 0 12px 0; font-size:19px;">Add a Lead</h3>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <div>
+          <label style="font-weight:900;">Couple name</label>
+          <input class="lt-name" type="text" placeholder="e.g. Sarah & Ben" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:650;">
+        </div>
+        <div>
+          <label style="font-weight:900;">Enquiry date</label>
+          <input class="lt-enquiryDate" type="date" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:650;">
+        </div>
+        <div>
+          <label style="font-weight:900;">Wedding date</label>
+          <input class="lt-weddingDate" type="date" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:650;">
+        </div>
+        <div>
+          <label style="font-weight:900;">Venue</label>
+          <input class="lt-venue" type="text" placeholder="e.g. The Haven Hotel" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:650;">
+        </div>
+        <div>
+          <label style="font-weight:900;">Email</label>
+          <input class="lt-email" type="email" placeholder="email@example.com" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:650;">
+        </div>
+        <div>
+          <label style="font-weight:900;">Lead source</label>
+          <select class="lt-source" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; background:#fff; font-size:17px; font-weight:800;">
+            <option value="Instagram">Instagram</option>
+            <option value="Website">Website</option>
+            <option value="Referral">Referral</option>
+            <option value="Venue">Venue</option>
+            <option value="Vendor">Vendor</option>
+            <option value="Facebook">Facebook</option>
+            <option value="TikTok">TikTok</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-weight:900;">Status</label>
+          <select class="lt-status" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; background:#fff; font-size:17px; font-weight:800;">
+            <option value="Replied">Replied</option>
+            <option value="Booked">Booked</option>
+            <option value="Lost">Lost</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-weight:900;">Price quoted (€)</label>
+          <input class="lt-price" type="number" inputmode="numeric" placeholder="e.g. 950" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:650;">
+        </div>
+        <div style="grid-column: 1 / -1;">
+          <button type="button" class="lt-add" style="background:#FF6B35; color:#fff; border:none; padding:12px 14px; border-radius:14px; font-weight:950; cursor:pointer; width:100%; font-size:17px;">Add Lead</button>
+          <div class="lt-msg" style="margin-top:10px; font-size:14px; opacity:.95; font-weight:850;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASKS -->
+    <div style="margin-top:16px; background:#fff; padding:16px; border-radius:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+        <h3 style="margin:0; font-size:19px;">Follow-ups Due</h3>
+        <div style="opacity:.85; font-size:14px; font-weight:800;">Follow-ups appear when they're due, and stay until marked done.</div>
+      </div>
+      <div class="lt-tasks" style="margin-top:10px;"></div>
+    </div>
+
+    <!-- LEADS TABLE -->
+    <div style="margin-top:16px; background:#fff; padding:16px; border-radius:14px;">
+      <h3 style="margin:0 0 10px 0; font-size:19px;">Your Leads</h3>
+      <div style="overflow:auto;">
+        <table style="width:100%; border-collapse:collapse; min-width:1450px; font-size:16px;">
+          <thead>
+            <tr style="text-align:left; border-bottom:1px solid rgba(26,26,46,.15);">
+              <th style="padding:10px;">Couple</th>
+              <th style="padding:10px;">Source</th>
+              <th style="padding:10px;">Status</th>
+              <th style="padding:10px;">Enquiry</th>
+              <th style="padding:10px;">Wedding</th>
+              <th style="padding:10px;">Next follow-up</th>
+              <th style="padding:10px;">Quoted</th>
+              <th style="padding:10px;">Deposit</th>
+              <th style="padding:10px;">Instalments</th>
+              <th style="padding:10px;">Paid</th>
+              <th style="padding:10px;">Balance</th>
+              <th style="padding:10px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="lt-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SOURCE PERFORMANCE -->
+    <div style="margin-top:16px; background:#fff; padding:16px; border-radius:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap;">
+        <div>
+          <h3 style="margin:0 0 6px 0; font-size:19px;">Lead Source Performance</h3>
+          <div style="opacity:.85; font-size:14px; font-weight:800;">See where most leads are coming from.</div>
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div style="padding:12px; border-radius:16px; min-width:240px; background:#E9EEFF;">
+            <div style="opacity:.85; font-size:12px; font-weight:900;">Top lead source</div>
+            <div class="lt_topLeads" style="font-weight:950; font-size:16px;">—</div>
+          </div>
+          <div style="padding:12px; border-radius:16px; min-width:240px; background:#EAF6EF;">
+            <div style="opacity:.85; font-size:12px; font-weight:900;">Second best</div>
+            <div class="lt_secondLeads" style="font-weight:950; font-size:16px;">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="lt-sourceCards" style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;"></div>
+      <div style="overflow:auto; margin-top:12px;">
+        <table style="width:100%; border-collapse:collapse; min-width:880px; font-size:16px;">
+          <thead>
+            <tr style="text-align:left; border-bottom:1px solid rgba(26,26,46,.15);">
+              <th style="padding:10px;">Source</th>
+              <th style="padding:10px;">Leads</th>
+              <th style="padding:10px;">Booked</th>
+              <th style="padding:10px;">Booking rate</th>
+              <th style="padding:10px;">Booked value</th>
+            </tr>
+          </thead>
+          <tbody class="lt-sourceTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BOOKING TOTALS -->
+    <div style="margin-top:16px; background:#fff; padding:16px; border-radius:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap;">
+        <div>
+          <h3 style="margin:0 0 6px 0; font-size:19px;">Booking Totals</h3>
+          <div style="opacity:.85; font-size:14px; font-weight:800;">Net earnings = cash received so far (deposit + instalments).</div>
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div style="padding:12px; border-radius:16px; min-width:190px; background:#FFF0E8;">
+            <div style="opacity:.85; font-size:12px; font-weight:900;">Total booked value</div>
+            <div class="lt_totalBooked" style="font-weight:950; font-size:18px;">€0</div>
+          </div>
+          <div style="padding:12px; border-radius:16px; min-width:190px; background:#EAF6EF;">
+            <div style="opacity:.85; font-size:12px; font-weight:900;">Net earnings</div>
+            <div class="lt_totalNet" style="font-weight:950; font-size:18px;">€0</div>
+          </div>
+          <div style="padding:12px; border-radius:16px; min-width:190px; background:#E9EEFF;">
+            <div style="opacity:.85; font-size:12px; font-weight:900;">Total paid</div>
+            <div class="lt_totalPaid" style="font-weight:950; font-size:18px;">€0</div>
+          </div>
+          <div style="padding:12px; border-radius:16px; min-width:190px; background:#FFF1E6;">
+            <div style="opacity:.85; font-size:12px; font-weight:900;">Outstanding balance</div>
+            <div class="lt_totalBalance" style="font-weight:950; font-size:18px;">€0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:18px; font-size:13px; opacity:.85; font-weight:800;">
+      Your data is saved securely to the cloud. Access it from any device by signing in.
+    </div>
+  </div>
+</div>
+
+<!-- SAVE STATUS TOAST -->
+<div id="save-status">✓ Saved</div>
+
+<script>
+// ─── SUPABASE INIT ───────────────────────────────────────────────────────────
+const SUPABASE_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_CS3XLLfWaZNA-B2oE37N-g_z2FMWCzq";
+const { createClient } = supabase;
+// Safe init — reuse existing client if already created on this page
+if (!window._wbwSb) {
+  window._wbwSb = createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { storageKey: 'wbw-auth', autoRefreshToken: true, persistSession: true }
+  });
+}
+const sb = window._wbwSb;
+
+let currentUser = null;
+
+// ─── AUTH UI ─────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById("form-signin").style.display = tab === "signin" ? "" : "none";
+  document.getElementById("form-signup").style.display = tab === "signup" ? "" : "none";
+  document.getElementById("tab-signin").classList.toggle("active", tab === "signin");
+  document.getElementById("tab-signup").classList.toggle("active", tab === "signup");
+}
+
+async function signIn() {
+  const email = document.getElementById("signin-email").value.trim();
+  const password = document.getElementById("signin-password").value;
+  const msgEl = document.getElementById("signin-msg");
+  const btn = document.getElementById("signin-btn");
+
+  if (!email || !password) { showMsg(msgEl, "Please enter email and password.", "error"); return; }
+
+  btn.disabled = true;
+  btn.textContent = "Signing in…";
+  msgEl.textContent = "";
+
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+
+  btn.disabled = false;
+  btn.textContent = "Sign In";
+
+  if (error) { showMsg(msgEl, error.message, "error"); }
+}
+
+async function signUp() {
+  const email = document.getElementById("signup-email").value.trim();
+  const password = document.getElementById("signup-password").value;
+  const msgEl = document.getElementById("signup-msg");
+  const btn = document.getElementById("signup-btn");
+
+  if (!email || !password) { showMsg(msgEl, "Please enter email and password.", "error"); return; }
+  if (password.length < 6) { showMsg(msgEl, "Password must be at least 6 characters.", "error"); return; }
+
+  btn.disabled = true;
+  btn.textContent = "Creating account…";
+
+  const { error } = await sb.auth.signUp({ email, password });
+
+  btn.disabled = false;
+  btn.textContent = "Create Account";
+
+  if (error) {
+    showMsg(msgEl, error.message, "error");
+  } else {
+    showMsg(msgEl, "Account created! Check your email to confirm, then sign in.", "success");
+    switchTab("signin");
+    document.getElementById("signin-email").value = email;
+  }
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  currentUser = null;
+  document.getElementById("app-screen").style.display = "none";
+  document.getElementById("auth-screen").style.display = "flex";
+}
+
+function showMsg(el, text, type) {
+  el.textContent = text;
+  el.className = "auth-msg " + type;
+}
+
+// ─── AUTH STATE ──────────────────────────────────────────────────────────────
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (session?.user) {
+    currentUser = session.user;
+    document.getElementById("auth-screen").style.display = "none";
+    document.getElementById("app-screen").style.display = "block";
+    document.getElementById("user-email-display").textContent = currentUser.email;
+    await loadFromCloud();
+    const root = document.querySelector(".wbw-lead-tracker");
+    if (root) bindTool(root);
+  } else {
+    currentUser = null;
+    document.getElementById("app-screen").style.display = "none";
+    document.getElementById("auth-screen").style.display = "flex";
+  }
+});
+
+// ─── CLOUD STORAGE ───────────────────────────────────────────────────────────
+let cloudLeads = [];
+
+async function loadFromCloud() {
+  if (!currentUser) return;
+  const { data, error } = await sb
+    .from("leads")
+    .select("id, data")
+    .eq("user_id", currentUser.id);
+
+  if (error) { console.error("Load error:", error); return; }
+
+  cloudLeads = (data || []).map(row => ({ ...row.data, id: row.id }));
+  const root = document.querySelector(".wbw-lead-tracker");
+  if (root) render(root);
+}
+
+async function saveLeadToCloud(lead) {
+  if (!currentUser) return;
+  const { id, ...data } = lead;
+  const { error } = await sb.from("leads").upsert({
+    id: id,
+    user_id: currentUser.id,
+    data: { ...data, id },
+    updated_at: new Date().toISOString()
+  }, { onConflict: "id" });
+
+  if (error) { showToast("Save failed", true); console.error(error); }
+  else showToast("✓ Saved");
+}
+
+async function deleteLeadFromCloud(id) {
+  if (!currentUser) return;
+  const { error } = await sb.from("leads").delete().eq("id", id).eq("user_id", currentUser.id);
+  if (error) console.error("Delete error:", error);
+}
+
+async function deleteAllLeadsFromCloud() {
+  if (!currentUser) return;
+  const { error } = await sb.from("leads").delete().eq("user_id", currentUser.id);
+  if (error) console.error("Clear error:", error);
+}
+
+function showToast(msg, isError = false) {
+  const el = document.getElementById("save-status");
+  el.textContent = msg;
+  el.className = "show" + (isError ? " error" : "");
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.className = ""; }, 2500);
+}
+
+// ─── LEAD TRACKER LOGIC (your original, adapted for cloud) ──────────────────
+const GAP_DAYS = 3;
+const MAX_FOLLOWUPS = 5;
+
+function todayISO() {
+  const d = new Date();
+  return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0,10);
+}
+function addDaysISO(iso, days) {
+  const d = new Date((iso || todayISO()) + "T00:00:00");
+  d.setDate(d.getDate() + days);
+  return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0,10);
+}
+
+function load() { return cloudLeads.map(l => ({...l})); }
+function save(leads) { cloudLeads = leads.map(l => ({...l})); }
+
+function esc(str) {
+  return String(str || "")
+    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+function fmtEuro(n) {
+  const num = Number(n || 0);
+  return "€" + (isFinite(num) ? Math.round(num).toString() : "0");
+}
+function fmtDatePretty(iso) {
+  if (!iso) return "";
+  const d = new Date(iso + "T00:00:00");
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${String(d.getDate()).padStart(2,"0")} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+function csvEscape(v) {
+  const s = String(v ?? "");
+  if (/[",\n]/.test(s)) return `"${s.replaceAll('"','""')}"`;
+  return s;
+}
+
+function ensureLeadShape(l) {
+  l.priceQuoted = Number(l.priceQuoted || 0);
+  l.depositPaid = Number(l.depositPaid || 0);
+  l.instalments = Array.isArray(l.instalments) ? l.instalments.map(x => Number(x || 0)) : [];
+  l.followupStep = Number(l.followupStep || 1);
+  l.nextFollowUp = l.nextFollowUp || "";
+  l.status = l.status || "Replied";
+  return l;
+}
+
+function totalInstalments(l) { return (l.instalments || []).reduce((s,x)=> s + Number(x||0), 0); }
+function totalPaid(l) { return Number(l.depositPaid || 0) + totalInstalments(l); }
+function balanceDue(l) { return Math.max(0, Number(l.priceQuoted || 0) - totalPaid(l)); }
+function dueDateForStep(lead, step) {
+  return addDaysISO(lead.enquiryDate || todayISO(), GAP_DAYS * step);
+}
+
+function chip(status) {
+  const map = {
+    Replied:        {bg:"#E9EEFF", fg:"#1A1A2E"},
+    'Deposit Paid': {bg:"#FFF0E8", fg:"#C45000"},
+    Booked:         {bg:"#EAF6EF", fg:"#246b3a"},
+    Lost:           {bg:"#FBEAEA", fg:"#8a2a2a"}
+  };
+  const c = map[status] || map.Replied;
+  return `<span style="display:inline-block; padding:6px 10px; border-radius:999px; background:${c.bg}; color:${c.fg}; font-weight:950; font-size:12px;">${esc(status)}</span>`;
+}
+
+function msg(root, text, ok=true) {
+  const el = root.querySelector(".lt-msg");
+  if (!el) return;
+  el.style.color = ok ? "#246b3a" : "#8a2a2a";
+  el.textContent = text;
+  setTimeout(()=>{ el.textContent = ""; }, 4200);
+}
+
+function pct(n) { return isFinite(n) ? Math.round(n) + "%" : "0%"; }
+
+function calcTotals(root, leads) {
+  const booked = leads.filter(l => l.status === "Booked");
+  root.querySelector(".lt_totalBooked").textContent = fmtEuro(booked.reduce((s,l)=> s + Number(l.priceQuoted||0), 0));
+  root.querySelector(".lt_totalPaid").textContent = fmtEuro(booked.reduce((s,l)=> s + totalPaid(l), 0));
+  root.querySelector(".lt_totalBalance").textContent = fmtEuro(booked.reduce((s,l)=> s + balanceDue(l), 0));
+  root.querySelector(".lt_totalNet").textContent = fmtEuro(booked.reduce((s,l)=> s + totalPaid(l), 0));
+}
+
+function renderSourcePerformance(root, leads) {
+  const tBody = root.querySelector(".lt-sourceTable");
+  const cardsWrap = root.querySelector(".lt-sourceCards");
+  if (!tBody || !cardsWrap) return;
+
+  const sources = {};
+  for (const l of leads) {
+    const src = (l.source || "Other").trim() || "Other";
+    if (!sources[src]) sources[src] = {source: src, leads: 0, booked: 0, bookedValue: 0};
+    sources[src].leads += 1;
+    if (l.status === "Booked") { sources[src].booked += 1; sources[src].bookedValue += Number(l.priceQuoted || 0); }
+  }
+
+  const rows = Object.values(sources)
+    .map(s => ({...s, rate: s.leads ? (s.booked/s.leads)*100 : 0}))
+    .sort((a,b) => b.leads !== a.leads ? b.leads - a.leads : b.booked - a.booked);
+
+  if (!rows.length) {
+    tBody.innerHTML = `<tr><td colspan="5" style="padding:14px; opacity:.85; font-weight:800;">Add a few leads and you'll see your top sources here.</td></tr>`;
+    root.querySelector(".lt_topLeads").textContent = "—";
+    root.querySelector(".lt_secondLeads").textContent = "—";
+    cardsWrap.innerHTML = "";
+    return;
+  }
+
+  root.querySelector(".lt_topLeads").textContent = `${rows[0].source} • ${rows[0].leads} leads`;
+  root.querySelector(".lt_secondLeads").textContent = rows[1] ? `${rows[1].source} • ${rows[1].leads} leads` : "—";
+
+  const cardColours = ["#E9EEFF","#F9E8ED","#EAF6EF","#FFF1E6","#FBEAEA"];
+  cardsWrap.innerHTML = rows.slice(0,4).map((r,i)=>`
+    <div style="padding:12px; border-radius:16px; background:${cardColours[i % cardColours.length]}; min-width:220px;">
+      <div style="font-weight:950; font-size:16px;">${esc(r.source)}</div>
+      <div style="opacity:.9; font-size:14px; font-weight:850;">${r.leads} leads • ${r.booked} booked • ${pct(r.rate)}</div>
+    </div>
+  `).join("");
+
+  tBody.innerHTML = rows.map(r => `
+    <tr style="border-top:1px solid rgba(26,26,46,.10);">
+      <td style="padding:10px; font-weight:950;">${esc(r.source)}</td>
+      <td style="padding:10px; font-weight:850;">${r.leads}</td>
+      <td style="padding:10px; font-weight:850;">${r.booked}</td>
+      <td style="padding:10px; font-weight:850;">${pct(r.rate)}</td>
+      <td style="padding:10px; font-weight:850;">${fmtEuro(r.bookedValue)}</td>
+    </tr>
+  `).join("");
+}
+
+function renderTasks(root, leads) {
+  const wrap = root.querySelector(".lt-tasks");
+  if (!wrap) return;
+  const today = todayISO();
+  const tasks = [];
+
+  for (const l0 of leads) {
+    const l = ensureLeadShape({...l0});
+    if (l.status === "Booked" || l.status === "Lost") continue;
+    if (!l.nextFollowUp) {
+      l.followupStep = Math.max(1, Number(l.followupStep || 1));
+      l.nextFollowUp = dueDateForStep(l, l.followupStep);
+    }
+    for (let s = Number(l.followupStep || 1); s <= MAX_FOLLOWUPS; s++) {
+      const due = dueDateForStep(l, s);
+      if (due <= today) tasks.push({id:l.id, name:l.name, venue:l.venue, step:s, dueDate:due});
+      else break;
+    }
+  }
+
+  tasks.sort((a,b) => a.dueDate.localeCompare(b.dueDate));
+
+  wrap.innerHTML = !tasks.length
+    ? `<div style="opacity:.85; font-weight:800;">No follow-ups due today 🎉</div>`
+    : tasks.map(t => `
+      <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; padding:12px; border:1px solid rgba(26,26,46,.12); border-radius:14px; margin-top:10px;">
+        <div>
+          <div style="font-weight:950; font-size:16px;">${esc(t.name || "Unnamed lead")}</div>
+          <div style="opacity:.92; font-size:14px; font-weight:850;">
+            Follow-up #${t.step} due <b>${fmtDatePretty(t.dueDate)}</b>
+            <span style="opacity:.85;">(see follow-up template for #${t.step})</span>
+            ${t.venue ? `• ${esc(t.venue)}` : ""}
+          </div>
+        </div>
+        <button type="button" data-followup="${t.id}" style="background:#FF6B35; color:#fff; border:none; padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:950;">Mark done</button>
+      </div>
+    `).join("");
+}
+
+function renderTable(root, leads) {
+  const tbody = root.querySelector(".lt-table");
+  if (!tbody) return;
+
+  if (!leads.length) {
+    tbody.innerHTML = `<tr><td colspan="12" style="padding:14px; opacity:.85; font-weight:800;">No leads yet — add your first enquiry above.</td></tr>`;
+    return;
+  }
+
+  leads.sort((a,b) => {
+    const aA = (a.status !== "Booked" && a.status !== "Lost");
+    const bA = (b.status !== "Booked" && b.status !== "Lost");
+    if (aA !== bA) return aA ? -1 : 1;
+    const an = a.nextFollowUp || "9999-12-31";
+    const bn = b.nextFollowUp || "9999-12-31";
+    if (an !== bn) return an.localeCompare(bn);
+    return (b.createdAt || "").localeCompare(a.createdAt || "");
+  });
+
+  tbody.innerHTML = leads.map(l => {
+    const instTotal = totalInstalments(l);
+    const paid = totalPaid(l);
+    const bal = (l.status === "Booked") ? balanceDue(l) : 0;
+    const instLabel = l.instalments?.length ? `${l.instalments.length} instalment${l.instalments.length>1?"s":""}` : "";
+    return `
+      <tr style="border-top:1px solid rgba(26,26,46,.10);">
+        <td style="padding:10px; font-weight:950;">${esc(l.name||"")}</td>
+        <td style="padding:10px; font-weight:850;">${esc(l.source||"")}</td>
+        <td style="padding:10px;">${chip(l.status||"Replied")}</td>
+        <td style="padding:10px; font-weight:850;">${fmtDatePretty(l.enquiryDate)}</td>
+        <td style="padding:10px; font-weight:850;">${fmtDatePretty(l.weddingDate)}</td>
+        <td style="padding:10px; font-weight:850;">${l.nextFollowUp ? fmtDatePretty(l.nextFollowUp) : ""}</td>
+        <td style="padding:10px; font-weight:850;">${l.priceQuoted ? fmtEuro(l.priceQuoted) : ""}</td>
+        <td style="padding:10px; font-weight:850;">${l.depositPaid ? fmtEuro(l.depositPaid) : ""}</td>
+        <td style="padding:10px; font-weight:850;">
+          ${instTotal ? fmtEuro(instTotal) : ""}
+          ${instLabel ? `<div style="opacity:.8; font-size:12px; font-weight:850;">${instLabel}</div>` : ""}
+        </td>
+        <td style="padding:10px; font-weight:850;">${l.status==="Booked" ? fmtEuro(paid) : ""}</td>
+        <td style="padding:10px; font-weight:850;">${l.status==="Booked" ? fmtEuro(bal) : ""}</td>
+        <td style="padding:10px; white-space:nowrap;">
+          <button type="button" data-edit="${l.id}" style="background:#1A1A2E; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950;">Edit</button>
+          <button type="button" data-booked="${l.id}" style="background:#FF6B35; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; margin-left:8px;">${l.status==="Booked" ? "Unbook" : "Booked"}</button>
+          <button type="button" data-pay="${l.id}" style="background:#FF6B35; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; margin-left:8px;">Add payment</button>
+          <button type="button" data-lost="${l.id}" style="background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; margin-left:8px;">${l.status==="Lost" ? "Undo Lost" : "Lost"}</button>
+          <button type="button" data-del="${l.id}" style="background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; margin-left:8px;">Delete</button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function normalizeLeads(leads) {
+  return leads.map(l => {
+    l = ensureLeadShape(l);
+    if (l.status === "Replied" && !l.nextFollowUp) {
+      l.followupStep = Math.max(1, Number(l.followupStep || 1));
+      l.nextFollowUp = dueDateForStep(l, l.followupStep);
+    }
+    if (l.status === "Booked" || l.status === "Lost") {
+      l.nextFollowUp = "";
+      l.followupStep = 0;
+    }
+    return l;
+  });
+}
+
+function render(root) {
+  const leads = normalizeLeads(load());
+  renderTasks(root, leads);
+  renderTable(root, leads);
+  calcTotals(root, leads);
+  renderSourcePerformance(root, leads);
+}
+
+async function addLead(root) {
+  const name = (root.querySelector(".lt-name")?.value || "").trim();
+  const enquiryDate = root.querySelector(".lt-enquiryDate")?.value || todayISO();
+  const weddingDate = root.querySelector(".lt-weddingDate")?.value || "";
+  const venue = (root.querySelector(".lt-venue")?.value || "").trim();
+  const email = (root.querySelector(".lt-email")?.value || "").trim();
+  const source = root.querySelector(".lt-source")?.value || "Instagram";
+  const status = root.querySelector(".lt-status")?.value || "Replied";
+  const priceRaw = root.querySelector(".lt-price")?.value || "";
+
+  if (!name) { msg(root, "Please enter a couple name.", false); return; }
+
+  const lead = ensureLeadShape({
+    id: (Math.random().toString(16).slice(2) + "_" + Date.now().toString(16)),
+    createdAt: new Date().toISOString(),
+    name, enquiryDate, weddingDate, venue, email, source, status,
+    priceQuoted: priceRaw ? Number(priceRaw) : 0,
+    depositPaid: 0, instalments: [],
+    followupStep: (status === "Replied") ? 1 : 0,
+    nextFollowUp: (status === "Replied") ? dueDateForStep({enquiryDate}, 1) : ""
+  });
+
+  const leads = load();
+  leads.push(lead);
+  save(leads);
+
+  root.querySelector(".lt-name").value = "";
+  root.querySelector(".lt-venue").value = "";
+  root.querySelector(".lt-email").value = "";
+  root.querySelector(".lt-weddingDate").value = "";
+  root.querySelector(".lt-price").value = "";
+
+  msg(root, "Lead added ✔", true);
+  render(root);
+  await saveLeadToCloud(lead);
+}
+
+async function markFollowupDone(root, id) {
+  const leads = load().map(ensureLeadShape);
+  const lead = leads.find(l => l.id === id);
+  if (!lead || lead.status === "Booked" || lead.status === "Lost") return;
+
+  lead.followupStep = Math.max(1, Number(lead.followupStep || 1));
+  if (lead.followupStep >= MAX_FOLLOWUPS) {
+    lead.nextFollowUp = "";
+    save(leads);
+    msg(root, `Follow-up #${MAX_FOLLOWUPS} done for ${lead.name}.`, true);
+    render(root);
+    await saveLeadToCloud(lead);
+    return;
+  }
+  lead.followupStep += 1;
+  lead.nextFollowUp = dueDateForStep(lead, lead.followupStep);
+  save(leads);
+  msg(root, `Follow-up done. Next: #${lead.followupStep} due ${fmtDatePretty(lead.nextFollowUp)}`, true);
+  render(root);
+  await saveLeadToCloud(lead);
+}
+
+function openPaymentsModal(root, id) {
+  const leads = load().map(ensureLeadShape);
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+
+  const overlay = document.createElement("div");
+  overlay.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; padding:18px; z-index:99999;";
+
+  const modal = document.createElement("div");
+  modal.style.cssText = "background:#FFFBF7; color:#1A1A2E; width:min(560px, 100%); border-radius:18px; padding:16px; box-shadow:0 18px 60px rgba(0,0,0,.25); font-family:Montserrat, sans-serif;";
+  modal.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+      <div>
+        <div style="font-weight:950; font-size:18px;">Payments</div>
+        <div style="opacity:.9; font-weight:800; font-size:13px;">Add a deposit + instalments. Balance updates automatically.</div>
+      </div>
+      <button type="button" class="m-close" style="border:none; background:#fff; border-radius:12px; padding:8px 10px; font-weight:950; cursor:pointer;">✕</button>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+      <div>
+        <label style="font-weight:900; font-size:13px;">Quoted price (€)</label>
+        <input class="m-quoted" type="number" inputmode="numeric" value="${Number(lead.priceQuoted||0)}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:800;">
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px;">Deposit paid (€)</label>
+        <input class="m-deposit" type="number" inputmode="numeric" value="${Number(lead.depositPaid||0)}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:800;">
+      </div>
+    </div>
+    <div style="margin-top:12px; background:#fff; border:1px solid rgba(26,26,46,.12); border-radius:14px; padding:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+        <div style="font-weight:950;">Instalments</div>
+        <button type="button" class="m-addpay" style="background:#FF6B35; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950;">+ Add instalment</button>
+      </div>
+      <div class="m-paylist" style="margin-top:10px; display:grid; gap:10px;"></div>
+    </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+      <div style="flex:1; min-width:150px; background:#EAF6EF; border-radius:14px; padding:10px;">
+        <div style="opacity:.85; font-weight:900; font-size:12px;">Total paid</div>
+        <div class="m-totalpaid" style="font-weight:950; font-size:18px;">€0</div>
+      </div>
+      <div style="flex:1; min-width:150px; background:#FFF1E6; border-radius:14px; padding:10px;">
+        <div style="opacity:.85; font-weight:900; font-size:12px;">Balance due</div>
+        <div class="m-balance" style="font-weight:950; font-size:18px;">€0</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:12px;">
+      <button type="button" class="m-save" style="flex:1; background:#1A1A2E; color:#fff; border:none; padding:12px 14px; border-radius:14px; cursor:pointer; font-weight:950;">Save</button>
+      <button type="button" class="m-cancel" style="flex:1; background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:12px 14px; border-radius:14px; cursor:pointer; font-weight:950;">Cancel</button>
+    </div>
+  `;
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  const paylist = modal.querySelector(".m-paylist");
+  const quotedEl = modal.querySelector(".m-quoted");
+  const depositEl = modal.querySelector(".m-deposit");
+
+  function makePayRow(value) {
+    const row = document.createElement("div");
+    row.style.cssText = "display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center;";
+    row.innerHTML = `
+      <input class="m-pay" type="number" inputmode="numeric" value="${Number(value||0)}" placeholder="€ amount" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:17px; font-weight:800;">
+      <button type="button" class="m-delpay" style="background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:950;">Remove</button>
+    `;
+    row.querySelector(".m-delpay").addEventListener("click", () => { row.remove(); recalc(); });
+    row.querySelector(".m-pay").addEventListener("input", recalc);
+    return row;
+  }
+
+  function getNumbers() {
+    const quoted = Number(quotedEl.value || 0);
+    const dep = Number(depositEl.value || 0);
+    const pays = Array.from(paylist.querySelectorAll(".m-pay")).map(i => Number(i.value||0)).filter(n => isFinite(n) && n > 0);
+    return { quoted, dep, pays, paid: dep + pays.reduce((s,x)=>s+x,0), bal: Math.max(0, quoted - dep - pays.reduce((s,x)=>s+x,0)) };
+  }
+
+  function recalc() {
+    const {paid, bal} = getNumbers();
+    modal.querySelector(".m-totalpaid").textContent = fmtEuro(paid);
+    modal.querySelector(".m-balance").textContent = fmtEuro(bal);
+  }
+
+  (lead.instalments || []).forEach(v => paylist.appendChild(makePayRow(v)));
+  if (!(lead.instalments || []).length) paylist.appendChild(makePayRow(0));
+
+  modal.querySelector(".m-addpay").addEventListener("click", () => { paylist.appendChild(makePayRow(0)); recalc(); });
+  quotedEl.addEventListener("input", recalc);
+  depositEl.addEventListener("input", recalc);
+
+  function close() { overlay.remove(); }
+  modal.querySelector(".m-close").addEventListener("click", close);
+  modal.querySelector(".m-cancel").addEventListener("click", close);
+
+  modal.querySelector(".m-save").addEventListener("click", async () => {
+    const {quoted, dep, pays} = getNumbers();
+    lead.priceQuoted = quoted;
+    lead.depositPaid = dep;
+    lead.instalments = pays;
+    if (lead.status !== "Lost") lead.status = "Booked";
+    lead.followupStep = 0;
+    lead.nextFollowUp = "";
+    save(leads);
+    close();
+    render(root);
+    await saveLeadToCloud(lead);
+  });
+
+  recalc();
+}
+
+async function toggleBooked(root, id) {
+  const leads = load().map(ensureLeadShape);
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+  if (lead.status === "Booked") {
+    lead.status = "Replied";
+    lead.followupStep = Math.max(1, Number(lead.followupStep || 1));
+    lead.nextFollowUp = dueDateForStep(lead, lead.followupStep);
+    save(leads);
+    render(root);
+    await saveLeadToCloud(lead);
+    return;
+  }
+  openPaymentsModal(root, id);
+}
+
+async function toggleLost(root, id) {
+  const leads = load().map(ensureLeadShape);
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+  if (lead.status === "Lost") {
+    lead.status = "Replied";
+    lead.followupStep = Math.max(1, Number(lead.followupStep || 1));
+    lead.nextFollowUp = dueDateForStep(lead, lead.followupStep);
+  } else {
+    lead.status = "Lost";
+    lead.followupStep = 0;
+    lead.nextFollowUp = "";
+  }
+  save(leads);
+  render(root);
+  await saveLeadToCloud(lead);
+}
+
+async function delLead(root, id) {
+  if (!confirm("Delete this lead?")) return;
+  const leads = load().filter(l => l.id !== id);
+  save(leads);
+  render(root);
+  await deleteLeadFromCloud(id);
+}
+
+async function editLead(root, id) {
+  const leads = load().map(ensureLeadShape);
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+
+  const overlay = document.createElement("div");
+  overlay.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; padding:18px; z-index:99999;";
+
+  const modal = document.createElement("div");
+  modal.style.cssText = "background:#FFFBF7; color:#1A1A2E; width:min(560px, 100%); border-radius:18px; padding:20px; box-shadow:0 18px 60px rgba(0,0,0,.25); font-family:Montserrat, sans-serif; max-height:90vh; overflow-y:auto;";
+  modal.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:16px;">
+      <div style="font-weight:950; font-size:18px;">Edit Lead</div>
+      <button type="button" class="e-close" style="border:none; background:#fff; border-radius:12px; padding:8px 10px; font-weight:950; cursor:pointer;">✕</button>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div style="grid-column:1/-1;">
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Couple name</label>
+        <input class="e-name" type="text" value="${(lead.name||'').replace(/"/g,'&quot;')}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Venue</label>
+        <input class="e-venue" type="text" value="${(lead.venue||'').replace(/"/g,'&quot;')}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Email</label>
+        <input class="e-email" type="email" value="${(lead.email||'').replace(/"/g,'&quot;')}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Lead source</label>
+        <select class="e-source" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; background:#fff; font-family:Montserrat,sans-serif;">
+          ${['Instagram','Website','Referral','Venue','Vendor','Facebook','TikTok','Other'].map(s => `<option value="${s}" ${lead.source===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Status</label>
+        <select class="e-status" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; background:#fff; font-family:Montserrat,sans-serif;">
+          <option value="Replied" ${lead.status==='Replied'?'selected':''}>Replied</option>
+          <option value="Deposit Paid" ${lead.status==='Deposit Paid'?'selected':''}>Deposit Paid</option>
+          <option value="Booked" ${lead.status==='Booked'?'selected':''}>Booked</option>
+          <option value="Lost" ${lead.status==='Lost'?'selected':''}>Lost</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Next follow-up date</label>
+        <input class="e-followup" type="date" value="${lead.nextFollowUp||''}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+      </div>
+      <div>
+        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Wedding date</label>
+        <input class="e-wedding" type="date" value="${lead.weddingDate||''}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+      </div>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:16px;">
+      <button type="button" class="e-save" style="flex:1; background:#FF6B35; color:#fff; border:none; padding:13px; border-radius:14px; cursor:pointer; font-weight:950; font-size:15px; font-family:Montserrat,sans-serif;">Save changes</button>
+      <button type="button" class="e-cancel" style="flex:1; background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:13px; border-radius:14px; cursor:pointer; font-weight:950; font-size:15px; font-family:Montserrat,sans-serif;">Cancel</button>
+    </div>
+  `;
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  function close() { overlay.remove(); }
+  modal.querySelector(".e-close").addEventListener("click", close);
+  modal.querySelector(".e-cancel").addEventListener("click", close);
+
+  modal.querySelector(".e-save").addEventListener("click", async () => {
+    lead.name = modal.querySelector(".e-name").value.trim();
+    lead.venue = modal.querySelector(".e-venue").value.trim();
+    lead.email = modal.querySelector(".e-email").value.trim();
+    lead.source = modal.querySelector(".e-source").value;
+    const newStatus = modal.querySelector(".e-status").value;
+    const newFollowup = modal.querySelector(".e-followup").value;
+    const newWedding = modal.querySelector(".e-wedding").value;
+
+    lead.status = newStatus;
+    lead.weddingDate = newWedding;
+
+    if (newStatus === "Lost") {
+      lead.followupStep = 0; lead.nextFollowUp = "";
+    } else if (newStatus === "Booked") {
+      lead.followupStep = 0; lead.nextFollowUp = "";
+    } else {
+      lead.nextFollowUp = newFollowup || dueDateForStep(lead, Math.max(1, Number(lead.followupStep||1)));
+    }
+
+    save(leads);
+    close();
+    render(root);
+    await saveLeadToCloud(lead);
+
+    if (newStatus === "Booked") openPaymentsModal(root, id);
+  });
+}
+
+function exportCSV() {
+  const leads = load().map(ensureLeadShape);
+  const headers = ["Couple","Lead Source","Status","Enquiry Date","Wedding Date","Venue","Email","Follow-up Step","Next Follow-up","Quoted (€)","Deposit (€)","Instalments (list)","Instalments Total (€)","Total Paid (€)","Balance (€)"];
+  const rows = leads.map(l => ([l.name||"",l.source||"",l.status||"",fmtDatePretty(l.enquiryDate||""),fmtDatePretty(l.weddingDate||""),l.venue||"",l.email||"",l.followupStep||0,fmtDatePretty(l.nextFollowUp||""),Number(l.priceQuoted||0),Number(l.depositPaid||0),(l.instalments||[]).join(";"),totalInstalments(l),totalPaid(l),balanceDue(l)]));
+  const csv = [headers.map(csvEscape).join(","), ...rows.map(r => r.map(csvEscape).join(","))].join("\n");
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = "wbw-leads.csv";
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+
+function backupJSON() {
+  const data = load();
+  const blob = new Blob([JSON.stringify({version:"v4-supabase", exportedAt:new Date().toISOString(), leads:data}, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = "wbw-leads-backup.json";
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+
+async function restoreJSON(root, file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      const parsed = JSON.parse(String(reader.result || "{}"));
+      const leads = parsed.leads || parsed || [];
+      if (!Array.isArray(leads)) throw new Error("Invalid");
+      save(leads);
+      for (const lead of leads) await saveLeadToCloud(lead);
+      alert("Restore complete ✔");
+      render(root);
+    } catch { alert("That file didn't look like a valid backup."); }
+  };
+  reader.readAsText(file);
+}
+
+async function clearAll(root) {
+  if (!confirm("This will delete ALL your leads. This cannot be undone. Continue?")) return;
+  save([]);
+  await deleteAllLeadsFromCloud();
+  render(root);
+}
+
+function bindTool(root) {
+  if (root.dataset.wbwBound === "1") return;
+  root.dataset.wbwBound = "1";
+
+  const dateEl = root.querySelector(".lt-enquiryDate");
+  if (dateEl && !dateEl.value) dateEl.value = todayISO();
+
+  root.querySelector(".lt-add")?.addEventListener("click", () => addLead(root));
+  root.querySelector(".lt-export-csv")?.addEventListener("click", exportCSV);
+  root.querySelector(".lt-export-json")?.addEventListener("click", backupJSON);
+  root.querySelector(".lt-clear")?.addEventListener("click", () => clearAll(root));
+  root.querySelector(".lt-import")?.addEventListener("change", (e) => restoreJSON(root, e.target.files?.[0]));
+
+  root.addEventListener("click", (e) => {
+    const t = e.target;
+    if (!(t instanceof HTMLElement)) return;
+    const f = t.getAttribute("data-followup"); if (f) return markFollowupDone(root, f);
+    const ed = t.getAttribute("data-edit"); if (ed) return editLead(root, ed);
+    const bk = t.getAttribute("data-booked"); if (bk) return toggleBooked(root, bk);
+    const pay = t.getAttribute("data-pay"); if (pay) return openPaymentsModal(root, pay);
+    const ls = t.getAttribute("data-lost"); if (ls) return toggleLost(root, ls);
+    const dl = t.getAttribute("data-del"); if (dl) return delLead(root, dl);
+  });
+
+  render(root);
+}
+</script>
+
+</div><!-- end lt-root -->
+</html>
