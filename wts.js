@@ -511,8 +511,8 @@ document.addEventListener('DOMContentLoaded', function() {
   on('retake-btn', resetAssessment);
 });
 
-  // Wire up buttons
-  document.addEventListener('DOMContentLoaded', function() {
+  // Wire up buttons — use interval in case DOM not ready yet
+  function wireButtons() {
     const on = (id, fn) => { const e = document.getElementById(id); if(e) e.addEventListener('click', fn); };
     on('tab-in-btn', () => switchTab('in'));
     on('tab-up-btn', () => switchTab('up'));
@@ -521,5 +521,9 @@ document.addEventListener('DOMContentLoaded', function() {
     on('signout-btn', signOut);
     on('start-btn',  startAssessment);
     on('retake-btn', resetAssessment);
-  });
+  }
+  // Try immediately, then again after short delay
+  wireButtons();
+  setTimeout(wireButtons, 500);
+  setTimeout(wireButtons, 1500);
 })();
