@@ -1,358 +1,311 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
 <head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>WBW Lead Tracker</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WBW Lead Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Montserrat, sans-serif; background: #FFFBF7; color: #1A1A2E; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Montserrat, sans-serif; background: #FFFBF7; color: #1A1A2E; }
 
+/* AUTH */
+#auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: #FFFBF7; }
+.auth-box { background: #fff; border-radius: 20px; padding: 36px 32px; width: 100%; max-width: 420px; box-shadow: 0 8px 40px rgba(26,26,46,0.10); }
+.auth-box h1 { font-size: 24px; font-weight: 900; color: #FF6B35; margin-bottom: 6px; }
+.auth-box p { font-size: 14px; font-weight: 600; opacity: .75; margin-bottom: 24px; }
+.auth-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+.auth-tab { flex: 1; padding: 10px; border-radius: 12px; border: 1px solid rgba(26,26,46,.2); background: #fff; color: #1A1A2E; font-weight: 800; font-size: 14px; cursor: pointer; transition: all .2s; font-family: Montserrat, sans-serif; }
+.auth-tab.active { background: #FF6B35; color: #fff; border-color: #FF6B35; }
+.auth-field { margin-bottom: 14px; }
+.auth-field label { display: block; font-weight: 800; font-size: 13px; margin-bottom: 6px; }
+.auth-field input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #ddd; font-size: 15px; font-weight: 600; font-family: Montserrat, sans-serif; outline: none; transition: border-color .2s; }
+.auth-field input:focus { border-color: #FF6B35; }
+.auth-btn { width: 100%; padding: 13px; background: #FF6B35; color: #fff; border: none; border-radius: 14px; font-size: 16px; font-weight: 900; cursor: pointer; margin-top: 6px; transition: opacity .2s; font-family: Montserrat, sans-serif; }
+.auth-btn:hover { opacity: .88; }
+.auth-btn:disabled { opacity: .5; cursor: not-allowed; }
+.auth-msg { margin-top: 12px; font-size: 13px; font-weight: 700; text-align: center; min-height: 20px; }
+.auth-msg.error { color: #8a2a2a; }
+.auth-msg.success { color: #246b3a; }
 
+/* TOP BAR */
+#app-screen { display: none; }
+#top-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: #FF6B35; color: #fff; }
+#top-bar .brand { font-weight: 900; font-size: 16px; }
+#top-bar .user-info { font-size: 13px; font-weight: 700; opacity: .85; }
+#sign-out-btn { background: rgba(255,255,255,.15); color: #fff; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; font-family: Montserrat, sans-serif; }
+#sign-out-btn:hover { background: rgba(255,255,255,.25); }
 
-  /* AUTH SCREEN */
-  #auth-screen {
-    min-height: unset;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: #FFFBF7;
-  }
-  .auth-box {
-    background: #fff;
-    border-radius: 20px;
-    padding: 36px 32px;
-    width: 100%;
-    max-width: 420px;
-    box-shadow: 0 8px 40px rgba(26,26,46,0.10);
-  }
-  .auth-box h1 { font-size: 24px; font-weight: 900; color: #FF6B35; margin-bottom: 6px; }
-  .auth-box p { font-size: 14px; font-weight: 600; opacity: .75; margin-bottom: 24px; }
-  .auth-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
-  .auth-tab {
-    flex: 1; padding: 10px; border-radius: 12px; border: 1px solid rgba(26,26,46,.2);
-    background: #fff; color: #1A1A2E; font-weight: 800; font-size: 14px;
-    cursor: pointer; transition: all .2s;
-  }
-  .auth-tab.active { background: #FF6B35; color: #fff; border-color: #FF6B35; }
-  .auth-field { margin-bottom: 14px; }
-  .auth-field label { display: block; font-weight: 800; font-size: 13px; margin-bottom: 6px; }
-  .auth-field input {
-    width: 100%; padding: 12px 14px; border-radius: 12px;
-    border: 1px solid #ddd; font-size: 15px; font-weight: 600;
-    font-family: Montserrat, sans-serif; outline: none;
-    transition: border-color .2s;
-  }
-  .auth-field input:focus { border-color: #FF6B35; }
-  .auth-btn {
-    width: 100%; padding: 13px; background: #FF6B35; color: #fff;
-    border: none; border-radius: 14px; font-size: 16px; font-weight: 900;
-    cursor: pointer; margin-top: 6px; transition: opacity .2s;
-    font-family: Montserrat, sans-serif;
-  }
-  .auth-btn:hover { opacity: .88; }
-  .auth-btn:disabled { opacity: .5; cursor: not-allowed; }
-  .auth-msg { margin-top: 12px; font-size: 13px; font-weight: 700; text-align: center; min-height: 20px; }
-  .auth-msg.error { color: #8a2a2a; }
-  .auth-msg.success { color: #246b3a; }
+/* MAIN */
+.tracker { padding: 20px; max-width: 1100px; margin: auto; }
+.section { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+.section-title { font-size: 18px; font-weight: 900; margin-bottom: 14px; }
 
-  /* TOP BAR */
-  #top-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 20px; background: #FF6B35; color: #fff;
-    font-family: Montserrat, sans-serif;
-  }
-  #top-bar .brand { font-weight: 900; font-size: 16px; }
-  #top-bar .user-info { font-size: 13px; font-weight: 700; opacity: .85; }
-  #sign-out-btn {
-    background: rgba(255,255,255,.15); color: #fff; border: none;
-    padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 13px;
-    cursor: pointer; font-family: Montserrat, sans-serif;
-  }
-  #sign-out-btn:hover { background: rgba(255,255,255,.25); }
+/* ADD LEAD FORM */
+.add-form { background: #FFF0E8; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grid label { display: block; font-weight: 800; font-size: 13px; margin-bottom: 5px; }
+.form-grid input, .form-grid select { width: 100%; padding: 11px 13px; border-radius: 11px; border: 1px solid #ddd; font-size: 14px; font-weight: 600; font-family: Montserrat, sans-serif; background: #fff; }
+.form-grid input:focus, .form-grid select:focus { outline: none; border-color: #FF6B35; }
+.full-col { grid-column: 1 / -1; }
+.add-btn { width: 100%; padding: 13px; background: #FF6B35; color: #fff; border: none; border-radius: 13px; font-size: 16px; font-weight: 900; cursor: pointer; font-family: Montserrat, sans-serif; margin-top: 4px; }
+.add-btn:hover { opacity: .9; }
+.add-msg { margin-top: 8px; font-size: 13px; font-weight: 700; min-height: 18px; }
+.add-msg.ok { color: #246b3a; }
+.add-msg.err { color: #8a2a2a; }
 
-  /* MAIN APP */
-  #app-screen { display: none; }
+/* FOLLOW UPS */
+.followup-card { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px; border: 2px solid #FF6B35; border-radius: 14px; margin-top: 10px; background: #FFFBF7; }
+.followup-card .details { flex: 1; }
+.followup-card .name { font-weight: 950; font-size: 15px; }
+.followup-card .due { font-size: 13px; font-weight: 800; color: #FF6B35; margin-top: 3px; }
+.followup-card .venue-txt { font-size: 12px; font-weight: 700; opacity: .7; margin-top: 2px; }
+.followup-card .done-msg { font-size: 13px; font-weight: 800; color: #246b3a; margin-top: 4px; display: none; }
+.mark-done-btn { background: #FF6B35; color: #fff; border: none; padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 900; font-size: 13px; white-space: nowrap; font-family: Montserrat, sans-serif; flex-shrink: 0; }
+.mark-done-btn:disabled { opacity: .5; }
+.all-clear { background: #EAF6EF; border-radius: 12px; padding: 12px 16px; font-weight: 800; color: #246b3a; font-size: 14px; }
 
-  /* SAVE STATUS */
-  #save-status {
-    position: fixed; bottom: 20px; right: 20px;
-    background: #246b3a; color: #fff;
-    padding: 10px 16px; border-radius: 12px;
-    font-size: 13px; font-weight: 800;
-    opacity: 0; transition: opacity .3s;
-    z-index: 9999;
-    font-family: Montserrat, sans-serif;
-  }
-  #save-status.show { opacity: 1; }
-  #save-status.error { background: #8a2a2a; }
+/* LEADS TABLE */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 700px; font-size: 14px; }
+thead tr { border-bottom: 2px solid rgba(26,26,46,.12); }
+th { padding: 10px 12px; font-weight: 900; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; opacity: .6; text-align: left; }
+td { padding: 10px 12px; border-top: 1px solid rgba(26,26,46,.08); vertical-align: top; }
+.chip { display: inline-block; padding: 5px 10px; border-radius: 999px; font-weight: 900; font-size: 11px; }
+.chip-replied { background: #E9EEFF; color: #1A1A2E; }
+.chip-deposit { background: #FFF0E8; color: #C45000; }
+.chip-booked { background: #EAF6EF; color: #246b3a; }
+.chip-lost { background: #FBEAEA; color: #8a2a2a; }
 
-  /* TOOL STYLES (existing) */
-  .wbw-lead-tracker {
-    font-family: Montserrat, sans-serif;
-    font-size: 17px; font-weight: 650; line-height: 1.5;
-    background: #FFFBF7; color: #1A1A2E;
-    padding: 22px; border-radius: 16px;
-    max-width: 1100px; margin: auto;
-  }
-  input, select, button { font-family: Montserrat, sans-serif; }
+/* ACTION BUTTONS */
+.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; min-width: 150px; }
+.action-grid button { padding: 7px 8px; border-radius: 10px; font-weight: 900; font-size: 12px; cursor: pointer; font-family: Montserrat, sans-serif; border: none; }
+.btn-edit { background: #1A1A2E; color: #fff; }
+.btn-pay { background: #FF6B35; color: #fff; }
+.btn-booked { background: #246b3a; color: #fff; }
+.btn-unbook { background: #FF6B35; color: #fff; }
+.btn-lost { background: #fff; color: #1A1A2E; border: 1px solid rgba(26,26,46,.25) !important; }
+.btn-undo { background: #fff; color: #8a2a2a; border: 1px solid #8a2a2a !important; }
+.btn-del { grid-column: 1/-1; background: #fff; color: #991b1b; border: 1px solid #991b1b !important; }
+
+/* STATS */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.stat-card { background: #FFFBF7; border-radius: 14px; padding: 14px; }
+.stat-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; opacity: .6; margin-bottom: 4px; }
+.stat-value { font-size: 22px; font-weight: 900; }
+
+/* TOAST */
+#toast { position: fixed; bottom: 20px; right: 20px; background: #246b3a; color: #fff; padding: 10px 18px; border-radius: 12px; font-size: 13px; font-weight: 800; opacity: 0; transition: opacity .3s; z-index: 9999; font-family: Montserrat, sans-serif; }
+#toast.show { opacity: 1; }
+
+/* MODAL */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; padding: 18px; z-index: 99999; }
+.modal { background: #FFFBF7; color: #1A1A2E; width: min(560px, 100%); border-radius: 18px; padding: 22px; box-shadow: 0 18px 60px rgba(0,0,0,.25); font-family: Montserrat, sans-serif; max-height: 90vh; overflow-y: auto; }
+.modal-title { font-size: 18px; font-weight: 950; margin-bottom: 4px; }
+.modal-sub { font-size: 13px; font-weight: 700; opacity: .7; margin-bottom: 16px; }
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.modal-grid label { display: block; font-weight: 900; font-size: 12px; margin-bottom: 5px; }
+.modal-grid input, .modal-grid select { width: 100%; padding: 11px 13px; border-radius: 11px; border: 1px solid #ddd; font-size: 14px; font-weight: 700; font-family: Montserrat, sans-serif; background: #fff; }
+.modal-grid .full { grid-column: 1/-1; }
+.modal-btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+.modal-btn-row button { flex: 1; min-width: 120px; padding: 12px; border-radius: 13px; font-size: 14px; font-weight: 900; cursor: pointer; font-family: Montserrat, sans-serif; border: none; }
+.mbtn-primary { background: #FF6B35; color: #fff; }
+.mbtn-dark { background: #1A1A2E; color: #fff; }
+.mbtn-ghost { background: #fff; color: #1A1A2E; border: 1px solid rgba(26,26,46,.25) !important; }
+.pay-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; margin-top: 8px; }
+.pay-row input { width: 100%; padding: 10px 12px; border-radius: 11px; border: 1px solid #ddd; font-size: 14px; font-weight: 700; font-family: Montserrat, sans-serif; }
+.pay-summary { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.pay-summary-card { flex: 1; min-width: 130px; border-radius: 13px; padding: 12px; }
+
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .modal-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
-
-<!-- AUTH SCREEN -->
-<div id="lt-root">
-
+<!-- AUTH -->
 <div id="auth-screen">
   <div class="auth-box">
     <h1>WBW Lead Tracker</h1>
     <p>Your leads, saved securely in the cloud.</p>
-
     <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
-      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Create Account</button>
+      <button class="auth-tab active" id="tab-signin">Sign In</button>
+      <button class="auth-tab" id="tab-signup">Create Account</button>
     </div>
-
     <div id="form-signin">
-      <div class="auth-field">
-        <label>Email</label>
-        <input type="email" id="signin-email" placeholder="you@example.com">
-      </div>
-      <div class="auth-field">
-        <label>Password</label>
-        <input type="password" id="signin-password" placeholder="Your password">
-      </div>
-      <button class="auth-btn" id="signin-btn" onclick="signIn()">Sign In</button>
+      <div class="auth-field"><label>Email</label><input type="email" id="signin-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="signin-password" placeholder="Your password"></div>
+      <button class="auth-btn" id="signin-btn">Sign In</button>
       <div class="auth-msg" id="signin-msg"></div>
     </div>
-
     <div id="form-signup" style="display:none;">
-      <div class="auth-field">
-        <label>Email</label>
-        <input type="email" id="signup-email" placeholder="you@example.com">
-      </div>
-      <div class="auth-field">
-        <label>Password</label>
-        <input type="password" id="signup-password" placeholder="Choose a password (min 6 chars)">
-      </div>
-      <button class="auth-btn" id="signup-btn" onclick="signUp()">Create Account</button>
+      <div class="auth-field"><label>Email</label><input type="email" id="signup-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="signup-password" placeholder="Choose a password (min 6 chars)"></div>
+      <button class="auth-btn" id="signup-btn">Create Account</button>
       <div class="auth-msg" id="signup-msg"></div>
     </div>
   </div>
 </div>
 
-<!-- APP SCREEN -->
+<!-- APP -->
 <div id="app-screen">
   <div id="top-bar">
     <div class="brand">WBW Lead Tracker</div>
-    <div style="display:flex; align-items:center; gap:14px;">
+    <div style="display:flex; align-items:center; gap:12px;">
       <div class="user-info" id="user-email-display"></div>
-      <button id="sign-out-btn" onclick="signOut()">Sign out</button>
+      <button id="sign-out-btn">Sign out</button>
     </div>
   </div>
 
-  <!-- LEAD TRACKER TOOL (your original, unchanged) -->
-  <div class="wbw-lead-tracker">
+  <div class="tracker">
 
     <!-- HEADER -->
-    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:16px; padding-top:4px;">
       <div>
-        <h2 style="margin:0 0 6px 0; font-size:28px;">Lead Tracker</h2>
-        <div style="opacity:.92; font-weight:650;">Track enquiries, follow up on time, and see where your best leads come from.</div>
+        <h2 style="font-size:26px; font-weight:900; margin-bottom:4px;">Lead Tracker</h2>
+        <div style="font-size:14px; font-weight:600; opacity:.7;">Track enquiries, follow up on time, and see where your best leads come from.</div>
       </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button type="button" class="lt-export-csv" style="background:#FF6B35; color:#fff; border:none; padding:10px 12px; border-radius:12px; font-weight:900; cursor:pointer;">Export CSV</button>
-        <button type="button" class="lt-export-json" style="background:#1A1A2E; color:#fff; border:none; padding:10px 12px; border-radius:12px; font-weight:900; cursor:pointer;">Backup</button>
-        <label style="background:#1A1A2E; color:#fff; padding:10px 12px; border-radius:12px; font-weight:900; cursor:pointer; display:inline-block;">
-          Restore <input class="lt-import" type="file" accept="application/json" style="display:none;">
-        </label>
-        <button type="button" class="lt-clear" style="background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:10px 12px; border-radius:12px; font-weight:900; cursor:pointer;">Clear All</button>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button id="export-csv-btn" style="background:#FF6B35; color:#fff; border:none; padding:9px 14px; border-radius:11px; font-weight:900; font-size:13px; cursor:pointer; font-family:Montserrat,sans-serif;">Export CSV</button>
+        <button id="backup-btn" style="background:#1A1A2E; color:#fff; border:none; padding:9px 14px; border-radius:11px; font-weight:900; font-size:13px; cursor:pointer; font-family:Montserrat,sans-serif;">Backup</button>
+        <label style="background:#1A1A2E; color:#fff; padding:9px 14px; border-radius:11px; font-weight:900; font-size:13px; cursor:pointer; font-family:Montserrat,sans-serif;">Restore <input id="restore-input" type="file" accept="application/json" style="display:none;"></label>
+        <button id="clear-all-btn" style="background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.2); padding:9px 14px; border-radius:11px; font-weight:900; font-size:13px; cursor:pointer; font-family:Montserrat,sans-serif;">Clear All</button>
       </div>
     </div>
 
+    <!-- STATS -->
+    <div class="stats-grid" id="stats-row" style="margin-bottom:16px;"></div>
+
     <!-- ADD LEAD -->
-    <div style="background:#FFF0E8; padding:16px; border-radius:14px; margin-top:16px;">
-      <h3 style="margin:0 0 12px 0; font-size:19px;">Add a Lead</h3>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-        <div>
-          <label style="font-weight:900;">Couple name</label>
-          <input class="lt-name" type="text" placeholder="e.g. Sarah & Ben" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:650;">
-        </div>
-        <div>
-          <label style="font-weight:900;">Enquiry date</label>
-          <input class="lt-enquiryDate" type="date" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:650;">
-        </div>
-        <div>
-          <label style="font-weight:900;">Wedding date</label>
-          <input class="lt-weddingDate" type="date" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:650;">
-        </div>
-        <div>
-          <label style="font-weight:900;">Venue</label>
-          <input class="lt-venue" type="text" placeholder="e.g. The Haven Hotel" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:650;">
-        </div>
-        <div>
-          <label style="font-weight:900;">Email</label>
-          <input class="lt-email" type="email" placeholder="email@example.com" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:650;">
-        </div>
-        <div>
-          <label style="font-weight:900;">Lead source</label>
-          <select class="lt-source" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; background:#fff; font-size:17px; font-weight:800;">
-            <option value="Instagram">Instagram</option>
-            <option value="Website">Website</option>
-            <option value="Referral">Referral</option>
-            <option value="Venue">Venue</option>
-            <option value="Vendor">Vendor</option>
-            <option value="Facebook">Facebook</option>
-            <option value="TikTok">TikTok</option>
-            <option value="Other">Other</option>
+    <div class="add-form">
+      <div class="section-title">Add a Lead</div>
+      <div class="form-grid">
+        <div><label>Couple name</label><input type="text" id="f-name" placeholder="e.g. Sarah & Ben"></div>
+        <div><label>Enquiry date</label><input type="date" id="f-enquiry"></div>
+        <div><label>Wedding date</label><input type="date" id="f-wedding"></div>
+        <div><label>Venue</label><input type="text" id="f-venue" placeholder="e.g. The Haven Hotel"></div>
+        <div><label>Email</label><input type="email" id="f-email" placeholder="email@example.com"></div>
+        <div><label>Phone</label><input type="text" id="f-phone" placeholder="e.g. 086 123 4567"></div>
+        <div><label>Lead source</label>
+          <select id="f-source">
+            <option>Instagram</option><option>Website</option><option>Referral</option>
+            <option>Venue</option><option>Vendor</option><option>Facebook</option>
+            <option>TikTok</option><option>Other</option>
           </select>
         </div>
-        <div>
-          <label style="font-weight:900;">Status</label>
-          <select class="lt-status" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; background:#fff; font-size:17px; font-weight:800;">
+        <div><label>Status</label>
+          <select id="f-status">
             <option value="Replied">Replied</option>
+            <option value="Deposit Paid">Deposit Paid</option>
             <option value="Booked">Booked</option>
             <option value="Lost">Lost</option>
           </select>
         </div>
-        <div>
-          <label style="font-weight:900;">Price quoted (€)</label>
-          <input class="lt-price" type="number" inputmode="numeric" placeholder="e.g. 950" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:650;">
-        </div>
-        <div style="grid-column: 1 / -1;">
-          <button type="button" class="lt-add" style="background:#FF6B35; color:#fff; border:none; padding:12px 14px; border-radius:14px; font-weight:950; cursor:pointer; width:100%; font-size:17px;">Add Lead</button>
-          <div class="lt-msg" style="margin-top:10px; font-size:14px; opacity:.95; font-weight:850;"></div>
-        </div>
+        <div><label>Price quoted (€)</label><input type="number" id="f-price" placeholder="e.g. 2500"></div>
+
+        <div class="full-col"><button class="add-btn" id="add-lead-btn">+ Add Lead</button></div>
+        <div class="full-col"><div class="add-msg" id="add-msg"></div></div>
       </div>
     </div>
 
-    <!-- TASKS -->
-    <div style="margin-top:16px; background:#fff; padding:16px; border-radius:14px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
-        <h3 style="margin:0; font-size:19px;">Follow-ups Due</h3>
-        <div style="opacity:.85; font-size:14px; font-weight:800;">Follow-ups appear when they're due, and stay until marked done.</div>
+    <!-- FOLLOW UPS DUE -->
+    <div class="section">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div class="section-title" style="margin-bottom:0;">Follow-ups Due Today</div>
+        <div id="today-date" style="font-size:13px; font-weight:800; opacity:.6;"></div>
       </div>
-      <div class="lt-tasks" style="margin-top:10px;"></div>
+      <div id="followups-list"></div>
     </div>
 
     <!-- LEADS TABLE -->
-    <div style="margin-top:16px; background:#fff; padding:16px; border-radius:14px;">
-      <h3 style="margin:0 0 10px 0; font-size:19px;">Your Leads</h3>
-      <div style="overflow:auto;">
-        <table style="width:100%; border-collapse:collapse; min-width:1450px; font-size:16px;">
+    <div class="section">
+      <div class="section-title">Your Leads</div>
+      <div class="table-wrap">
+        <table>
           <thead>
-            <tr style="text-align:left; border-bottom:1px solid rgba(26,26,46,.15);">
-              <th style="padding:10px;">Couple</th>
-              <th style="padding:10px;">Source</th>
-              <th style="padding:10px;">Status</th>
-              <th style="padding:10px;">Enquiry</th>
-              <th style="padding:10px;">Wedding</th>
-              <th style="padding:10px;">Next follow-up</th>
-              <th style="padding:10px;">Quoted</th>
-              <th style="padding:10px;">Paid</th>
-              <th style="padding:10px;">Balance</th>
-              <th style="padding:10px;">Actions</th>
+            <tr>
+              <th>Couple</th>
+              <th>Source</th>
+              <th>Status</th>
+              <th>Enquiry</th>
+              <th>Wedding</th>
+              <th>Next Follow-up</th>
+              <th>Quoted</th>
+              <th>Paid</th>
+              <th>Balance</th>
+              <th>Actions</th>
             </tr>
           </thead>
-          <tbody class="lt-table"></tbody>
+          <tbody id="leads-tbody"></tbody>
         </table>
       </div>
     </div>
 
     <!-- SOURCE PERFORMANCE -->
-    <div style="margin-top:16px; background:#fff; padding:16px; border-radius:14px;">
-      <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap;">
-        <div>
-          <h3 style="margin:0 0 6px 0; font-size:19px;">Lead Source Performance</h3>
-          <div style="opacity:.85; font-size:14px; font-weight:800;">See where most leads are coming from.</div>
-        </div>
-        <div style="display:flex; gap:12px; flex-wrap:wrap;">
-          <div style="padding:12px; border-radius:16px; min-width:240px; background:#E9EEFF;">
-            <div style="opacity:.85; font-size:12px; font-weight:900;">Top lead source</div>
-            <div class="lt_topLeads" style="font-weight:950; font-size:16px;">—</div>
-          </div>
-          <div style="padding:12px; border-radius:16px; min-width:240px; background:#EAF6EF;">
-            <div style="opacity:.85; font-size:12px; font-weight:900;">Second best</div>
-            <div class="lt_secondLeads" style="font-weight:950; font-size:16px;">—</div>
-          </div>
-        </div>
-      </div>
-      <div class="lt-sourceCards" style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;"></div>
-      <div style="overflow:auto; margin-top:12px;">
-        <table style="width:100%; border-collapse:collapse; min-width:880px; font-size:16px;">
-          <thead>
-            <tr style="text-align:left; border-bottom:1px solid rgba(26,26,46,.15);">
-              <th style="padding:10px;">Source</th>
-              <th style="padding:10px;">Leads</th>
-              <th style="padding:10px;">Booked</th>
-              <th style="padding:10px;">Booking rate</th>
-              <th style="padding:10px;">Booked value</th>
-            </tr>
-          </thead>
-          <tbody class="lt-sourceTable"></tbody>
+    <div class="section">
+      <div class="section-title">Lead Source Performance</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Source</th><th>Leads</th><th>Booked</th><th>Rate</th><th>Value</th></tr></thead>
+          <tbody id="source-tbody"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- BOOKING TOTALS -->
-    <div style="margin-top:16px; background:#fff; padding:16px; border-radius:14px;">
-      <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap;">
-        <div>
-          <h3 style="margin:0 0 6px 0; font-size:19px;">Booking Totals</h3>
-          <div style="opacity:.85; font-size:14px; font-weight:800;">Net earnings = cash received so far (deposit + instalments).</div>
-        </div>
-        <div style="display:flex; gap:12px; flex-wrap:wrap;">
-          <div style="padding:12px; border-radius:16px; min-width:190px; background:#FFF0E8;">
-            <div style="opacity:.85; font-size:12px; font-weight:900;">Total booked value</div>
-            <div class="lt_totalBooked" style="font-weight:950; font-size:18px;">€0</div>
-          </div>
-          <div style="padding:12px; border-radius:16px; min-width:190px; background:#EAF6EF;">
-            <div style="opacity:.85; font-size:12px; font-weight:900;">Net earnings</div>
-            <div class="lt_totalNet" style="font-weight:950; font-size:18px;">€0</div>
-          </div>
-          <div style="padding:12px; border-radius:16px; min-width:190px; background:#E9EEFF;">
-            <div style="opacity:.85; font-size:12px; font-weight:900;">Total paid</div>
-            <div class="lt_totalPaid" style="font-weight:950; font-size:18px;">€0</div>
-          </div>
-          <div style="padding:12px; border-radius:16px; min-width:190px; background:#FFF1E6;">
-            <div style="opacity:.85; font-size:12px; font-weight:900;">Outstanding balance</div>
-            <div class="lt_totalBalance" style="font-weight:950; font-size:18px;">€0</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div style="margin-top:18px; font-size:13px; opacity:.85; font-weight:800;">
-      Your data is saved securely to the cloud. Access it from any device by signing in.
-    </div>
   </div>
 </div>
 
-<!-- SAVE STATUS TOAST -->
-<div id="save-status">✓ Saved</div>
+<div id="toast">✓ Saved</div>
 
 <script>
-// ─── SUPABASE INIT ───────────────────────────────────────────────────────────
+// ── SUPABASE ──────────────────────────────────────────────────────────
 const SUPABASE_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_CS3XLLfWaZNA-B2oE37N-g_z2FMWCzq";
-const { createClient } = supabase;
-// Safe init — reuse existing client if already created on this page
 if (!window._wbwSb) {
-  window._wbwSb = createClient(SUPABASE_URL, SUPABASE_KEY, {
+  window._wbwSb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: { storageKey: 'wbw-auth', autoRefreshToken: true, persistSession: true }
   });
 }
 const sb = window._wbwSb;
-
 let currentUser = null;
+let leads = [];
 
-// ─── AUTH UI ─────────────────────────────────────────────────────────────────
+// ── HELPERS ───────────────────────────────────────────────────────────
+const esc = s => String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const fmtEuro = n => "€" + Number(n||0).toLocaleString("en-IE", {minimumFractionDigits:0, maximumFractionDigits:0});
+const todayISO = () => new Date().toISOString().slice(0,10);
+function fmtDate(iso) {
+  if (!iso) return "";
+  const [y,m,d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+function chipHtml(status) {
+  const map = { "Replied":"replied", "Deposit Paid":"deposit", "Booked":"booked", "Lost":"lost" };
+  return `<span class="chip chip-${map[status]||'replied'}">${esc(status)}</span>`;
+}
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg || "✓ Saved";
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2500);
+}
+function dueDateFromEnquiry(enquiryDate, days) {
+  const d = new Date(enquiryDate || todayISO());
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0,10);
+}
+const FOLLOWUP_DAYS = [3, 7, 14, 30];
+
+// ── AUTH ──────────────────────────────────────────────────────────────
+document.getElementById("tab-signin").onclick = () => switchTab("signin");
+document.getElementById("tab-signup").onclick = () => switchTab("signup");
+document.getElementById("signin-btn").onclick = signIn;
+document.getElementById("signup-btn").onclick = signUp;
+document.getElementById("sign-out-btn").onclick = signOut;
+
 function switchTab(tab) {
   document.getElementById("form-signin").style.display = tab === "signin" ? "" : "none";
   document.getElementById("form-signup").style.display = tab === "signup" ? "" : "none";
@@ -362,55 +315,35 @@ function switchTab(tab) {
 
 async function signIn() {
   const email = document.getElementById("signin-email").value.trim();
-  const password = document.getElementById("signin-password").value;
-  const msgEl = document.getElementById("signin-msg");
+  const pass = document.getElementById("signin-password").value;
+  const msg = document.getElementById("signin-msg");
   const btn = document.getElementById("signin-btn");
-
-  if (!email || !password) { showMsg(msgEl, "Please enter email and password.", "error"); return; }
-
-  btn.disabled = true;
-  btn.textContent = "Signing in…";
-  msgEl.textContent = "";
-
-  const { error } = await sb.auth.signInWithPassword({ email, password });
-
-  btn.disabled = false;
-  btn.textContent = "Sign In";
-
-  if (error) { showMsg(msgEl, error.message, "error"); }
+  if (!email || !pass) { showMsg(msg, "Please enter email and password.", "error"); return; }
+  btn.disabled = true; btn.textContent = "Signing in…";
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  btn.disabled = false; btn.textContent = "Sign In";
+  if (error) showMsg(msg, error.message, "error");
 }
 
 async function signUp() {
   const email = document.getElementById("signup-email").value.trim();
-  const password = document.getElementById("signup-password").value;
-  const msgEl = document.getElementById("signup-msg");
+  const pass = document.getElementById("signup-password").value;
+  const msg = document.getElementById("signup-msg");
   const btn = document.getElementById("signup-btn");
-
-  if (!email || !password) { showMsg(msgEl, "Please enter email and password.", "error"); return; }
-  if (password.length < 6) { showMsg(msgEl, "Password must be at least 6 characters.", "error"); return; }
-
-  btn.disabled = true;
-  btn.textContent = "Creating account…";
-
-  const { error } = await sb.auth.signUp({ email, password });
-
-  btn.disabled = false;
-  btn.textContent = "Create Account";
-
-  if (error) {
-    showMsg(msgEl, error.message, "error");
-  } else {
-    showMsg(msgEl, "Account created! Check your email to confirm, then sign in.", "success");
-    switchTab("signin");
-    document.getElementById("signin-email").value = email;
-  }
+  if (!email || !pass) { showMsg(msg, "Please enter email and password.", "error"); return; }
+  if (pass.length < 6) { showMsg(msg, "Password must be at least 6 characters.", "error"); return; }
+  btn.disabled = true; btn.textContent = "Creating account…";
+  const { error } = await sb.auth.signUp({ email, password: pass });
+  btn.disabled = false; btn.textContent = "Create Account";
+  if (error) showMsg(msg, error.message, "error");
+  else { showMsg(msg, "Account created! Please sign in.", "success"); switchTab("signin"); }
 }
 
 async function signOut() {
   await sb.auth.signOut();
-  currentUser = null;
   document.getElementById("app-screen").style.display = "none";
   document.getElementById("auth-screen").style.display = "flex";
+  leads = [];
 }
 
 function showMsg(el, text, type) {
@@ -418,16 +351,16 @@ function showMsg(el, text, type) {
   el.className = "auth-msg " + type;
 }
 
-// ─── AUTH STATE ──────────────────────────────────────────────────────────────
 sb.auth.onAuthStateChange(async (event, session) => {
   if (session?.user) {
     currentUser = session.user;
     document.getElementById("auth-screen").style.display = "none";
     document.getElementById("app-screen").style.display = "block";
     document.getElementById("user-email-display").textContent = currentUser.email;
-    await loadFromCloud();
-    const root = document.querySelector(".wbw-lead-tracker");
-    if (root) bindTool(root);
+    document.getElementById("today-date").textContent = "Today: " + fmtDate(todayISO());
+    document.getElementById("f-enquiry").value = todayISO();
+    await loadLeads();
+    render();
   } else {
     currentUser = null;
     document.getElementById("app-screen").style.display = "none";
@@ -435,689 +368,504 @@ sb.auth.onAuthStateChange(async (event, session) => {
   }
 });
 
-// ─── CLOUD STORAGE ───────────────────────────────────────────────────────────
-let cloudLeads = [];
+// ── CLOUD SYNC ────────────────────────────────────────────────────────
+async function loadLeads() {
+  try {
+    const { data } = await sb.from("leads").select("*").eq("user_id", currentUser.id);
+    leads = (data || []).map(row => row.data ? {...row.data, _rowId: row.id} : row);
+  } catch(e) { leads = []; }
+}
 
-async function loadFromCloud() {
+async function saveLead(lead) {
   if (!currentUser) return;
-  const { data, error } = await sb
-    .from("leads")
-    .select("id, data")
-    .eq("user_id", currentUser.id);
-
-  if (error) { console.error("Load error:", error); return; }
-
-  cloudLeads = (data || []).map(row => ({ ...row.data, id: row.id }));
-  const root = document.querySelector(".wbw-lead-tracker");
-  if (root) render(root);
+  try {
+    await sb.from("leads").upsert({
+      id: lead.id,
+      user_id: currentUser.id,
+      data: lead,
+      updated_at: new Date().toISOString()
+    }, { onConflict: "id" });
+    showToast("✓ Saved");
+  } catch(e) { console.log("Save error:", e); }
 }
 
-async function saveLeadToCloud(lead) {
+async function deleteLead(id) {
   if (!currentUser) return;
-  const { id, ...data } = lead;
-  const { error } = await sb.from("leads").upsert({
-    id: id,
-    user_id: currentUser.id,
-    data: { ...data, id },
-    updated_at: new Date().toISOString()
-  }, { onConflict: "id" });
-
-  if (error) { showToast("Save failed", true); console.error(error); }
-  else showToast("✓ Saved");
+  try { await sb.from("leads").delete().eq("id", id).eq("user_id", currentUser.id); } catch(e) {}
 }
 
-async function deleteLeadFromCloud(id) {
-  if (!currentUser) return;
-  const { error } = await sb.from("leads").delete().eq("id", id).eq("user_id", currentUser.id);
-  if (error) console.error("Delete error:", error);
-}
+// ── ADD LEAD ──────────────────────────────────────────────────────────
+document.getElementById("add-lead-btn").onclick = addLead;
 
-async function deleteAllLeadsFromCloud() {
-  if (!currentUser) return;
-  const { error } = await sb.from("leads").delete().eq("user_id", currentUser.id);
-  if (error) console.error("Clear error:", error);
-}
+async function addLead() {
+  const name = document.getElementById("f-name").value.trim();
+  if (!name) { setAddMsg("Please enter a couple name.", false); return; }
 
-function showToast(msg, isError = false) {
-  const el = document.getElementById("save-status");
-  el.textContent = msg;
-  el.className = "show" + (isError ? " error" : "");
-  clearTimeout(el._t);
-  el._t = setTimeout(() => { el.className = ""; }, 2500);
-}
-
-// ─── LEAD TRACKER LOGIC (your original, adapted for cloud) ──────────────────
-const GAP_DAYS = 3;
-const MAX_FOLLOWUPS = 5;
-
-function todayISO() {
-  const d = new Date();
-  return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0,10);
-}
-function addDaysISO(iso, days) {
-  const d = new Date((iso || todayISO()) + "T00:00:00");
-  d.setDate(d.getDate() + days);
-  return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0,10);
-}
-
-function load() { return cloudLeads.map(l => ({...l})); }
-function save(leads) { cloudLeads = leads.map(l => ({...l})); }
-
-function esc(str) {
-  return String(str || "")
-    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
-}
-function fmtEuro(n) {
-  const num = Number(n || 0);
-  return "€" + (isFinite(num) ? Math.round(num).toString() : "0");
-}
-function fmtDatePretty(iso) {
-  if (!iso) return "";
-  const d = new Date(iso + "T00:00:00");
-  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  return `${String(d.getDate()).padStart(2,"0")} ${months[d.getMonth()]} ${d.getFullYear()}`;
-}
-function csvEscape(v) {
-  const s = String(v ?? "");
-  if (/[",\n]/.test(s)) return `"${s.replaceAll('"','""')}"`;
-  return s;
-}
-
-function ensureLeadShape(l) {
-  l.priceQuoted = Number(l.priceQuoted || 0);
-  l.depositPaid = Number(l.depositPaid || 0);
-  l.instalments = Array.isArray(l.instalments) ? l.instalments.map(x => Number(x || 0)) : [];
-  l.followupStep = Number(l.followupStep || 1);
-  l.nextFollowUp = l.nextFollowUp || "";
-  l.status = l.status || "Replied";
-  return l;
-}
-
-function totalInstalments(l) { return (l.instalments || []).reduce((s,x)=> s + Number(x||0), 0); }
-function totalPaid(l) { return Number(l.depositPaid || 0) + totalInstalments(l); }
-function balanceDue(l) { return Math.max(0, Number(l.priceQuoted || 0) - totalPaid(l)); }
-function dueDateForStep(lead, step) {
-  return addDaysISO(lead.enquiryDate || todayISO(), GAP_DAYS * step);
-}
-
-function chip(status) {
-  const map = {
-    Replied:        {bg:"#E9EEFF", fg:"#1A1A2E"},
-    'Deposit Paid': {bg:"#FFF0E8", fg:"#C45000"},
-    Booked:         {bg:"#EAF6EF", fg:"#246b3a"},
-    Lost:           {bg:"#FBEAEA", fg:"#8a2a2a"}
-  };
-  const c = map[status] || map.Replied;
-  return `<span style="display:inline-block; padding:6px 10px; border-radius:999px; background:${c.bg}; color:${c.fg}; font-weight:950; font-size:12px;">${esc(status)}</span>`;
-}
-
-function msg(root, text, ok=true) {
-  const el = root.querySelector(".lt-msg");
-  if (!el) return;
-  el.style.color = ok ? "#246b3a" : "#8a2a2a";
-  el.textContent = text;
-  setTimeout(()=>{ el.textContent = ""; }, 4200);
-}
-
-function pct(n) { return isFinite(n) ? Math.round(n) + "%" : "0%"; }
-
-function calcTotals(root, leads) {
-  const booked = leads.filter(l => l.status === "Booked");
-  root.querySelector(".lt_totalBooked").textContent = fmtEuro(booked.reduce((s,l)=> s + Number(l.priceQuoted||0), 0));
-  root.querySelector(".lt_totalPaid").textContent = fmtEuro(booked.reduce((s,l)=> s + totalPaid(l), 0));
-  root.querySelector(".lt_totalBalance").textContent = fmtEuro(booked.reduce((s,l)=> s + balanceDue(l), 0));
-  root.querySelector(".lt_totalNet").textContent = fmtEuro(booked.reduce((s,l)=> s + totalPaid(l), 0));
-}
-
-function renderSourcePerformance(root, leads) {
-  const tBody = root.querySelector(".lt-sourceTable");
-  const cardsWrap = root.querySelector(".lt-sourceCards");
-  if (!tBody || !cardsWrap) return;
-
-  const sources = {};
-  for (const l of leads) {
-    const src = (l.source || "Other").trim() || "Other";
-    if (!sources[src]) sources[src] = {source: src, leads: 0, booked: 0, bookedValue: 0};
-    sources[src].leads += 1;
-    if (l.status === "Booked") { sources[src].booked += 1; sources[src].bookedValue += Number(l.priceQuoted || 0); }
+  // Check for wedding date clash
+  if (wedding) {
+    const clashes = leads.filter(l =>
+      l.wedding === wedding &&
+      (l.status === "Booked" || l.status === "Deposit Paid")
+    );
+    if (clashes.length > 0) {
+      const names = clashes.map(l => l.name).join(", ");
+      const proceed = confirm(
+        "⚠️ You already have " + clashes.length + " booking(s) on this date:\n" +
+        names + "\n\n" +
+        "Do you want to continue and book 2 weddings on the same date?\n\n" +
+        "Click OK to continue, or Cancel — you may be unavailable for this date."
+      );
+      if (!proceed) return;
+    }
   }
+  const enquiry = document.getElementById("f-enquiry").value || todayISO();
+  const wedding = document.getElementById("f-wedding").value;
+  const venue = document.getElementById("f-venue").value.trim();
+  const email = document.getElementById("f-email").value.trim();
+  const phone = document.getElementById("f-phone").value.trim();
+  const source = document.getElementById("f-source").value;
+  const status = document.getElementById("f-status").value;
+  const price = Number(document.getElementById("f-price").value) || 0;
+  const followup = dueDateFromEnquiry(enquiry, FOLLOWUP_DAYS[0]);
 
-  const rows = Object.values(sources)
-    .map(s => ({...s, rate: s.leads ? (s.booked/s.leads)*100 : 0}))
-    .sort((a,b) => b.leads !== a.leads ? b.leads - a.leads : b.booked - a.booked);
+  const lead = {
+    id: Math.random().toString(16).slice(2) + "_" + Date.now().toString(16),
+    createdAt: new Date().toISOString(),
+    name, enquiry, wedding, venue, email, phone, source, status,
+    priceQuoted: price, depositPaid: 0, instalments: [],
+    nextFollowUp: (status === "Lost" || status === "Booked") ? "" : followup,
+    followupStep: (status === "Lost" || status === "Booked") ? 0 : 1,
+    notes: ""
+  };
 
-  if (!rows.length) {
-    tBody.innerHTML = `<tr><td colspan="5" style="padding:14px; opacity:.85; font-weight:800;">Add a few leads and you'll see your top sources here.</td></tr>`;
-    root.querySelector(".lt_topLeads").textContent = "—";
-    root.querySelector(".lt_secondLeads").textContent = "—";
-    cardsWrap.innerHTML = "";
+  leads.push(lead);
+  clearForm();
+  setAddMsg("Lead added ✔", true);
+  render();
+  await saveLead(lead);
+}
+
+function clearForm() {
+  ["f-name","f-wedding","f-venue","f-email","f-phone","f-price"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+  document.getElementById("f-enquiry").value = todayISO();
+}
+
+function setAddMsg(text, ok) {
+  const el = document.getElementById("add-msg");
+  el.textContent = text;
+  el.className = "add-msg " + (ok ? "ok" : "err");
+  if (ok) setTimeout(() => el.textContent = "", 3000);
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────
+function render() {
+  renderStats();
+  renderFollowups();
+  renderTable();
+  renderSources();
+}
+
+function totalPaid(l) {
+  return Number(l.depositPaid||0) + (l.instalments||[]).reduce((s,x) => s + Number(x||0), 0);
+}
+
+function balance(l) {
+  return Math.max(0, Number(l.priceQuoted||0) - totalPaid(l));
+}
+
+function renderStats() {
+  const active = leads.filter(l => l.status !== "Lost");
+  const booked = leads.filter(l => l.status === "Booked" || l.status === "Deposit Paid");
+  const totalRevenue = booked.reduce((s,l) => s + Number(l.priceQuoted||0), 0);
+  const totalPaidAll = booked.reduce((s,l) => s + totalPaid(l), 0);
+  const today = todayISO();
+  const dueToday = leads.filter(l => l.nextFollowUp && l.nextFollowUp <= today && l.status !== "Booked" && l.status !== "Lost").length;
+
+  const stats = [
+    { label: "Total Leads", value: leads.length, bg: "#E9EEFF" },
+    { label: "Active", value: active.length, bg: "#FFF0E8" },
+    { label: "Booked", value: booked.length, bg: "#EAF6EF" },
+    { label: "Follow-ups Due", value: dueToday, bg: dueToday > 0 ? "#FEF2F2" : "#EAF6EF" },
+    { label: "Total Revenue", value: fmtEuro(totalRevenue), bg: "#EAF6EF" },
+    { label: "Total Received", value: fmtEuro(totalPaidAll), bg: "#FFF0E8" },
+  ];
+
+  document.getElementById("stats-row").innerHTML = stats.map(s => `
+    <div class="stat-card" style="background:${s.bg};">
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-value">${s.value}</div>
+    </div>
+  `).join("");
+}
+
+function renderFollowups() {
+  const today = todayISO();
+  const due = leads.filter(l => l.nextFollowUp && l.nextFollowUp <= today && l.status !== "Booked" && l.status !== "Lost");
+  due.sort((a,b) => (a.nextFollowUp||"").localeCompare(b.nextFollowUp||""));
+
+  const list = document.getElementById("followups-list");
+  if (!due.length) {
+    list.innerHTML = `<div class="all-clear">✅ No follow-ups due today — you're all caught up!</div>`;
     return;
   }
 
-  root.querySelector(".lt_topLeads").textContent = `${rows[0].source} • ${rows[0].leads} leads`;
-  root.querySelector(".lt_secondLeads").textContent = rows[1] ? `${rows[1].source} • ${rows[1].leads} leads` : "—";
-
-  const cardColours = ["#E9EEFF","#F9E8ED","#EAF6EF","#FFF1E6","#FBEAEA"];
-  cardsWrap.innerHTML = rows.slice(0,4).map((r,i)=>`
-    <div style="padding:12px; border-radius:16px; background:${cardColours[i % cardColours.length]}; min-width:220px;">
-      <div style="font-weight:950; font-size:16px;">${esc(r.source)}</div>
-      <div style="opacity:.9; font-size:14px; font-weight:850;">${r.leads} leads • ${r.booked} booked • ${pct(r.rate)}</div>
+  list.innerHTML = due.map(l => `
+    <div class="followup-card" id="fu-${l.id}">
+      <div class="details">
+        <div class="name">${esc(l.name)}</div>
+        <div class="due">Follow-up due: ${fmtDate(l.nextFollowUp)}</div>
+        ${l.venue ? `<div class="venue-txt">📍 ${esc(l.venue)}</div>` : ""}
+        <div class="done-msg" id="fu-done-${l.id}"></div>
+      </div>
+      <button class="mark-done-btn" data-fu="${l.id}">Mark done ✓</button>
     </div>
   `).join("");
 
-  tBody.innerHTML = rows.map(r => `
-    <tr style="border-top:1px solid rgba(26,26,46,.10);">
-      <td style="padding:10px; font-weight:950;">${esc(r.source)}</td>
-      <td style="padding:10px; font-weight:850;">${r.leads}</td>
-      <td style="padding:10px; font-weight:850;">${r.booked}</td>
-      <td style="padding:10px; font-weight:850;">${pct(r.rate)}</td>
-      <td style="padding:10px; font-weight:850;">${fmtEuro(r.bookedValue)}</td>
-    </tr>
-  `).join("");
-}
-
-function renderTasks(root, leads) {
-  const wrap = root.querySelector(".lt-tasks");
-  if (!wrap) return;
-  const today = todayISO();
-  const tasks = [];
-
-  for (const l0 of leads) {
-    const l = ensureLeadShape({...l0});
-    if (l.status === "Booked" || l.status === "Lost") continue;
-    if (!l.nextFollowUp) {
-      l.followupStep = Math.max(1, Number(l.followupStep || 1));
-      l.nextFollowUp = dueDateForStep(l, l.followupStep);
-    }
-    for (let s = Number(l.followupStep || 1); s <= MAX_FOLLOWUPS; s++) {
-      const due = dueDateForStep(l, s);
-      if (due <= today) tasks.push({id:l.id, name:l.name, venue:l.venue, step:s, dueDate:due});
-      else break;
-    }
-  }
-
-  tasks.sort((a,b) => a.dueDate.localeCompare(b.dueDate));
-
-  const todayPretty = fmtDatePretty(today);
-  wrap.innerHTML = !tasks.length
-    ? `<div style="background:#EAF6EF; border-radius:12px; padding:12px 16px; font-weight:800; color:#246b3a;">✅ No follow-ups due today — you're all caught up!</div>`
-    : `<div style="font-size:13px; font-weight:800; color:#888; margin-bottom:8px;">Today is ${todayPretty}</div>` +
-      tasks.map(t => `
-      <div class="followup-card" style="display:flex; justify-content:space-between; gap:12px; align-items:center; padding:14px; border:2px solid #FF6B35; border-radius:14px; margin-top:10px; background:#FFFBF7;">
-        <div style="flex:1;">
-          <div style="font-weight:950; font-size:16px;">${esc(t.name || "Unnamed lead")}</div>
-          <div style="font-size:13px; font-weight:850; color:#FF6B35; margin-top:2px;">Follow-up #${t.step} — due ${fmtDatePretty(t.dueDate)}</div>
-          ${t.venue ? `<div style="opacity:.75; font-size:13px; font-weight:700; margin-top:2px;">📍 ${esc(t.venue)}</div>` : ""}
-          <div class="fu-done-msg-${t.id}" style="font-size:13px; font-weight:800; color:#246b3a; margin-top:4px; display:none;"></div>
-        </div>
-        <button type="button" data-followup="${t.id}" style="background:#FF6B35; color:#fff; border:none; padding:10px 16px; border-radius:12px; cursor:pointer; font-weight:950; white-space:nowrap; flex-shrink:0;">Mark done ✓</button>
-      </div>
-    `).join("");
-}
-
-function renderTable(root, leads) {
-  const tbody = root.querySelector(".lt-table");
-  if (!tbody) return;
-
-  if (!leads.length) {
-    tbody.innerHTML = `<tr><td colspan="9" style="padding:14px; opacity:.85; font-weight:800;">No leads yet — add your first enquiry above.</td></tr>`;
-    return;
-  }
-
-  leads.sort((a,b) => {
-    const aA = (a.status !== "Booked" && a.status !== "Lost");
-    const bA = (b.status !== "Booked" && b.status !== "Lost");
-    if (aA !== bA) return aA ? -1 : 1;
-    const an = a.nextFollowUp || "9999-12-31";
-    const bn = b.nextFollowUp || "9999-12-31";
-    if (an !== bn) return an.localeCompare(bn);
-    return (b.createdAt || "").localeCompare(a.createdAt || "");
-  });
-
-  tbody.innerHTML = leads.map(l => {
-    const instTotal = totalInstalments(l);
-    const paid = totalPaid(l);
-    const bal = (l.status === "Booked") ? balanceDue(l) : 0;
-    const instLabel = l.instalments?.length ? `${l.instalments.length} instalment${l.instalments.length>1?"s":""}` : "";
-    return `
-      <tr style="border-top:1px solid rgba(26,26,46,.10);">
-        <td style="padding:10px; font-weight:950;">${esc(l.name||"")}</td>
-        <td style="padding:10px; font-weight:850;">${esc(l.source||"")}</td>
-        <td style="padding:10px;">${chip(l.status||"Replied")}</td>
-        <td style="padding:10px; font-weight:850;">${fmtDatePretty(l.enquiryDate)}</td>
-        <td style="padding:10px; font-weight:850;">${fmtDatePretty(l.weddingDate)}</td>
-        <td style="padding:10px; font-weight:850;">${l.nextFollowUp ? fmtDatePretty(l.nextFollowUp) : ""}</td>
-        <td style="padding:10px; font-weight:850;">${l.priceQuoted ? fmtEuro(l.priceQuoted) : "—"}</td>
-        <td style="padding:10px; font-weight:850;">
-          ${paid > 0 ? fmtEuro(paid) : "—"}
-          ${l.depositPaid > 0 ? `<div style="opacity:.7; font-size:11px; font-weight:800;">dep: ${fmtEuro(l.depositPaid)}</div>` : ""}
-          ${instLabel ? `<div style="opacity:.7; font-size:11px; font-weight:800;">${instLabel}</div>` : ""}
-        </td>
-        <td style="padding:10px; font-weight:950; color:${bal > 0 ? '#C45000' : '#246b3a'};">${l.priceQuoted > 0 ? fmtEuro(bal) : "—"}</td>
-        <td style="padding:10px;">
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; min-width:160px;">
-            <button type="button" data-edit="${l.id}" style="background:#1A1A2E; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">Edit</button>
-            <button type="button" data-pay="${l.id}" style="background:#FF6B35; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">&#x1F4B3; Pay</button>
-            <button type="button" data-booked="${l.id}" style="background:${l.status==="Booked"?"#246b3a":"#FF6B35"}; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">${l.status==="Booked" ? "Unbook" : "Booked"}</button>
-            <button type="button" data-lost="${l.id}" style="background:#fff; color:${l.status==="Lost"?"#991b1b":"#1A1A2E"}; border:1px solid ${l.status==="Lost"?"#991b1b":"rgba(26,26,46,.25)"}; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:13px;">${l.status==="Lost" ? "Undo" : "Lost"}</button>
-            <button type="button" data-del="${l.id}" style="grid-column:1/-1; background:#fff; color:#991b1b; border:1px solid #991b1b; padding:6px 10px; border-radius:12px; cursor:pointer; font-weight:950; font-size:12px;">Delete</button>
-          </div>
-        </td>
-      </tr>
-    `;
-  }).join("");
-}
-
-function normalizeLeads(leads) {
-  return leads.map(l => {
-    l = ensureLeadShape(l);
-    if (l.status === "Replied" && !l.nextFollowUp) {
-      l.followupStep = Math.max(1, Number(l.followupStep || 1));
-      l.nextFollowUp = dueDateForStep(l, l.followupStep);
-    }
-    if (l.status === "Booked" || l.status === "Lost") {
-      l.nextFollowUp = "";
-      l.followupStep = 0;
-    }
-    return l;
+  list.querySelectorAll("[data-fu]").forEach(btn => {
+    btn.onclick = () => markDone(btn.getAttribute("data-fu"));
   });
 }
 
-function render(root) {
-  const leads = normalizeLeads(load());
-  renderTasks(root, leads);
-  renderTable(root, leads);
-  calcTotals(root, leads);
-  renderSourcePerformance(root, leads);
-}
-
-async function addLead(root) {
-  const name = (root.querySelector(".lt-name")?.value || "").trim();
-  const enquiryDate = root.querySelector(".lt-enquiryDate")?.value || todayISO();
-  const weddingDate = root.querySelector(".lt-weddingDate")?.value || "";
-  const venue = (root.querySelector(".lt-venue")?.value || "").trim();
-  const email = (root.querySelector(".lt-email")?.value || "").trim();
-  const source = root.querySelector(".lt-source")?.value || "Instagram";
-  const status = root.querySelector(".lt-status")?.value || "Replied";
-  const priceRaw = root.querySelector(".lt-price")?.value || "";
-
-  if (!name) { msg(root, "Please enter a couple name.", false); return; }
-
-  const lead = ensureLeadShape({
-    id: (Math.random().toString(16).slice(2) + "_" + Date.now().toString(16)),
-    createdAt: new Date().toISOString(),
-    name, enquiryDate, weddingDate, venue, email, source, status,
-    priceQuoted: priceRaw ? Number(priceRaw) : 0,
-    depositPaid: 0, instalments: [],
-    followupStep: (status === "Replied") ? 1 : 0,
-    nextFollowUp: (status === "Replied") ? dueDateForStep({enquiryDate}, 1) : ""
-  });
-
-  const leads = load();
-  leads.push(lead);
-  save(leads);
-
-  root.querySelector(".lt-name").value = "";
-  root.querySelector(".lt-venue").value = "";
-  root.querySelector(".lt-email").value = "";
-  root.querySelector(".lt-weddingDate").value = "";
-  root.querySelector(".lt-price").value = "";
-
-  msg(root, "Lead added ✔", true);
-  render(root);
-  await saveLeadToCloud(lead);
-}
-
-async function markFollowupDone(root, id) {
-  const leads = load().map(ensureLeadShape);
-  const lead = leads.find(l => l.id === id);
-  if (!lead || lead.status === "Booked" || lead.status === "Lost") return;
-
-  lead.followupStep = Math.max(1, Number(lead.followupStep || 1));
-  if (lead.followupStep >= MAX_FOLLOWUPS) {
-    lead.nextFollowUp = "";
-    save(leads);
-    msg(root, `Follow-up #${MAX_FOLLOWUPS} done for ${lead.name}.`, true);
-    render(root);
-    await saveLeadToCloud(lead);
-    return;
-  }
-  lead.followupStep += 1;
-  lead.nextFollowUp = dueDateForStep(lead, lead.followupStep);
-  save(leads);
-  msg(root, `Follow-up done for ${lead.name}. Next follow-up: ${fmtDatePretty(lead.nextFollowUp)}`, true);
-  // Show confirmation on the card itself without full re-render
-  const doneMsg = root.querySelector(`.fu-done-msg-${id}`);
-  if (doneMsg) {
-    doneMsg.style.display = 'block';
-    doneMsg.textContent = `✓ Done! Next follow-up: ${fmtDatePretty(lead.nextFollowUp)}`;
-    const btn = root.querySelector(`[data-followup="${id}"]`);
-    if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; btn.textContent = 'Done ✓'; }
-  }
-  render(root);
-  await saveLeadToCloud(lead);
-}
-
-function openPaymentsModal(root, id) {
-  const leads = load().map(ensureLeadShape);
+async function markDone(id) {
   const lead = leads.find(l => l.id === id);
   if (!lead) return;
 
-  const overlay = document.createElement("div");
-  overlay.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; padding:18px; z-index:99999;";
+  lead.followupStep = Number(lead.followupStep||1);
+  const nextStepDays = FOLLOWUP_DAYS[lead.followupStep] || null;
 
-  const modal = document.createElement("div");
-  modal.style.cssText = "background:#FFFBF7; color:#1A1A2E; width:min(560px, 100%); border-radius:18px; padding:16px; box-shadow:0 18px 60px rgba(0,0,0,.25); font-family:Montserrat, sans-serif;";
-  modal.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
-      <div>
-        <div style="font-weight:950; font-size:18px;">Payments</div>
-        <div style="opacity:.9; font-weight:800; font-size:13px;">Add a deposit + instalments. Balance updates automatically.</div>
-      </div>
-      <button type="button" class="m-close" style="border:none; background:#fff; border-radius:12px; padding:8px 10px; font-weight:950; cursor:pointer;">✕</button>
-    </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
-      <div>
-        <label style="font-weight:900; font-size:13px;">Quoted price (€)</label>
-        <input class="m-quoted" type="number" inputmode="numeric" value="${Number(lead.priceQuoted||0)}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:800;">
-      </div>
-      <div>
-        <label style="font-weight:900; font-size:13px;">Deposit paid (€)</label>
-        <input class="m-deposit" type="number" inputmode="numeric" value="${Number(lead.depositPaid||0)}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; margin-top:6px; font-size:17px; font-weight:800;">
-      </div>
-    </div>
-    <div style="margin-top:12px; background:#fff; border:1px solid rgba(26,26,46,.12); border-radius:14px; padding:12px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
-        <div style="font-weight:950;">Instalments</div>
-        <button type="button" class="m-addpay" style="background:#FF6B35; color:#fff; border:none; padding:8px 10px; border-radius:12px; cursor:pointer; font-weight:950;">+ Add instalment</button>
-      </div>
-      <div class="m-paylist" style="margin-top:10px; display:grid; gap:10px;"></div>
-    </div>
-    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
-      <div style="flex:1; min-width:150px; background:#EAF6EF; border-radius:14px; padding:10px;">
-        <div style="opacity:.85; font-weight:900; font-size:12px;">Total paid</div>
-        <div class="m-totalpaid" style="font-weight:950; font-size:18px;">€0</div>
-      </div>
-      <div style="flex:1; min-width:150px; background:#FFF1E6; border-radius:14px; padding:10px;">
-        <div style="opacity:.85; font-weight:900; font-size:12px;">Balance due</div>
-        <div class="m-balance" style="font-weight:950; font-size:18px;">€0</div>
-      </div>
-    </div>
-    <div style="display:flex; gap:10px; margin-top:12px;">
-      <button type="button" class="m-save" style="flex:1; background:#1A1A2E; color:#fff; border:none; padding:12px 14px; border-radius:14px; cursor:pointer; font-weight:950;">Save</button>
-      <button type="button" class="m-cancel" style="flex:1; background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:12px 14px; border-radius:14px; cursor:pointer; font-weight:950;">Cancel</button>
-    </div>
-  `;
-
-  overlay.appendChild(modal);
-  document.body.appendChild(overlay);
-
-  const paylist = modal.querySelector(".m-paylist");
-  const quotedEl = modal.querySelector(".m-quoted");
-  const depositEl = modal.querySelector(".m-deposit");
-
-  function makePayRow(value) {
-    const row = document.createElement("div");
-    row.style.cssText = "display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center;";
-    row.innerHTML = `
-      <input class="m-pay" type="number" inputmode="numeric" value="${Number(value||0)}" placeholder="€ amount" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:17px; font-weight:800;">
-      <button type="button" class="m-delpay" style="background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:950;">Remove</button>
-    `;
-    row.querySelector(".m-delpay").addEventListener("click", () => { row.remove(); recalc(); });
-    row.querySelector(".m-pay").addEventListener("input", recalc);
-    return row;
-  }
-
-  function getNumbers() {
-    const quoted = Number(quotedEl.value || 0);
-    const dep = Number(depositEl.value || 0);
-    const pays = Array.from(paylist.querySelectorAll(".m-pay")).map(i => Number(i.value||0)).filter(n => isFinite(n) && n > 0);
-    return { quoted, dep, pays, paid: dep + pays.reduce((s,x)=>s+x,0), bal: Math.max(0, quoted - dep - pays.reduce((s,x)=>s+x,0)) };
-  }
-
-  function recalc() {
-    const {paid, bal} = getNumbers();
-    modal.querySelector(".m-totalpaid").textContent = fmtEuro(paid);
-    modal.querySelector(".m-balance").textContent = fmtEuro(bal);
-  }
-
-  (lead.instalments || []).forEach(v => paylist.appendChild(makePayRow(v)));
-  if (!(lead.instalments || []).length) paylist.appendChild(makePayRow(0));
-
-  modal.querySelector(".m-addpay").addEventListener("click", () => { paylist.appendChild(makePayRow(0)); recalc(); });
-  quotedEl.addEventListener("input", recalc);
-  depositEl.addEventListener("input", recalc);
-
-  function close() { overlay.remove(); }
-  modal.querySelector(".m-close").addEventListener("click", close);
-  modal.querySelector(".m-cancel").addEventListener("click", close);
-
-  modal.querySelector(".m-save").addEventListener("click", async () => {
-    const {quoted, dep, pays} = getNumbers();
-    lead.priceQuoted = quoted;
-    lead.depositPaid = dep;
-    lead.instalments = pays;
-    if (lead.status !== "Lost") lead.status = "Booked";
-    lead.followupStep = 0;
+  if (nextStepDays) {
+    lead.followupStep += 1;
+    lead.nextFollowUp = dueDateFromEnquiry(lead.enquiry || todayISO(), 
+      FOLLOWUP_DAYS.slice(0, lead.followupStep).reduce((s,d) => s+d, 0));
+  } else {
     lead.nextFollowUp = "";
-    save(leads);
-    close();
-    render(root);
-    await saveLeadToCloud(lead);
-  });
+    lead.followupStep = 0;
+  }
 
-  recalc();
+  // Show confirmation on card
+  const doneMsg = document.getElementById("fu-done-" + id);
+  const btn = document.querySelector(`[data-fu="${id}"]`);
+  if (doneMsg) {
+    doneMsg.style.display = "block";
+    doneMsg.textContent = lead.nextFollowUp
+      ? "✓ Done! Next follow-up: " + fmtDate(lead.nextFollowUp)
+      : "✓ All follow-ups complete for this lead";
+  }
+  if (btn) { btn.disabled = true; btn.textContent = "Done ✓"; }
+
+  render();
+  await saveLead(lead);
 }
 
-async function toggleBooked(root, id) {
-  const leads = load().map(ensureLeadShape);
+function renderTable() {
+  const tbody = document.getElementById("leads-tbody");
+  if (!leads.length) {
+    tbody.innerHTML = `<tr><td colspan="10" style="padding:14px; opacity:.7; font-weight:700;">No leads yet — add your first enquiry above.</td></tr>`;
+    return;
+  }
+
+  const sorted = [...leads].sort((a,b) => {
+    const aActive = a.status !== "Booked" && a.status !== "Lost";
+    const bActive = b.status !== "Booked" && b.status !== "Lost";
+    if (aActive !== bActive) return aActive ? -1 : 1;
+    return (a.nextFollowUp||"9999").localeCompare(b.nextFollowUp||"9999");
+  });
+
+  tbody.innerHTML = sorted.map(l => {
+    const paid = totalPaid(l);
+    const bal = balance(l);
+    const isBooked = l.status === "Booked" || l.status === "Deposit Paid";
+    return `<tr>
+      <td style="font-weight:900;">${esc(l.name)}</td>
+      <td>${esc(l.source||"")}</td>
+      <td>${chipHtml(l.status||"Replied")}</td>
+      <td>${fmtDate(l.enquiry)}</td>
+      <td>${fmtDate(l.wedding)}</td>
+      <td style="font-weight:800; color:${l.nextFollowUp && l.nextFollowUp <= todayISO() ? '#C45000' : 'inherit'};">${fmtDate(l.nextFollowUp)}</td>
+      <td>${l.priceQuoted ? fmtEuro(l.priceQuoted) : "—"}</td>
+      <td>
+        ${paid > 0 ? `<div style="font-weight:800;">${fmtEuro(paid)}</div>` : "—"}
+        ${l.depositPaid > 0 ? `<div style="font-size:11px; opacity:.65;">dep: ${fmtEuro(l.depositPaid)}</div>` : ""}
+        ${(l.instalments||[]).length ? `<div style="font-size:11px; opacity:.65;">${l.instalments.length} instalment(s)</div>` : ""}
+      </td>
+      <td style="font-weight:900; color:${bal > 0 ? '#C45000' : (isBooked ? '#246b3a' : 'inherit')};">${l.priceQuoted ? fmtEuro(bal) : "—"}</td>
+      <td>
+        <div class="action-grid">
+          <button class="btn-edit" data-edit="${l.id}">Edit</button>
+          <button class="btn-pay" data-pay="${l.id}">💳 Pay</button>
+          <button class="${l.status === 'Booked' ? 'btn-unbook' : 'btn-booked'}" data-book="${l.id}">${l.status === "Booked" ? "Unbook" : "Book"}</button>
+          <button class="${l.status === 'Lost' ? 'btn-undo' : 'btn-lost'}" data-lost="${l.id}">${l.status === "Lost" ? "Undo" : "Lost"}</button>
+          <button class="btn-del" data-del="${l.id}">Delete</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+
+  tbody.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => openEditModal(b.getAttribute("data-edit")));
+  tbody.querySelectorAll("[data-pay]").forEach(b => b.onclick = () => openPayModal(b.getAttribute("data-pay")));
+  tbody.querySelectorAll("[data-book]").forEach(b => b.onclick = () => toggleBooked(b.getAttribute("data-book")));
+  tbody.querySelectorAll("[data-lost]").forEach(b => b.onclick = () => toggleLost(b.getAttribute("data-lost")));
+  tbody.querySelectorAll("[data-del]").forEach(b => b.onclick = () => deleteLead2(b.getAttribute("data-del")));
+}
+
+function renderSources() {
+  const map = {};
+  leads.forEach(l => {
+    const s = l.source || "Other";
+    if (!map[s]) map[s] = { leads:0, booked:0, value:0 };
+    map[s].leads++;
+    if (l.status === "Booked" || l.status === "Deposit Paid") {
+      map[s].booked++;
+      map[s].value += Number(l.priceQuoted||0);
+    }
+  });
+
+  const rows = Object.entries(map)
+    .map(([s,d]) => ({source:s, ...d, rate: d.leads ? Math.round(d.booked/d.leads*100) : 0}))
+    .sort((a,b) => b.booked - a.booked);
+
+  document.getElementById("source-tbody").innerHTML = rows.map(r => `
+    <tr>
+      <td style="font-weight:900;">${esc(r.source)}</td>
+      <td>${r.leads}</td>
+      <td>${r.booked}</td>
+      <td>${r.rate}%</td>
+      <td>${fmtEuro(r.value)}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="5" style="padding:12px; opacity:.6;">No data yet</td></tr>`;
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────
+async function toggleBooked(id) {
   const lead = leads.find(l => l.id === id);
   if (!lead) return;
   if (lead.status === "Booked") {
     lead.status = "Replied";
-    lead.followupStep = Math.max(1, Number(lead.followupStep || 1));
-    lead.nextFollowUp = dueDateForStep(lead, lead.followupStep);
-    save(leads);
-    render(root);
-    await saveLeadToCloud(lead);
-    return;
+    lead.nextFollowUp = dueDateFromEnquiry(lead.enquiry || todayISO(), FOLLOWUP_DAYS[0]);
+    lead.followupStep = 1;
+  } else {
+    lead.status = "Booked";
+    lead.nextFollowUp = "";
+    lead.followupStep = 0;
   }
-  openPaymentsModal(root, id);
+  render();
+  await saveLead(lead);
 }
 
-async function toggleLost(root, id) {
-  const leads = load().map(ensureLeadShape);
+async function toggleLost(id) {
   const lead = leads.find(l => l.id === id);
   if (!lead) return;
   if (lead.status === "Lost") {
     lead.status = "Replied";
-    lead.followupStep = Math.max(1, Number(lead.followupStep || 1));
-    lead.nextFollowUp = dueDateForStep(lead, lead.followupStep);
+    lead.nextFollowUp = dueDateFromEnquiry(lead.enquiry || todayISO(), FOLLOWUP_DAYS[0]);
+    lead.followupStep = 1;
   } else {
     lead.status = "Lost";
-    lead.followupStep = 0;
     lead.nextFollowUp = "";
+    lead.followupStep = 0;
   }
-  save(leads);
-  render(root);
-  await saveLeadToCloud(lead);
+  render();
+  await saveLead(lead);
 }
 
-async function delLead(root, id) {
-  if (!confirm("Delete this lead?")) return;
-  const leads = load().filter(l => l.id !== id);
-  save(leads);
-  render(root);
-  await deleteLeadFromCloud(id);
+async function deleteLead2(id) {
+  if (!confirm("Delete this lead? This cannot be undone.")) return;
+  leads = leads.filter(l => l.id !== id);
+  render();
+  await deleteLead(id);
 }
 
-async function editLead(root, id) {
-  const leads = load().map(ensureLeadShape);
+// ── EDIT MODAL ────────────────────────────────────────────────────────
+function openEditModal(id) {
   const lead = leads.find(l => l.id === id);
   if (!lead) return;
 
   const overlay = document.createElement("div");
-  overlay.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; padding:18px; z-index:99999;";
-
-  const modal = document.createElement("div");
-  modal.style.cssText = "background:#FFFBF7; color:#1A1A2E; width:min(560px, 100%); border-radius:18px; padding:20px; box-shadow:0 18px 60px rgba(0,0,0,.25); font-family:Montserrat, sans-serif; max-height:90vh; overflow-y:auto;";
-  modal.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:16px;">
-      <div style="font-weight:950; font-size:18px;">Edit Lead</div>
-      <button type="button" class="e-close" style="border:none; background:#fff; border-radius:12px; padding:8px 10px; font-weight:950; cursor:pointer;">✕</button>
-    </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-      <div style="grid-column:1/-1;">
-        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Couple name</label>
-        <input class="e-name" type="text" value="${(lead.name||'').replace(/"/g,'&quot;')}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+  overlay.className = "overlay";
+  overlay.innerHTML = `
+    <div class="modal">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div class="modal-title">Edit Lead</div>
+        <button class="e-close" style="border:none; background:#f0f0f5; border-radius:10px; padding:7px 11px; font-weight:900; cursor:pointer;">✕</button>
       </div>
-      <div>
-        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Venue</label>
-        <input class="e-venue" type="text" value="${(lead.venue||'').replace(/"/g,'&quot;')}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+      <div class="modal-grid">
+        <div class="full"><label>Couple name</label><input class="e-name" type="text" value="${esc(lead.name||"")}"></div>
+        <div><label>Venue</label><input class="e-venue" type="text" value="${esc(lead.venue||"")}"></div>
+        <div><label>Email</label><input class="e-email" type="email" value="${esc(lead.email||"")}"></div>
+        <div><label>Phone</label><input class="e-phone" type="text" value="${esc(lead.phone||"")}"></div>
+        <div><label>Wedding date</label><input class="e-wedding" type="date" value="${lead.wedding||""}"></div>
+        <div><label>Lead source</label>
+          <select class="e-source">
+            ${["Instagram","Website","Referral","Venue","Vendor","Facebook","TikTok","Other"].map(s => `<option ${lead.source===s?"selected":""}>${s}</option>`).join("")}
+          </select>
+        </div>
+        <div><label>Status</label>
+          <select class="e-status">
+            ${["Replied","Deposit Paid","Booked","Lost"].map(s => `<option value="${s}" ${lead.status===s?"selected":""}>${s}</option>`).join("")}
+          </select>
+        </div>
+        <div><label>Next follow-up date</label><input class="e-followup" type="date" value="${lead.nextFollowUp||""}"></div>
+        <div><label>Price quoted (€)</label><input class="e-price" type="number" value="${lead.priceQuoted||""}"></div>
       </div>
-      <div>
-        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Email</label>
-        <input class="e-email" type="email" value="${(lead.email||'').replace(/"/g,'&quot;')}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
+      <div class="modal-btn-row">
+        <button class="mbtn-primary e-save">Save changes</button>
+        <button class="mbtn-dark e-pay">💳 Payments</button>
+        <button class="mbtn-ghost e-cancel">Cancel</button>
       </div>
-      <div>
-        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Lead source</label>
-        <select class="e-source" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; background:#fff; font-family:Montserrat,sans-serif;">
-          ${['Instagram','Website','Referral','Venue','Vendor','Facebook','TikTok','Other'].map(s => `<option value="${s}" ${lead.source===s?'selected':''}>${s}</option>`).join('')}
-        </select>
-      </div>
-      <div>
-        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Status</label>
-        <select class="e-status" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; background:#fff; font-family:Montserrat,sans-serif;">
-          <option value="Replied" ${lead.status==='Replied'?'selected':''}>Replied</option>
-          <option value="Deposit Paid" ${lead.status==='Deposit Paid'?'selected':''}>Deposit Paid</option>
-          <option value="Booked" ${lead.status==='Booked'?'selected':''}>Booked</option>
-          <option value="Lost" ${lead.status==='Lost'?'selected':''}>Lost</option>
-        </select>
-      </div>
-      <div>
-        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Next follow-up date</label>
-        <input class="e-followup" type="date" value="${lead.nextFollowUp||''}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
-      </div>
-      <div>
-        <label style="font-weight:900; font-size:13px; display:block; margin-bottom:6px;">Wedding date</label>
-        <input class="e-wedding" type="date" value="${lead.weddingDate||''}" style="width:100%; padding:12px; border-radius:12px; border:1px solid #ddd; font-size:15px; font-weight:700; font-family:Montserrat,sans-serif;">
-      </div>
-    </div>
-    <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
-      <button type="button" class="e-save" style="flex:1; min-width:140px; background:#FF6B35; color:#fff; border:none; padding:13px; border-radius:14px; cursor:pointer; font-weight:950; font-size:15px; font-family:Montserrat,sans-serif;">Save changes</button>
-      <button type="button" class="e-payments" style="flex:1; min-width:140px; background:#1A1A2E; color:#fff; border:none; padding:13px; border-radius:14px; cursor:pointer; font-weight:950; font-size:15px; font-family:Montserrat,sans-serif;">💳 Payments</button>
-      <button type="button" class="e-cancel" style="flex:1; min-width:140px; background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.25); padding:13px; border-radius:14px; cursor:pointer; font-weight:950; font-size:15px; font-family:Montserrat,sans-serif;">Cancel</button>
     </div>
   `;
 
-  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+  const close = () => overlay.remove();
+  overlay.querySelector(".e-close").onclick = close;
+  overlay.querySelector(".e-cancel").onclick = close;
+  overlay.querySelector(".e-pay").onclick = () => { close(); openPayModal(id); };
+  overlay.querySelector(".e-save").onclick = async () => {
+    lead.name = overlay.querySelector(".e-name").value.trim();
+    lead.venue = overlay.querySelector(".e-venue").value.trim();
+    lead.email = overlay.querySelector(".e-email").value.trim();
+    lead.phone = overlay.querySelector(".e-phone").value.trim();
+    lead.wedding = overlay.querySelector(".e-wedding").value;
+    lead.source = overlay.querySelector(".e-source").value;
+    lead.status = overlay.querySelector(".e-status").value;
+    lead.nextFollowUp = overlay.querySelector(".e-followup").value;
+    lead.priceQuoted = Number(overlay.querySelector(".e-price").value)||0;
+    if (lead.status === "Lost" || lead.status === "Booked") {
+      lead.nextFollowUp = ""; lead.followupStep = 0;
+    }
+    close(); render(); await saveLead(lead);
+  };
+}
+
+// ── PAYMENTS MODAL ────────────────────────────────────────────────────
+function openPayModal(id) {
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+
+  const overlay = document.createElement("div");
+  overlay.className = "overlay";
+  overlay.innerHTML = `
+    <div class="modal">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+        <div class="modal-title">Payments — ${esc(lead.name)}</div>
+        <button class="p-close" style="border:none; background:#f0f0f5; border-radius:10px; padding:7px 11px; font-weight:900; cursor:pointer;">✕</button>
+      </div>
+      <div class="modal-sub">Add deposit and instalments. Balance updates automatically.</div>
+      <div class="modal-grid">
+        <div><label>Price quoted (€)</label><input class="p-quoted" type="number" value="${lead.priceQuoted||0}"></div>
+        <div><label>Deposit paid (€)</label><input class="p-deposit" type="number" value="${lead.depositPaid||0}"></div>
+      </div>
+      <div style="background:#fff; border:1px solid rgba(26,26,46,.12); border-radius:14px; padding:14px; margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <div style="font-weight:900; font-size:14px;">Instalments</div>
+          <button class="p-add-inst" style="background:#FF6B35; color:#fff; border:none; padding:8px 12px; border-radius:10px; font-weight:900; font-size:13px; cursor:pointer; font-family:Montserrat,sans-serif;">+ Add instalment</button>
+        </div>
+        <div class="p-inst-list"></div>
+      </div>
+      <div class="pay-summary">
+        <div class="pay-summary-card" style="background:#EAF6EF;">
+          <div style="font-size:11px; font-weight:900; opacity:.7; margin-bottom:4px;">TOTAL PAID</div>
+          <div class="p-total-paid" style="font-size:20px; font-weight:950;">€0</div>
+        </div>
+        <div class="pay-summary-card" style="background:#FFF0E8;">
+          <div style="font-size:11px; font-weight:900; opacity:.7; margin-bottom:4px;">BALANCE DUE</div>
+          <div class="p-balance" style="font-size:20px; font-weight:950;">€0</div>
+        </div>
+      </div>
+      <div class="modal-btn-row" style="margin-top:16px;">
+        <button class="mbtn-primary p-save">Save payments</button>
+        <button class="mbtn-ghost p-cancel">Cancel</button>
+      </div>
+    </div>
+  `;
+
   document.body.appendChild(overlay);
 
-  function close() { overlay.remove(); }
-  modal.querySelector(".e-close").addEventListener("click", close);
-  modal.querySelector(".e-cancel").addEventListener("click", close);
-  modal.querySelector(".e-payments").addEventListener("click", () => { close(); openPaymentsModal(root, id); });
+  const instList = overlay.querySelector(".p-inst-list");
+  const quotedEl = overlay.querySelector(".p-quoted");
+  const depositEl = overlay.querySelector(".p-deposit");
 
-  modal.querySelector(".e-save").addEventListener("click", async () => {
-    lead.name = modal.querySelector(".e-name").value.trim();
-    lead.venue = modal.querySelector(".e-venue").value.trim();
-    lead.email = modal.querySelector(".e-email").value.trim();
-    lead.source = modal.querySelector(".e-source").value;
-    const newStatus = modal.querySelector(".e-status").value;
-    const newFollowup = modal.querySelector(".e-followup").value;
-    const newWedding = modal.querySelector(".e-wedding").value;
+  function recalc() {
+    const quoted = Number(quotedEl.value||0);
+    const dep = Number(depositEl.value||0);
+    const insts = Array.from(instList.querySelectorAll(".inst-val")).map(i => Number(i.value||0)).filter(n => n > 0);
+    const paid = dep + insts.reduce((s,x) => s+x, 0);
+    const bal = Math.max(0, quoted - paid);
+    overlay.querySelector(".p-total-paid").textContent = fmtEuro(paid);
+    overlay.querySelector(".p-balance").textContent = fmtEuro(bal);
+  }
 
-    lead.status = newStatus;
-    lead.weddingDate = newWedding;
+  function addInstRow(val) {
+    const row = document.createElement("div");
+    row.className = "pay-row";
+    row.innerHTML = `<input class="inst-val" type="number" placeholder="€ amount" value="${Number(val||0)}"><button style="background:#fff; color:#1A1A2E; border:1px solid rgba(26,26,46,.2); padding:9px 12px; border-radius:10px; font-weight:900; cursor:pointer; font-family:Montserrat,sans-serif; white-space:nowrap;">Remove</button>`;
+    row.querySelector("button").onclick = () => { row.remove(); recalc(); };
+    row.querySelector("input").oninput = recalc;
+    instList.appendChild(row);
+    recalc();
+  }
 
-    if (newStatus === "Lost") {
-      lead.followupStep = 0; lead.nextFollowUp = "";
-    } else if (newStatus === "Booked") {
-      lead.followupStep = 0; lead.nextFollowUp = "";
-    } else {
-      lead.nextFollowUp = newFollowup || dueDateForStep(lead, Math.max(1, Number(lead.followupStep||1)));
-    }
+  (lead.instalments||[]).forEach(v => addInstRow(v));
+  overlay.querySelector(".p-add-inst").onclick = () => addInstRow(0);
+  quotedEl.oninput = recalc;
+  depositEl.oninput = recalc;
+  recalc();
 
-    save(leads);
-    close();
-    render(root);
-    await saveLeadToCloud(lead);
-
-    if (newStatus === "Booked") openPaymentsModal(root, id);
-  });
+  const close = () => overlay.remove();
+  overlay.querySelector(".p-close").onclick = close;
+  overlay.querySelector(".p-cancel").onclick = close;
+  overlay.querySelector(".p-save").onclick = async () => {
+    lead.priceQuoted = Number(quotedEl.value||0);
+    lead.depositPaid = Number(depositEl.value||0);
+    lead.instalments = Array.from(instList.querySelectorAll(".inst-val")).map(i => Number(i.value||0)).filter(n => n > 0);
+    if (lead.depositPaid > 0 && lead.status === "Replied") lead.status = "Deposit Paid";
+    if (lead.priceQuoted > 0 && totalPaid(lead) >= lead.priceQuoted) lead.status = "Booked";
+    close(); render(); await saveLead(lead);
+  };
 }
 
-function exportCSV() {
-  const leads = load().map(ensureLeadShape);
-  const headers = ["Couple","Lead Source","Status","Enquiry Date","Wedding Date","Venue","Email","Follow-up Step","Next Follow-up","Quoted (€)","Deposit (€)","Instalments (list)","Instalments Total (€)","Total Paid (€)","Balance (€)"];
-  const rows = leads.map(l => ([l.name||"",l.source||"",l.status||"",fmtDatePretty(l.enquiryDate||""),fmtDatePretty(l.weddingDate||""),l.venue||"",l.email||"",l.followupStep||0,fmtDatePretty(l.nextFollowUp||""),Number(l.priceQuoted||0),Number(l.depositPaid||0),(l.instalments||[]).join(";"),totalInstalments(l),totalPaid(l),balanceDue(l)]));
-  const csv = [headers.map(csvEscape).join(","), ...rows.map(r => r.map(csvEscape).join(","))].join("\n");
-  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a"); a.href = url; a.download = "wbw-leads.csv";
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-}
+// ── EXPORT / BACKUP ───────────────────────────────────────────────────
+document.getElementById("export-csv-btn").onclick = () => {
+  const headers = ["Couple","Source","Status","Enquiry","Wedding","Next Follow-up","Quoted","Paid","Balance","Email","Phone","Venue"];
+  const rows = leads.map(l => [l.name,l.source,l.status,fmtDate(l.enquiry),fmtDate(l.wedding),fmtDate(l.nextFollowUp),l.priceQuoted||0,totalPaid(l),balance(l),l.email,l.phone,l.venue]);
+  const csv = [headers, ...rows].map(r => r.map(v => `"${String(v||"").replace(/"/g,'""')}"`).join(",")).join("\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv"}));
+  a.download = "wbw-leads.csv";
+  a.click();
+};
 
-function backupJSON() {
-  const data = load();
-  const blob = new Blob([JSON.stringify({version:"v4-supabase", exportedAt:new Date().toISOString(), leads:data}, null, 2)], {type:"application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a"); a.href = url; a.download = "wbw-leads-backup.json";
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-}
+document.getElementById("backup-btn").onclick = () => {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify({leads, exportedAt: new Date().toISOString()}, null, 2)], {type:"application/json"}));
+  a.download = "wbw-leads-backup.json";
+  a.click();
+};
 
-async function restoreJSON(root, file) {
+document.getElementById("restore-input").onchange = async (e) => {
+  const file = e.target.files?.[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = async () => {
     try {
-      const parsed = JSON.parse(String(reader.result || "{}"));
-      const leads = parsed.leads || parsed || [];
-      if (!Array.isArray(leads)) throw new Error("Invalid");
-      save(leads);
-      for (const lead of leads) await saveLeadToCloud(lead);
+      const parsed = JSON.parse(reader.result);
+      leads = parsed.leads || parsed;
+      for (const l of leads) await saveLead(l);
+      render();
       alert("Restore complete ✔");
-      render(root);
-    } catch { alert("That file didn't look like a valid backup."); }
+    } catch { alert("Invalid backup file."); }
   };
   reader.readAsText(file);
-}
+};
 
-async function clearAll(root) {
-  if (!confirm("This will delete ALL your leads. This cannot be undone. Continue?")) return;
-  save([]);
-  await deleteAllLeadsFromCloud();
-  render(root);
-}
-
-function bindTool(root) {
-  if (root.dataset.wbwBound === "1") return;
-  root.dataset.wbwBound = "1";
-
-  const dateEl = root.querySelector(".lt-enquiryDate");
-  if (dateEl && !dateEl.value) dateEl.value = todayISO();
-
-  root.querySelector(".lt-add")?.addEventListener("click", () => addLead(root));
-  root.querySelector(".lt-export-csv")?.addEventListener("click", exportCSV);
-  root.querySelector(".lt-export-json")?.addEventListener("click", backupJSON);
-  root.querySelector(".lt-clear")?.addEventListener("click", () => clearAll(root));
-  root.querySelector(".lt-import")?.addEventListener("change", (e) => restoreJSON(root, e.target.files?.[0]));
-
-  root.addEventListener("click", (e) => {
-    const t = e.target;
-    if (!(t instanceof HTMLElement)) return;
-    const f = t.getAttribute("data-followup"); if (f) return markFollowupDone(root, f);
-    const ed = t.getAttribute("data-edit"); if (ed) return editLead(root, ed);
-    const bk = t.getAttribute("data-booked"); if (bk) return toggleBooked(root, bk);
-    const pay = t.getAttribute("data-pay"); if (pay) return openPaymentsModal(root, pay);
-    const ls = t.getAttribute("data-lost"); if (ls) return toggleLost(root, ls);
-    const dl = t.getAttribute("data-del"); if (dl) return delLead(root, dl);
-  });
-
-  render(root);
-}
+document.getElementById("clear-all-btn").onclick = async () => {
+  if (!confirm("Delete ALL leads? This cannot be undone.")) return;
+  for (const l of leads) await deleteLead(l.id);
+  leads = [];
+  render();
+};
 </script>
-
-</div><!-- end lt-root -->
+</body>
 </html>
