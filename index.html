@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Business Workspace</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #3B3C6D;
+  --pink: #FB478E;
+  --cream: #FAF8F6;
+  --white: #FFFFFF;
+  --border: rgba(59,60,109,.12);
+  --muted: rgba(59,60,109,.5);
+  --text: #2A2B4A;
+}
+body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+/* ── AUTH ─────────────────────────────────────────────── */
+#auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:var(--cream); }
+.auth-card { background:var(--white); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; box-shadow:0 8px 40px rgba(59,60,109,.1); }
+.auth-logo { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+.auth-tagline { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:32px; line-height:1.6; }
+.auth-tabs { display:flex; gap:6px; background:var(--cream); border-radius:14px; padding:5px; margin-bottom:24px; }
+.auth-tab { flex:1; padding:9px; border-radius:10px; border:none; background:transparent; color:var(--muted); font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+.auth-tab.active { background:var(--white); color:var(--navy); box-shadow:0 2px 8px rgba(59,60,109,.1); }
+.auth-field { margin-bottom:14px; }
+.auth-field label { display:block; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.auth-field input { width:100%; padding:12px 16px; background:var(--cream); border:1.5px solid var(--border); border-radius:12px; color:var(--text); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; transition:border-color .2s; }
+.auth-field input:focus { outline:none; border-color:var(--navy); }
+.auth-field input::placeholder { color:rgba(59,60,109,.3); }
+.auth-submit { width:100%; padding:14px; background:var(--pink); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; margin-top:6px; transition:opacity .2s; }
+.auth-submit:hover { opacity:.88; }
+.auth-submit:disabled { opacity:.5; cursor:not-allowed; }
+.auth-msg { margin-top:12px; font-size:13px; font-weight:700; text-align:center; min-height:18px; }
+.auth-msg.error { color:#c0392b; }
+.auth-msg.success { color:#27ae60; }
+
+/* ── APP ──────────────────────────────────────────────── */
+#app-screen { display:none; }
+.topnav { background:var(--navy); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:64px; position:sticky; top:0; z-index:100; }
+.nav-logo { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:#fff; }
+.nav-logo span { color:var(--pink); }
+.nav-right { display:flex; align-items:center; gap:14px; }
+.nav-user { font-size:12px; font-weight:600; color:rgba(255,255,255,.6); }
+.nav-signout { padding:8px 16px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:10px; color:rgba(255,255,255,.8); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:background .2s; }
+.nav-signout:hover { background:rgba(255,255,255,.2); }
+
+.main { max-width:1080px; margin:0 auto; padding:40px 24px 80px; }
+
+/* ── HERO ─────────────────────────────────────────────── */
+.hero { margin-bottom:32px; }
+.hero-greeting { font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--pink); margin-bottom:8px; }
+.hero-title { font-family:'Montserrat',sans-serif; font-size:clamp(22px,3vw,32px); font-weight:800; color:var(--navy); line-height:1.3; margin-bottom:8px; }
+.hero-title em { font-style:italic; color:var(--pink); }
+.hero-sub { font-size:14px; font-weight:600; color:var(--muted); max-width:520px; line-height:1.7; }
+
+/* ── BUSINESS SNAPSHOT ────────────────────────────────── */
+.snapshot-card {
+  background: var(--navy);
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.snapshot-card::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: rgba(251,71,142,.08);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.snapshot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.snapshot-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+.snapshot-sub {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,.5);
+  margin-top: 2px;
+}
+.snapshot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+}
+.snap-stat {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px;
+  padding: 16px 18px;
+  position: relative;
+}
+.snap-stat.highlight {
+  background: rgba(251,71,142,.15);
+  border-color: rgba(251,71,142,.3);
+}
+.snap-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 8px;
+}
+.snap-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.snap-value.pink { color: var(--pink); }
+.snap-value.amber { color: #FFD35C; }
+.snap-value.green { color: #52d68a; }
+.snap-meta {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,.4);
+}
+.snap-progress {
+  margin-top: 10px;
+  height: 5px;
+  background: rgba(255,255,255,.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.snap-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
+.snap-empty {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,.3);
+  font-style: italic;
+  margin-top: 4px;
+}
+.snap-unlock {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,.35);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ── WTS CARD ─────────────────────────────────────────── */
+.wts-card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 24px rgba(59,60,109,.07);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.wts-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,var(--navy),var(--pink)); border-radius:20px 20px 0 0; }
+.wts-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:10px; }
+.wts-card-title { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:900; color:var(--navy); letter-spacing:-.02em; }
+.wts-retake { font-size:12px; font-weight:700; color:var(--muted); text-decoration:none; border:1px solid var(--border); padding:7px 14px; border-radius:10px; transition:all .2s; }
+.wts-retake:hover { border-color:var(--navy); color:var(--navy); }
+.score-bars { display:flex; flex-direction:column; gap:13px; margin-bottom:20px; }
+.score-row { display:grid; grid-template-columns:190px 1fr 44px; align-items:center; gap:14px; }
+.score-label { font-size:13px; font-weight:700; color:var(--text); }
+.score-track { height:9px; background:var(--cream); border-radius:999px; overflow:hidden; }
+.score-fill { height:100%; border-radius:999px; width:0%; transition:width 1s cubic-bezier(.4,0,.2,1); }
+.score-pct { font-size:13px; font-weight:800; text-align:right; }
+.wts-empty { text-align:center; padding:12px 0 4px; }
+.wts-empty p { font-size:14px; font-weight:600; color:var(--muted); margin-bottom:18px; line-height:1.7; }
+.wts-start-btn { display:inline-block; padding:13px 30px; background:var(--pink); color:#fff; border-radius:14px; font-weight:800; font-size:14px; text-decoration:none; transition:opacity .2s; }
+.wts-start-btn:hover { opacity:.88; }
+.rec-banner { background:linear-gradient(135deg,rgba(251,71,142,.07),rgba(59,60,109,.04)); border:1px solid rgba(251,71,142,.2); border-radius:14px; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+.rec-eyebrow { font-size:10px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--pink); margin-bottom:3px; }
+.rec-tool { font-size:15px; font-weight:800; color:var(--navy); }
+.rec-why { font-size:12px; font-weight:600; color:var(--muted); margin-top:2px; }
+.rec-btn { padding:10px 22px; background:var(--pink); color:#fff; border-radius:12px; font-weight:800; font-size:13px; text-decoration:none; white-space:nowrap; flex-shrink:0; transition:opacity .2s; }
+.rec-btn:hover { opacity:.88; }
+
+/* ── CATEGORIES ───────────────────────────────────────── */
+.category { margin-bottom:40px; }
+.category-header { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+.cat-label { font-size:11px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
+.cat-line { flex:1; height:1px; background:var(--border); }
+.tools-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:16px; }
+.tool-card { background:var(--white); border:1px solid var(--border); border-radius:18px; padding:24px; text-decoration:none; color:var(--text); display:block; position:relative; overflow:hidden; transition:transform .2s,box-shadow .2s,border-color .2s; }
+.tool-card:not(.locked):hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(59,60,109,.12); border-color:rgba(59,60,109,.2); }
+.tool-card.locked { opacity:.4; pointer-events:none; }
+.tool-top-bar { position:absolute; top:0; left:0; right:0; height:3px; border-radius:18px 18px 0 0; }
+.tool-icon { width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:14px; margin-top:6px; }
+.tool-name { font-size:16px; font-weight:800; color:var(--navy); margin-bottom:7px; }
+.tool-desc { font-size:13px; font-weight:600; color:var(--muted); line-height:1.65; margin-bottom:18px; }
+.tool-footer { display:flex; align-items:center; justify-content:space-between; }
+.badge { font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; padding:4px 10px; border-radius:999px; }
+.badge-live { background:rgba(39,174,96,.12); color:#27ae60; }
+.badge-soon { background:rgba(59,60,109,.08); color:var(--muted); }
+.tool-arrow { font-size:16px; color:var(--muted); transition:transform .2s,color .2s; }
+.tool-card:hover .tool-arrow { transform:translateX(4px); color:var(--navy); }
+
+/* ── FOOTER ───────────────────────────────────────────── */
+.dash-footer { border-top:1px solid var(--border); padding:22px 32px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+.footer-logo { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:700; color:var(--navy); }
+.footer-logo span { color:var(--pink); }
+.footer-copy { font-size:12px; font-weight:600; color:var(--muted); }
+
+@media(max-width:640px){
+  .topnav{padding:0 16px;}
+  .main{padding:24px 16px 60px;}
+  .snapshot-card{padding:20px 18px;}
+  .snap-value{font-size:22px;}
+  .wts-card{padding:20px 18px;}
+  .score-row{grid-template-columns:110px 1fr 34px; gap:8px;}
+  .auth-card{padding:32px 24px;}
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">Wedding Business Workspace</div>
+    <div class="auth-tagline">Welcome back to your wedding business control centre.</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-in">Sign In</button>
+      <button class="auth-tab" id="tab-up">Create Account</button>
+    </div>
+    <div id="form-in">
+      <div class="auth-field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="in-pass" placeholder="Your password"></div>
+      <button class="auth-submit" id="signin-btn">Sign In</button>
+      <div class="auth-msg" id="in-msg"></div>
+    </div>
+    <div id="form-up" style="display:none;">
+      <div class="auth-field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="up-pass" placeholder="Choose a password (min 6 chars)"></div>
+      <button class="auth-submit" id="signup-btn">Create Account</button>
+      <div class="auth-msg" id="up-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-screen">
+  <nav class="topnav">
+    <div class="nav-logo">Wedding Business <span>Workspace</span></div>
+    <div class="nav-right">
+      <div class="nav-user" id="nav-user"></div>
+      <button class="nav-signout" id="signout-btn">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-greeting" id="hero-greeting">Good morning ✨</div>
+      <h1 class="hero-title">Welcome back to your wedding business control centre.</h1>
+      <p class="hero-sub">Your snapshot updates as you use your tools. The more you use them, the clearer your picture becomes.</p>
+    </div>
+
+    <!-- BUSINESS SNAPSHOT -->
+    <div class="snapshot-card">
+      <div class="snapshot-header">
+        <div>
+          <div class="snapshot-title">Business Snapshot</div>
+          <div class="snapshot-sub">Live data from your tools — updates automatically</div>
+        </div>
+      </div>
+      <div class="snapshot-grid" id="snapshot-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- WHERE TO START — above the fold -->
+    <div class="wts-card">
+      <div class="wts-card-header">
+        <div class="wts-card-title">Where To Start</div>
+        <a href="where-to-start.html" class="wts-retake" id="wts-action-link">Take the assessment →</a>
+      </div>
+      <div id="wts-results-area">
+        <div class="wts-empty">
+          <p>Answer 10 quick questions across 5 areas of your business.<br>We'll score each area and show you exactly where to focus first for the fastest results.</p>
+          <a href="where-to-start.html" class="wts-start-btn">Take the assessment →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEAD & CLIENT MANAGEMENT -->
+    <div class="category">
+      <div class="category-header">
+        <div class="cat-label">Lead & Client Management</div>
+        <div class="cat-line"></div>
+      </div>
+      <div class="tools-grid">
+        <a href="lead-tracker.html" class="tool-card">
+          <div class="tool-top-bar" style="background:linear-gradient(90deg,#FF6B1A,#FF9A5C);"></div>
+          <div class="tool-icon" style="background:rgba(255,107,26,.1);">📋</div>
+          <div class="tool-name">Lead Tracker</div>
+          <div class="tool-desc">Track every enquiry, follow up on time, and never let a great lead go cold. See exactly where your best bookings come from.</div>
+          <div class="tool-footer"><span class="badge badge-live">Live</span><span class="tool-arrow">→</span></div>
+        </a>
+        <div class="tool-card locked">
+          <div class="tool-top-bar" style="background:linear-gradient(90deg,#5B8DEF,#85AFFF);"></div>
+          <div class="tool-icon" style="background:rgba(91,141,239,.1);">💬</div>
+          <div class="tool-name">Enquiry Templates</div>
+          <div class="tool-desc">Ready-to-send response templates for every stage — first reply, follow-up, quote, and booking confirmation.</div>
+          <div class="tool-footer"><span class="badge badge-soon">Coming soon</span><span class="tool-arrow">→</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INCOME & PRICING -->
+    <div class="category">
+      <div class="category-header">
+        <div class="cat-label">Income & Pricing</div>
+        <div class="cat-line"></div>
+      </div>
+      <div class="tools-grid">
+        <div class="tool-card locked">
+          <div class="tool-top-bar" style="background:linear-gradient(90deg,#F5A800,#FFD35C);"></div>
+          <div class="tool-icon" style="background:rgba(245,168,0,.1);">📈</div>
+          <div class="tool-name">Income & Pricing Planner</div>
+          <div class="tool-desc">Set your income goal, work backwards to your minimum price, and know exactly how many weddings you need to book.</div>
+          <div class="tool-footer"><span class="badge badge-soon">Coming soon</span><span class="tool-arrow">→</span></div>
+        </div>
+        <div class="tool-card locked">
+          <div class="tool-top-bar" style="background:linear-gradient(90deg,#27ae60,#52d68a);"></div>
+          <div class="tool-icon" style="background:rgba(39,174,96,.1);">🎯</div>
+          <div class="tool-name">Ideal Client Clarity</div>
+          <div class="tool-desc">Define your most profitable couple — the venue, values, and personality that makes every booking feel like a dream.</div>
+          <div class="tool-footer"><span class="badge badge-soon">Coming soon</span><span class="tool-arrow">→</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARKETING & SOCIAL MEDIA -->
+    <div class="category">
+      <div class="category-header">
+        <div class="cat-label">Marketing & Social Media</div>
+        <div class="cat-line"></div>
+      </div>
+      <div class="tools-grid">
+        <div class="tool-card locked">
+          <div class="tool-top-bar" style="background:linear-gradient(90deg,#8B5CF6,#B794F4);"></div>
+          <div class="tool-icon" style="background:rgba(139,92,246,.1);">📱</div>
+          <div class="tool-name">Social Media Planner</div>
+          <div class="tool-desc">Stop guessing what to post. Build a content strategy that speaks directly to your most profitable couples.</div>
+          <div class="tool-footer"><span class="badge badge-soon">Coming soon</span><span class="tool-arrow">→</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="dash-footer">
+    <div class="footer-logo">Wedding Business <span>Workspace</span></div>
+    <div class="footer-copy">Hello Wedding Pro © 2025</div>
+  </footer>
+</div>
+
+<script>
+const SUPABASE_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_CS3XLLfWaZNA-B2oE37N-g_z2FMWCzq";
+if (!window._wbwSb) {
+  window._wbwSb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { storageKey: 'wbw-auth', autoRefreshToken: true, persistSession: true }
+  });
+}
+const sb = window._wbwSb;
+
+document.getElementById("tab-in").onclick  = () => switchTab("in");
+document.getElementById("tab-up").onclick  = () => switchTab("up");
+document.getElementById("signin-btn").onclick = signIn;
+document.getElementById("signup-btn").onclick = signUp;
+document.getElementById("signout-btn").onclick = signOut;
+
+function switchTab(t) {
+  document.getElementById("form-in").style.display = t === "in" ? "" : "none";
+  document.getElementById("form-up").style.display = t === "up" ? "" : "none";
+  document.getElementById("tab-in").classList.toggle("active", t === "in");
+  document.getElementById("tab-up").classList.toggle("active", t === "up");
+}
+
+async function signIn() {
+  const email = document.getElementById("in-email").value.trim();
+  const pass  = document.getElementById("in-pass").value;
+  const msg   = document.getElementById("in-msg");
+  const btn   = document.getElementById("signin-btn");
+  if (!email || !pass) { showMsg(msg, "Please enter email and password.", "error"); return; }
+  btn.disabled = true; btn.textContent = "Signing in…";
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  btn.disabled = false; btn.textContent = "Sign In";
+  if (error) showMsg(msg, error.message, "error");
+}
+
+async function signUp() {
+  const email = document.getElementById("up-email").value.trim();
+  const pass  = document.getElementById("up-pass").value;
+  const msg   = document.getElementById("up-msg");
+  const btn   = document.getElementById("signup-btn");
+  if (!email || !pass) { showMsg(msg, "Please enter email and password.", "error"); return; }
+  if (pass.length < 6) { showMsg(msg, "Password must be at least 6 characters.", "error"); return; }
+  btn.disabled = true; btn.textContent = "Creating account…";
+  const { error } = await sb.auth.signUp({ email, password: pass });
+  btn.disabled = false; btn.textContent = "Create Account";
+  if (error) showMsg(msg, error.message, "error");
+  else { showMsg(msg, "Account created! Please sign in.", "success"); switchTab("in"); }
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  document.getElementById("app-screen").style.display = "none";
+  document.getElementById("auth-screen").style.display = "flex";
+}
+
+function showMsg(el, text, type) {
+  el.textContent = text;
+  el.className = "auth-msg " + type;
+}
+
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (session?.user) {
+    document.getElementById("auth-screen").style.display = "none";
+    document.getElementById("app-screen").style.display = "block";
+    document.getElementById("nav-user").textContent = session.user.email;
+    const h = new Date().getHours();
+    document.getElementById("hero-greeting").textContent =
+      (h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening") + " ✨";
+    await Promise.all([
+      loadWTSResults(session.user.id),
+      loadLeadData(session.user.id)
+    ]);
+  } else {
+    document.getElementById("app-screen").style.display = "none";
+    document.getElementById("auth-screen").style.display = "flex";
+  }
+});
+
+// ── SNAPSHOT ──────────────────────────────────────────────────────────
+let snapData = {
+  incomeGoal: null,
+  projectedIncome: null,
+  weddingsNeeded: null,
+  bookedCount: 0,
+  totalLeads: 0,
+  followupsDue: 0,
+};
+
+function renderSnapshot() {
+  const d = snapData;
+  const grid = document.getElementById("snapshot-grid");
+
+  const booked = d.bookedCount;
+  const needed = d.weddingsNeeded;
+  const bookedPct = needed ? Math.min(100, Math.round((booked / needed) * 100)) : 0;
+  const projected = d.projectedIncome;
+  const goal = d.incomeGoal;
+  const incomePct = goal ? Math.min(100, Math.round((projected / goal) * 100)) : 0;
+  const gap = (goal && projected !== null) ? Math.max(0, goal - projected) : null;
+
+  const fmtEuro = n => n !== null && n !== undefined ? "€" + Number(n).toLocaleString("en-IE") : null;
+
+  const stats = [
+    {
+      label: "Income Goal",
+      value: fmtEuro(goal) || "—",
+      valueClass: "amber",
+      meta: goal ? "Set in Income Planner" : "Set in Income & Pricing Planner",
+      progress: null,
+      empty: !goal,
+      unlock: !goal ? "Income & Pricing Planner" : null,
+      highlight: false,
+    },
+    {
+      label: "Projected Income",
+      value: fmtEuro(projected) || "—",
+      valueClass: "green",
+      meta: gap !== null ? "Gap: " + fmtEuro(gap) : "From booked weddings",
+      progress: goal ? { pct: incomePct, color: "#52d68a" } : null,
+      empty: projected === null,
+      unlock: projected === null ? "Income & Pricing Planner" : null,
+      highlight: false,
+    },
+    {
+      label: "Weddings Booked",
+      value: booked,
+      valueClass: "pink",
+      meta: needed ? "of " + needed + " needed (" + bookedPct + "%)" : "Track in Lead Tracker",
+      progress: needed ? { pct: bookedPct, color: "#FB478E" } : null,
+      empty: false,
+      unlock: null,
+      highlight: true,
+    },
+    {
+      label: "Total Enquiries",
+      value: d.totalLeads || 0,
+      valueClass: "",
+      meta: d.followupsDue > 0 ? d.followupsDue + " follow-up" + (d.followupsDue > 1 ? "s" : "") + " due today" : "All follow-ups up to date ✓",
+      progress: null,
+      empty: false,
+      unlock: null,
+      highlight: false,
+    },
+  ];
+
+  grid.innerHTML = stats.map(s => `
+    <div class="snap-stat ${s.highlight ? "highlight" : ""}">
+      <div class="snap-label">${s.label}</div>
+      <div class="snap-value ${s.valueClass}">${s.value}</div>
+      <div class="snap-meta">${s.meta}</div>
+      ${s.progress ? `<div class="snap-progress"><div class="snap-progress-fill" data-pct="${s.progress.pct}" style="background:${s.progress.color};"></div></div>` : ""}
+      ${s.unlock ? `<div class="snap-unlock">🔒 Unlock with ${s.unlock}</div>` : ""}
+    </div>
+  `).join("");
+
+  // Animate progress bars
+  requestAnimationFrame(() => {
+    grid.querySelectorAll(".snap-progress-fill").forEach(el => {
+      const pct = el.getAttribute("data-pct");
+      setTimeout(() => { el.style.width = pct + "%"; }, 150);
+    });
+  });
+}
+
+// ── LOAD LEAD DATA ────────────────────────────────────────────────────
+async function loadLeadData(userId) {
+  try {
+    const { data } = await sb.from("leads").select("data").eq("user_id", userId);
+    if (data && data.length > 0) {
+      const leads = data.map(r => r.data).filter(Boolean);
+      const today = new Date().toISOString().slice(0, 10);
+      const booked = leads.filter(l => l.status === "Booked" || l.status === "Deposit Paid");
+      const followupsDue = leads.filter(l =>
+        l.nextFollowUp && l.nextFollowUp <= today &&
+        l.status !== "Booked" && l.status !== "Lost"
+      ).length;
+      const projectedIncome = booked.reduce((s, l) => s + Number(l.priceQuoted || 0), 0);
+
+      snapData.bookedCount = booked.length;
+      snapData.totalLeads = leads.length;
+      snapData.followupsDue = followupsDue;
+      snapData.projectedIncome = projectedIncome;
+    }
+  } catch(e) { console.log("Lead data:", e.message); }
+  renderSnapshot();
+}
+
+// ── WTS RESULTS ───────────────────────────────────────────────────────
+const SCORE_META = {
+  pricing: { label: "Pricing Confidence",     color: "#FB478E", tool: "Income & Pricing Planner", url: "#" },
+  leads:   { label: "Lead Tracking",           color: "#FF6B1A", tool: "Lead Tracker",             url: "lead-tracker.html" },
+  ica:     { label: "Most Profitable Couples", color: "#8B5CF6", tool: "Ideal Client Clarity",     url: "#" },
+  social:  { label: "Social Media",            color: "#5B8DEF", tool: "Social Media Planner",     url: "#" },
+  income:  { label: "Income Goals",            color: "#F5A800", tool: "Income & Pricing Planner", url: "#" },
+};
+
+async function loadWTSResults(userId) {
+  try {
+    const { data } = await sb.from("where_to_start").select("data").eq("user_id", userId).order("updated_at", { ascending: false }).limit(1);
+    if (data && data.length > 0 && data[0].data?.scores) {
+      renderWTSResults(data[0].data.scores);
+      document.getElementById("wts-action-link").textContent = "Retake assessment →";
+    }
+  } catch(e) { console.log("WTS load:", e.message); }
+}
+
+function renderWTSResults(scores) {
+  const area = document.getElementById("wts-results-area");
+  const items = Object.entries(scores)
+    .map(([key, val]) => ({ key, pct: Math.round((val.score / val.max) * 100), ...(SCORE_META[key] || { label: key, color: "#3B3C6D", tool: "", url: "#" }) }))
+    .sort((a, b) => a.pct - b.pct);
+  const weakest = items[0];
+
+  area.innerHTML = `
+    <div class="score-bars">
+      ${items.map(s => `
+        <div class="score-row">
+          <div class="score-label">${s.label}</div>
+          <div class="score-track"><div class="score-fill" data-pct="${s.pct}" style="background:${s.color};"></div></div>
+          <div class="score-pct" style="color:${s.color};">${s.pct}%</div>
+        </div>`).join("")}
+    </div>
+    ${weakest ? `
+    <div class="rec-banner" style="margin-top:20px;">
+      <div>
+        <div class="rec-eyebrow">Start here</div>
+        <div class="rec-tool">${weakest.tool}</div>
+        <div class="rec-why">Your lowest score is ${weakest.label} at ${weakest.pct}% — this is where you'll see the fastest results.</div>
+      </div>
+      <a href="${weakest.url}" class="rec-btn">Open tool →</a>
+    </div>` : ""}
+  `;
+
+  requestAnimationFrame(() => {
+    area.querySelectorAll(".score-fill").forEach(el => {
+      const pct = el.getAttribute("data-pct");
+      setTimeout(() => { el.style.width = pct + "%"; }, 100);
+    });
+  });
+}
+</script>
+</body>
+</html>
