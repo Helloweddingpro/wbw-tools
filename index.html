@@ -590,7 +590,7 @@ async function loadWTSResults(userId) {
 function renderWTSResults(scores) {
   const area = document.getElementById("wts-results-area");
   const items = Object.entries(scores)
-    .map(([key, val]) => ({ key, pct: Math.round((val.score / val.max) * 100), ...(SCORE_META[key] || { label: key, color: "#3B3C6D", tool: "", url: "#" }) }))
+    .map(([key, val]) => ({ key, pct: val.pct ?? (val.max ? Math.round((val.raw / val.max) * 100) : 0), ...(SCORE_META[key] || { label: key, color: "#3B3C6D", tool: "", url: "#" }) }))
     .sort((a, b) => a.pct - b.pct);
   const weakest = items[0];
   const strongest = items[items.length - 1];
