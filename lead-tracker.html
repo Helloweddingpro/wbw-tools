@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lead Tracker — Wedding Business Workspace</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #3B3C6D;
+  --pink: #FB478E;
+  --orange: #FF6B1A;
+  --cream: #FAF8F6;
+  --white: #FFFFFF;
+  --border: rgba(59,60,109,.12);
+  --muted: rgba(59,60,109,.5);
+  --text: #2A2B4A;
+  --green: #27ae60;
+  --red: #c0392b;
+}
+body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+/* AUTH */
+#auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:var(--cream); }
+.auth-card { background:var(--white); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; box-shadow:0 8px 40px rgba(59,60,109,.1); }
+.auth-logo { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+.auth-tagline { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:32px; }
+.auth-tabs { display:flex; gap:6px; background:var(--cream); border-radius:14px; padding:5px; margin-bottom:24px; }
+.auth-tab { flex:1; padding:9px; border-radius:10px; border:none; background:transparent; color:var(--muted); font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+.auth-tab.active { background:var(--white); color:var(--navy); box-shadow:0 2px 8px rgba(59,60,109,.1); }
+.auth-field { margin-bottom:14px; }
+.auth-field label { display:block; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.auth-field input { width:100%; padding:12px 16px; background:var(--cream); border:1.5px solid var(--border); border-radius:12px; color:var(--text); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; transition:border-color .2s; }
+.auth-field input:focus { outline:none; border-color:var(--navy); }
+.auth-field input::placeholder { color:rgba(59,60,109,.3); }
+.auth-submit { width:100%; padding:14px; background:var(--orange); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; margin-top:6px; transition:opacity .2s; }
+.auth-submit:hover { opacity:.88; }
+.auth-submit:disabled { opacity:.5; cursor:not-allowed; }
+.auth-msg { margin-top:12px; font-size:13px; font-weight:700; text-align:center; min-height:18px; }
+.auth-msg.error { color:var(--red); }
+.auth-msg.success { color:var(--green); }
+
+/* APP */
+#app-screen { display:none; }
+.topnav { background:var(--navy); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:64px; position:sticky; top:0; z-index:100; }
+.nav-left { display:flex; align-items:center; gap:16px; }
+.nav-back { font-size:13px; font-weight:700; color:rgba(255,255,255,.6); text-decoration:none; transition:color .2s; }
+.nav-back:hover { color:#fff; }
+.nav-logo { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:#fff; }
+.nav-logo span { color:var(--pink); }
+.nav-right { display:flex; align-items:center; gap:14px; }
+.nav-user { font-size:12px; font-weight:600; color:rgba(255,255,255,.6); }
+.nav-signout { padding:8px 16px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:10px; color:rgba(255,255,255,.8); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:background .2s; }
+.nav-signout:hover { background:rgba(255,255,255,.2); }
+
+.main { max-width:1100px; margin:0 auto; padding:36px 24px 80px; }
+
+.page-header { margin-bottom:28px; }
+.page-header h1 { font-family:'Cormorant Garamond',serif; font-size:36px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+.page-header p { font-size:14px; font-weight:600; color:var(--muted); }
+
+/* STATS */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:28px; }
+.stat-card { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:16px 18px; }
+.stat-label { font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.stat-value { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:700; color:var(--navy); line-height:1; }
+.stat-value.pink { color:var(--pink); }
+.stat-value.green { color:var(--green); }
+.stat-value.orange { color:var(--orange); }
+
+/* CARDS */
+.card { background:var(--white); border:1px solid var(--border); border-radius:18px; padding:24px; margin-bottom:20px; }
+.card-title { font-size:16px; font-weight:900; color:var(--navy); margin-bottom:18px; }
+
+/* ADD FORM */
+.add-form { background:rgba(255,107,26,.04); border:1px solid rgba(255,107,26,.15); }
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.form-group { display:flex; flex-direction:column; gap:6px; }
+.form-group.full { grid-column:1/-1; }
+.form-group label { font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); }
+.form-group input, .form-group select { padding:11px 13px; border:1.5px solid var(--border); border-radius:11px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; color:var(--text); background:var(--white); transition:border-color .2s; }
+.form-group input:focus, .form-group select:focus { outline:none; border-color:var(--orange); }
+.add-btn { width:100%; padding:13px; background:var(--orange); color:#fff; border:none; border-radius:13px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:opacity .2s; margin-top:4px; }
+.add-btn:hover { opacity:.9; }
+.add-msg { font-size:13px; font-weight:700; min-height:18px; margin-top:6px; }
+.add-msg.ok { color:var(--green); }
+.add-msg.err { color:var(--red); }
+
+/* FOLLOW UPS */
+.followup-item { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px 16px; border:1.5px solid rgba(255,107,26,.25); border-radius:13px; margin-bottom:10px; background:rgba(255,107,26,.04); }
+.followup-item:last-child { margin-bottom:0; }
+.fu-name { font-size:15px; font-weight:800; color:var(--navy); }
+.fu-date { font-size:12px; font-weight:700; color:var(--orange); margin-top:2px; }
+.fu-venue { font-size:12px; font-weight:600; color:var(--muted); margin-top:1px; }
+.fu-done-msg { font-size:12px; font-weight:700; color:var(--green); margin-top:4px; display:none; }
+.mark-done-btn { padding:9px 16px; background:var(--orange); color:#fff; border:none; border-radius:11px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:opacity .2s; }
+.mark-done-btn:hover { opacity:.88; }
+.mark-done-btn:disabled { opacity:.4; cursor:not-allowed; }
+.all-clear { background:rgba(39,174,96,.08); border:1px solid rgba(39,174,96,.2); border-radius:12px; padding:14px 16px; font-size:14px; font-weight:700; color:var(--green); }
+
+/* TABLE */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; min-width:750px; }
+thead tr { border-bottom:2px solid var(--border); }
+th { padding:10px 12px; font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); text-align:left; white-space:nowrap; }
+td { padding:11px 12px; border-top:1px solid var(--border); vertical-align:middle; font-size:13px; }
+.couple-name { font-weight:800; color:var(--navy); font-size:14px; }
+.couple-venue { font-size:11px; font-weight:600; color:var(--muted); margin-top:2px; }
+
+.chip { display:inline-block; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:800; letter-spacing:.04em; white-space:nowrap; }
+.chip-replied { background:rgba(59,60,109,.1); color:var(--navy); }
+.chip-deposit { background:rgba(255,107,26,.12); color:#c45000; }
+.chip-booked  { background:rgba(39,174,96,.12); color:var(--green); }
+.chip-lost     { background:rgba(192,57,43,.1); color:var(--red); }
+.chip-followup { background:rgba(255,107,26,.12); color:var(--orange); }
+
+.actions { display:grid; grid-template-columns:1fr 1fr; gap:5px; min-width:140px; }
+.actions button { padding:7px 8px; border-radius:9px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer; border:none; transition:opacity .2s; }
+.actions button:hover { opacity:.85; }
+.btn-edit   { background:var(--navy); color:#fff; }
+.btn-pay    { background:var(--orange); color:#fff; }
+.btn-book   { background:var(--green); color:#fff; }
+.btn-unbook { background:rgba(39,174,96,.15); color:var(--green); border:1px solid rgba(39,174,96,.3) !important; }
+.btn-lost   { background:var(--white); color:var(--text); border:1px solid var(--border) !important; }
+.btn-undo   { background:rgba(192,57,43,.1); color:var(--red); border:1px solid rgba(192,57,43,.25) !important; }
+.btn-del    { grid-column:1/-1; background:var(--white); color:var(--red); border:1px solid rgba(192,57,43,.25) !important; }
+
+.bal-outstanding { color:var(--orange); font-weight:800; }
+.bal-clear { color:var(--green); font-weight:800; }
+
+/* MODAL */
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; padding:20px; z-index:9999; }
+.modal { background:var(--white); border-radius:20px; padding:28px; width:min(560px,100%); max-height:90vh; overflow-y:auto; box-shadow:0 24px 60px rgba(0,0,0,.2); font-family:'Montserrat',sans-serif; }
+.modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.modal-title { font-size:18px; font-weight:900; color:var(--navy); }
+.modal-close { background:var(--cream); border:none; border-radius:9px; padding:7px 11px; font-size:16px; cursor:pointer; color:var(--muted); }
+.modal-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+.modal-grid .full { grid-column:1/-1; }
+.modal-grid label { display:block; font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.modal-grid input, .modal-grid select { width:100%; padding:11px 13px; border:1.5px solid var(--border); border-radius:11px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; color:var(--text); background:var(--white); }
+.modal-grid input:focus, .modal-grid select:focus { outline:none; border-color:var(--navy); }
+.modal-btns { display:flex; gap:10px; flex-wrap:wrap; }
+.modal-btns button { flex:1; min-width:120px; padding:12px; border-radius:12px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; cursor:pointer; border:none; }
+.mbtn-primary { background:var(--navy); color:#fff; }
+.mbtn-orange  { background:var(--orange); color:#fff; }
+.mbtn-ghost   { background:var(--cream); color:var(--text); }
+
+.pay-row { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; margin-bottom:8px; }
+.pay-row input { width:100%; padding:10px 13px; border:1.5px solid var(--border); border-radius:11px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; color:var(--text); }
+.pay-row input:focus { outline:none; border-color:var(--orange); }
+.pay-row button { padding:10px 14px; border-radius:10px; border:1px solid var(--border); background:var(--white); color:var(--red); font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap; font-family:'Montserrat',sans-serif; }
+.pay-summary { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
+.pay-sum-card { border-radius:13px; padding:14px; }
+
+#toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:11px 20px; border-radius:12px; font-size:13px; font-weight:800; opacity:0; pointer-events:none; transition:opacity .3s; z-index:99999; }
+#toast.show { opacity:1; }
+
+@media(max-width:640px){
+  .topnav { padding:0 16px; }
+  .main { padding:20px 14px 60px; }
+  .form-grid { grid-template-columns:1fr; }
+  .modal-grid { grid-template-columns:1fr; }
+  .stats-grid { grid-template-columns:1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">Lead Tracker</div>
+    <div class="auth-tagline">Wedding Business Workspace</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-in">Sign In</button>
+      <button class="auth-tab" id="tab-up">Create Account</button>
+    </div>
+    <div id="form-in">
+      <div class="auth-field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="in-pass" placeholder="Your password"></div>
+      <button class="auth-submit" id="signin-btn">Sign In</button>
+      <div class="auth-msg" id="in-msg"></div>
+    </div>
+    <div id="form-up" style="display:none;">
+      <div class="auth-field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="up-pass" placeholder="Min 6 characters"></div>
+      <button class="auth-submit" id="signup-btn">Create Account</button>
+      <div class="auth-msg" id="up-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-screen">
+  <nav class="topnav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-back">← Dashboard</a>
+      <div class="nav-logo">Lead <span>Tracker</span></div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-user" id="nav-user"></div>
+      <button class="nav-signout" id="signout-btn">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="main">
+
+    <div class="page-header">
+      <h1>Lead Tracker</h1>
+      <p>Track every enquiry, follow up on time, and see exactly where your best bookings come from.</p>
+    </div>
+
+    <div class="stats-grid" id="stats-row"></div>
+
+    <!-- FOLLOW UPS -->
+    <div class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+        <div class="card-title" style="margin-bottom:0;">Follow-ups Due</div>
+        <div id="today-display" style="font-size:12px; font-weight:700; color:var(--muted);"></div>
+      </div>
+      <div id="followups-list"></div>
+    </div>
+
+    <!-- ADD LEAD -->
+    <div class="card add-form">
+      <div class="card-title">Add a Lead</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Couple Name *</label><input type="text" id="f-name" placeholder="e.g. Sarah &amp; Ben"></div>
+        <div class="form-group"><label>Enquiry Date</label><input type="date" id="f-enquiry"></div>
+        <div class="form-group"><label>Wedding Date</label><input type="date" id="f-wedding"></div>
+        <div class="form-group"><label>Venue</label><input type="text" id="f-venue" placeholder="e.g. The Haven Hotel"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="f-email" placeholder="email@example.com"></div>
+        <div class="form-group"><label>Lead Source</label>
+          <select id="f-source">
+            <option>Instagram</option><option>Website</option><option>Referral</option>
+            <option>Venue</option><option>Vendor</option><option>Facebook</option>
+            <option>TikTok</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Status</label>
+          <select id="f-status">
+            <option value="Replied">Replied</option>
+            <option value="Follow-up 1">Follow-up 1</option>
+            <option value="Follow-up 2">Follow-up 2</option>
+            <option value="Follow-up 3">Follow-up 3</option>
+            <option value="Follow-up 4">Follow-up 4</option>
+            <option value="Follow-up 5">Follow-up 5</option>
+            <option value="Deposit Paid">Deposit Paid</option>
+            <option value="Booked">Booked</option>
+            <option value="Lost">Lost</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Price Quoted (€)</label><input type="number" id="f-price" placeholder="e.g. 2500"></div>
+        <div class="form-group full">
+          <button class="add-btn" id="add-lead-btn">+ Add Lead</button>
+          <div class="add-msg" id="add-msg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADS TABLE -->
+    <div class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+        <div class="card-title" style="margin-bottom:0;">All Leads</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button id="export-btn" style="padding:8px 14px; background:var(--navy); color:#fff; border:none; border-radius:10px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer;">Export CSV</button>
+          <button id="backup-btn" style="padding:8px 14px; background:var(--white); color:var(--navy); border:1px solid var(--border); border-radius:10px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer;">Backup</button>
+          <label style="padding:8px 14px; background:var(--white); color:var(--navy); border:1px solid var(--border); border-radius:10px; font-size:12px; font-weight:800; cursor:pointer; font-family:'Montserrat',sans-serif;">Restore <input type="file" id="restore-input" accept="application/json" style="display:none;"></label>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Couple</th><th>Source</th><th>Status</th><th>Wedding Date</th>
+              <th>Next Follow-up</th><th>Quoted</th><th>Paid</th><th>Balance</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="leads-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SOURCE PERFORMANCE -->
+    <div class="card">
+      <div class="card-title">Lead Source Performance</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Source</th><th>Leads</th><th>Booked</th><th>Conversion</th><th>Revenue</th></tr></thead>
+          <tbody id="source-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SUPABASE_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_CS3XLLfWaZNA-B2oE37N-g_z2FMWCzq";
+if (!window._wbwSb) {
+  window._wbwSb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { storageKey: 'wbw-auth', autoRefreshToken: true, persistSession: true }
+  });
+}
+const sb = window._wbwSb;
+let currentUser = null;
+let leads = [];
+
+const esc = s => String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const todayISO = () => new Date().toISOString().slice(0,10);
+const fmtDate = iso => { if (!iso) return "—"; const [y,m,d] = iso.split("-"); return d+"/"+m+"/"+y; };
+const fmtEuro = n => n ? "€"+Number(n).toLocaleString("en-IE",{minimumFractionDigits:0}) : "—";
+const totalPaid = l => Number(l.depositPaid||0)+(l.instalments||[]).reduce((s,x)=>s+Number(x||0),0);
+const balance = l => Math.max(0,Number(l.priceQuoted||0)-totalPaid(l));
+const autoFollowUp = enquiry => { const d=new Date(enquiry||todayISO()); d.setDate(d.getDate()+3); return d.toISOString().slice(0,10); };
+
+function chipHtml(status) {
+  const map = {"Replied":"replied","Deposit Paid":"deposit","Booked":"booked","Lost":"lost"};
+  const isFollowup = status && status.startsWith("Follow-up");
+  const cls = isFollowup ? "followup" : (map[status] || "replied");
+  return '<span class="chip chip-'+cls+'">'+esc(status)+'</span>';
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+// AUTH
+document.getElementById("tab-in").onclick = () => switchTab("in");
+document.getElementById("tab-up").onclick = () => switchTab("up");
+document.getElementById("signin-btn").onclick = signIn;
+document.getElementById("signup-btn").onclick = signUp;
+
+function switchTab(t) {
+  document.getElementById("form-in").style.display = t==="in" ? "" : "none";
+  document.getElementById("form-up").style.display = t==="up" ? "" : "none";
+  document.getElementById("tab-in").classList.toggle("active", t==="in");
+  document.getElementById("tab-up").classList.toggle("active", t==="up");
+}
+
+async function signIn() {
+  const email=document.getElementById("in-email").value.trim(), pass=document.getElementById("in-pass").value;
+  const msg=document.getElementById("in-msg"), btn=document.getElementById("signin-btn");
+  if (!email||!pass) { setMsg(msg,"Please enter email and password.","error"); return; }
+  btn.disabled=true; btn.textContent="Signing in…";
+  const {error} = await sb.auth.signInWithPassword({email,password:pass});
+  btn.disabled=false; btn.textContent="Sign In";
+  if (error) setMsg(msg,error.message,"error");
+}
+
+async function signUp() {
+  const email=document.getElementById("up-email").value.trim(), pass=document.getElementById("up-pass").value;
+  const msg=document.getElementById("up-msg"), btn=document.getElementById("signup-btn");
+  if (!email||!pass) { setMsg(msg,"Please fill in all fields.","error"); return; }
+  if (pass.length<6) { setMsg(msg,"Password must be at least 6 characters.","error"); return; }
+  btn.disabled=true; btn.textContent="Creating account…";
+  const {error} = await sb.auth.signUp({email,password:pass});
+  btn.disabled=false; btn.textContent="Create Account";
+  if (error) setMsg(msg,error.message,"error");
+  else { setMsg(msg,"Account created! Please sign in.","success"); switchTab("in"); }
+}
+
+function setMsg(el,text,type) { el.textContent=text; el.className="auth-msg "+type; }
+
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (session?.user) {
+    currentUser = session.user;
+    document.getElementById("auth-screen").style.display = "none";
+    document.getElementById("app-screen").style.display  = "block";
+    document.getElementById("nav-user").textContent = currentUser.email;
+    document.getElementById("today-display").textContent = "Today: "+fmtDate(todayISO());
+    document.getElementById("f-enquiry").value = todayISO();
+
+    // Wire buttons here — DOM guaranteed ready
+    document.getElementById("signout-btn").onclick   = signOut;
+    document.getElementById("add-lead-btn").onclick  = addLead;
+    document.getElementById("export-btn").onclick    = exportCSV;
+    document.getElementById("backup-btn").onclick    = backup;
+    document.getElementById("restore-input").onchange = restore;
+
+    await loadLeads();
+    render();
+  } else {
+    currentUser = null;
+    document.getElementById("app-screen").style.display  = "none";
+    document.getElementById("auth-screen").style.display = "flex";
+    leads = [];
+  }
+});
+
+async function signOut() { await sb.auth.signOut(); }
+
+async function loadLeads() {
+  try {
+    const {data} = await sb.from("leads").select("*").eq("user_id",currentUser.id);
+    leads = (data||[]).map(r=>r.data||r).filter(l=>l&&l.id);
+  } catch(e) { leads=[]; }
+}
+
+async function saveLead(lead) {
+  if (!currentUser) return;
+  try {
+    await sb.from("leads").upsert({id:lead.id,user_id:currentUser.id,data:lead,updated_at:new Date().toISOString()},{onConflict:"id"});
+    showToast("✓ Saved");
+  } catch(e) { console.log("Save error:",e); }
+}
+
+async function removeLeadFromDB(id) {
+  if (!currentUser) return;
+  try { await sb.from("leads").delete().eq("id",id).eq("user_id",currentUser.id); } catch(e) {}
+}
+
+async function addLead() {
+  const name = document.getElementById("f-name").value.trim();
+  if (!name) { setAddMsg("Please enter the couple name.",false); return; }
+
+  const enquiry = document.getElementById("f-enquiry").value || todayISO();
+  const wedding = document.getElementById("f-wedding").value;
+  const venue   = document.getElementById("f-venue").value.trim();
+  const email   = document.getElementById("f-email").value.trim();
+  const source  = document.getElementById("f-source").value;
+  const status  = document.getElementById("f-status").value;
+  const price   = Number(document.getElementById("f-price").value) || 0;
+
+  if (wedding) {
+    const clashes = leads.filter(l => l.wedding===wedding && (l.status==="Booked"||l.status==="Deposit Paid"));
+    if (clashes.length > 0) {
+      const go = confirm("You already have a booking on this date: "+clashes.map(l=>l.name).join(", ")+".\n\nAdd a second wedding on the same day?\n\nOK = Yes   Cancel = No");
+      if (!go) return;
+    }
+  }
+
+  const isActive = status!=="Lost" && status!=="Booked" && status!=="Deposit Paid";
+  const lead = {
+    id: Date.now().toString(16)+Math.random().toString(16).slice(2),
+    createdAt: new Date().toISOString(),
+    name, enquiry, wedding, venue, email, source, status,
+    priceQuoted:price, depositPaid:0, instalments:[],
+    nextFollowUp: isActive ? autoFollowUp(enquiry) : "",
+    followupStep: isActive ? 1 : 0,
+  };
+
+  leads.push(lead);
+  clearForm();
+  setAddMsg("Lead added ✓",true);
+  render();
+  await saveLead(lead);
+}
+
+function clearForm() {
+  ["f-name","f-wedding","f-venue","f-email","f-price"].forEach(id => document.getElementById(id).value="");
+  document.getElementById("f-enquiry").value = todayISO();
+  document.getElementById("f-status").value  = "Replied";
+}
+
+function setAddMsg(text,ok) {
+  const el=document.getElementById("add-msg");
+  el.textContent=text; el.className="add-msg "+(ok?"ok":"err");
+  if (ok) setTimeout(()=>el.textContent="",3000);
+}
+
+function render() { renderStats(); renderFollowups(); renderTable(); renderSources(); }
+
+function renderStats() {
+  const booked  = leads.filter(l=>l.status==="Booked"||l.status==="Deposit Paid");
+  const active  = leads.filter(l=>l.status!=="Lost");
+  const revenue = booked.reduce((s,l)=>s+Number(l.priceQuoted||0),0);
+  const received= leads.reduce((s,l)=>s+totalPaid(l),0);
+  const today   = todayISO();
+  const due     = leads.filter(l=>l.nextFollowUp&&l.nextFollowUp<=today&&l.status!=="Booked"&&l.status!=="Lost").length;
+
+  document.getElementById("stats-row").innerHTML = [
+    {label:"Total Leads",    value:leads.length,     cls:""},
+    {label:"Active",         value:active.length,    cls:""},
+    {label:"Booked",         value:booked.length,    cls:"green"},
+    {label:"Follow-ups Due", value:due,              cls:due>0?"orange":"green"},
+    {label:"Total Revenue",  value:fmtEuro(revenue), cls:"green"},
+    {label:"Total Received", value:fmtEuro(received),cls:""},
+  ].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value ${s.cls}">${s.value}</div></div>`).join("");
+}
+
+const FOLLOWUP_STEPS = [2,3,3,3,3]; // Days between each follow-up email
+
+function renderFollowups() {
+  const today = todayISO();
+  const due = leads.filter(l=>l.nextFollowUp&&l.nextFollowUp<=today&&l.status!=="Booked"&&l.status!=="Lost")
+    .sort((a,b)=>(a.nextFollowUp||"").localeCompare(b.nextFollowUp||""));
+  const list = document.getElementById("followups-list");
+  if (!due.length) { list.innerHTML='<div class="all-clear">✅ No follow-ups due today — you are all caught up!</div>'; return; }
+  list.innerHTML = due.map(l=>`
+    <div class="followup-item" id="fu-${l.id}">
+      <div>
+        <div class="fu-name">${esc(l.name)}</div>
+        <div class="fu-date">Due: ${fmtDate(l.nextFollowUp)}</div>
+        ${l.venue?'<div class="fu-venue">📍 '+esc(l.venue)+'</div>':""}
+        <div class="fu-done-msg" id="fu-done-${l.id}"></div>
+      </div>
+      <button class="mark-done-btn" data-fu="${l.id}">Mark done ✓</button>
+    </div>`).join("");
+  list.querySelectorAll("[data-fu]").forEach(btn=>btn.onclick=()=>markDone(btn.getAttribute("data-fu")));
+}
+
+async function markDone(id) {
+  const l = leads.find(x=>x.id===id); if (!l) return;
+  const step = Number(l.followupStep||1);
+  const totalDays = FOLLOWUP_STEPS.slice(0,step+1).reduce((s,d)=>s+d,0);
+  if (step < FOLLOWUP_STEPS.length) {
+    l.followupStep = step+1;
+    l.status = "Follow-up " + step;
+    const d=new Date(l.enquiry||todayISO()); d.setDate(d.getDate()+totalDays);
+    l.nextFollowUp = d.toISOString().slice(0,10);
+  } else { l.nextFollowUp=""; l.followupStep=0; l.status="Follow-up "+step; }
+  const doneEl=document.getElementById("fu-done-"+id);
+  const btn=document.querySelector('[data-fu="'+id+'"]');
+  if (doneEl) { doneEl.style.display="block"; doneEl.textContent=l.nextFollowUp?"✓ Next follow-up: "+fmtDate(l.nextFollowUp):"✓ All follow-ups complete!"; }
+  if (btn) { btn.disabled=true; btn.textContent="Done ✓"; }
+  render(); await saveLead(l);
+}
+
+function renderTable() {
+  const tbody=document.getElementById("leads-tbody");
+  if (!leads.length) { tbody.innerHTML='<tr><td colspan="9" style="padding:20px; text-align:center; color:var(--muted); font-weight:700;">No leads yet — add your first enquiry above.</td></tr>'; return; }
+  const today=todayISO();
+  const sorted=[...leads].sort((a,b)=>{
+    const aA=a.status!=="Booked"&&a.status!=="Lost", bA=b.status!=="Booked"&&b.status!=="Lost";
+    if (aA!==bA) return aA?-1:1;
+    return (a.nextFollowUp||"9999").localeCompare(b.nextFollowUp||"9999");
+  });
+  tbody.innerHTML = sorted.map(l=>{
+    const paid=totalPaid(l), bal=balance(l);
+    const overdue=l.nextFollowUp&&l.nextFollowUp<=today&&l.status!=="Booked"&&l.status!=="Lost";
+    return `<tr>
+      <td><div class="couple-name">${esc(l.name)}</div>${l.venue?'<div class="couple-venue">'+esc(l.venue)+'</div>':""}</td>
+      <td>${esc(l.source||"")}</td>
+      <td>${chipHtml(l.status)}</td>
+      <td style="font-weight:700;">${fmtDate(l.wedding)}</td>
+      <td style="font-weight:700; color:${overdue?"var(--orange)":"inherit"};">${fmtDate(l.nextFollowUp)}</td>
+      <td>${fmtEuro(l.priceQuoted)}</td>
+      <td>${paid>0?fmtEuro(paid):"—"}</td>
+      <td class="${l.priceQuoted?(bal>0?"bal-outstanding":"bal-clear"):""}">${l.priceQuoted?fmtEuro(bal):"—"}</td>
+      <td><div class="actions">
+        <button class="btn-edit" data-edit="${l.id}">Edit</button>
+        <button class="btn-pay"  data-pay="${l.id}">💳 Pay</button>
+        <button class="${l.status==="Booked"?"btn-unbook":"btn-book"}" data-book="${l.id}">${l.status==="Booked"?"Unbook":"Book ✓"}</button>
+        <button class="${l.status==="Lost"?"btn-undo":"btn-lost"}" data-lost="${l.id}">${l.status==="Lost"?"Undo":"Lost"}</button>
+        <button class="btn-del" data-del="${l.id}">Delete</button>
+      </div></td>
+    </tr>`;
+  }).join("");
+  tbody.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>openEditModal(b.getAttribute("data-edit")));
+  tbody.querySelectorAll("[data-pay]").forEach(b=>b.onclick=()=>openPayModal(b.getAttribute("data-pay")));
+  tbody.querySelectorAll("[data-book]").forEach(b=>b.onclick=()=>toggleBooked(b.getAttribute("data-book")));
+  tbody.querySelectorAll("[data-lost]").forEach(b=>b.onclick=()=>toggleLost(b.getAttribute("data-lost")));
+  tbody.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>deleteLead(b.getAttribute("data-del")));
+}
+
+function renderSources() {
+  const map={};
+  leads.forEach(l=>{ const s=l.source||"Other"; if(!map[s]) map[s]={count:0,booked:0,value:0}; map[s].count++; if(l.status==="Booked"||l.status==="Deposit Paid"){map[s].booked++;map[s].value+=Number(l.priceQuoted||0);} });
+  const rows=Object.entries(map).map(([s,d])=>({source:s,...d,rate:d.count?Math.round(d.booked/d.count*100):0})).sort((a,b)=>b.booked-a.booked);
+  document.getElementById("source-tbody").innerHTML=rows.length
+    ?rows.map(r=>`<tr><td style="font-weight:800;">${esc(r.source)}</td><td>${r.count}</td><td>${r.booked}</td><td style="font-weight:800;">${r.rate}%</td><td style="font-weight:800;">${fmtEuro(r.value)}</td></tr>`).join("")
+    :'<tr><td colspan="5" style="padding:14px; color:var(--muted); font-weight:700;">No data yet</td></tr>';
+}
+
+async function toggleBooked(id) {
+  const l=leads.find(x=>x.id===id); if(!l) return;
+  if (l.status==="Booked"){l.status="Replied";l.nextFollowUp=autoFollowUp(l.enquiry);l.followupStep=1;}
+  else{l.status="Booked";l.nextFollowUp="";l.followupStep=0;}
+  render(); await saveLead(l);
+}
+
+async function toggleLost(id) {
+  const l=leads.find(x=>x.id===id); if(!l) return;
+  if (l.status==="Lost"){l.status="Replied";l.nextFollowUp=autoFollowUp(l.enquiry);l.followupStep=1;}
+  else{l.status="Lost";l.nextFollowUp="";l.followupStep=0;}
+  render(); await saveLead(l);
+}
+
+async function deleteLead(id) {
+  if (!confirm("Delete this lead? This cannot be undone.")) return;
+  leads=leads.filter(l=>l.id!==id); render(); await removeLeadFromDB(id);
+}
+
+function openEditModal(id) {
+  const l=leads.find(x=>x.id===id); if(!l) return;
+  const overlay=document.createElement("div"); overlay.className="overlay";
+  overlay.innerHTML=`<div class="modal">
+    <div class="modal-header"><div class="modal-title">Edit Lead</div><button class="modal-close" id="eclose">✕</button></div>
+    <div class="modal-grid">
+      <div class="full"><label>Couple Name</label><input class="e-name" type="text" value="${esc(l.name||"")}"></div>
+      <div><label>Wedding Date</label><input class="e-wedding" type="date" value="${l.wedding||""}"></div>
+      <div><label>Venue</label><input class="e-venue" type="text" value="${esc(l.venue||"")}"></div>
+      <div><label>Email</label><input class="e-email" type="email" value="${esc(l.email||"")}"></div>
+      <div><label>Phone</label><input class="e-phone" type="text" value="${esc(l.phone||"")}"></div>
+      <div><label>Source</label><select class="e-source">${["Instagram","Website","Referral","Venue","Vendor","Facebook","TikTok","Other"].map(s=>'<option'+(l.source===s?' selected':'')+'>'+s+'</option>').join("")}</select></div>
+      <div><label>Status</label><select class="e-status">${["Replied","Follow-up 1","Follow-up 2","Follow-up 3","Follow-up 4","Follow-up 5","Deposit Paid","Booked","Lost"].map(s=>'<option value="'+s+'"'+(l.status===s?' selected':'')+'>'+s+'</option>').join("")}</select></div>
+      <div><label>Next Follow-up</label><input class="e-followup" type="date" value="${l.nextFollowUp||""}"></div>
+      <div><label>Price Quoted (€)</label><input class="e-price" type="number" value="${l.priceQuoted||""}"></div>
+    </div>
+    <div class="modal-btns">
+      <button class="mbtn-primary" id="esave">Save Changes</button>
+      <button class="mbtn-orange" id="epay">💳 Payments</button>
+      <button class="mbtn-ghost" id="ecancel">Cancel</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  const close=()=>overlay.remove();
+  overlay.querySelector("#eclose").onclick=close;
+  overlay.querySelector("#ecancel").onclick=close;
+  overlay.querySelector("#epay").onclick=()=>{close();openPayModal(id);};
+  overlay.querySelector("#esave").onclick=async()=>{
+    l.name=overlay.querySelector(".e-name").value.trim();
+    l.wedding=overlay.querySelector(".e-wedding").value;
+    l.venue=overlay.querySelector(".e-venue").value.trim();
+    l.email=overlay.querySelector(".e-email").value.trim();
+    l.source=overlay.querySelector(".e-source").value;
+    l.status=overlay.querySelector(".e-status").value;
+    l.nextFollowUp=overlay.querySelector(".e-followup").value;
+    l.priceQuoted=Number(overlay.querySelector(".e-price").value)||0;
+    if(l.status==="Booked"||l.status==="Lost"){l.nextFollowUp="";l.followupStep=0;}
+    close(); render(); await saveLead(l);
+  };
+}
+
+function openPayModal(id) {
+  const l=leads.find(x=>x.id===id); if(!l) return;
+  const overlay=document.createElement("div"); overlay.className="overlay";
+  overlay.innerHTML=`<div class="modal">
+    <div class="modal-header"><div class="modal-title">Payments — ${esc(l.name)}</div><button class="modal-close" id="pclose">✕</button></div>
+    <div class="modal-grid">
+      <div><label>Price Quoted (€)</label><input id="p-quoted" type="number" value="${l.priceQuoted||0}"></div>
+      <div><label>Deposit Paid (€)</label><input id="p-deposit" type="number" value="${l.depositPaid||0}"></div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:13px;font-weight:900;color:var(--navy);">Instalments</div>
+        <button id="p-add" style="padding:7px 14px;background:var(--orange);color:#fff;border:none;border-radius:9px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer;">+ Add</button>
+      </div>
+      <div id="p-inst-list"></div>
+    </div>
+    <div class="pay-summary">
+      <div class="pay-sum-card" style="background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.2);">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px;">Total Paid</div>
+        <div id="p-total" style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--green);">€0</div>
+      </div>
+      <div class="pay-sum-card" style="background:rgba(255,107,26,.08);border:1px solid rgba(255,107,26,.2);">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px;">Balance Due</div>
+        <div id="p-balance" style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--orange);">€0</div>
+      </div>
+    </div>
+    <div class="modal-btns" style="margin-top:16px;">
+      <button class="mbtn-primary" id="psave">Save Payments</button>
+      <button class="mbtn-ghost" id="pcancel">Cancel</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  const qEl=overlay.querySelector("#p-quoted"), dEl=overlay.querySelector("#p-deposit"), iList=overlay.querySelector("#p-inst-list");
+  function recalc(){
+    const q=Number(qEl.value||0),dep=Number(dEl.value||0);
+    const ins=Array.from(iList.querySelectorAll(".inst-val")).map(i=>Number(i.value||0));
+    const paid=dep+ins.reduce((s,x)=>s+x,0);
+    overlay.querySelector("#p-total").textContent=fmtEuro(paid)||"€0";
+    overlay.querySelector("#p-balance").textContent=fmtEuro(Math.max(0,q-paid))||"€0";
+  }
+  function addRow(val){
+    const row=document.createElement("div"); row.className="pay-row";
+    row.innerHTML='<input class="inst-val" type="number" placeholder="€ amount" value="'+(Number(val)||0)+'"><button type="button">Remove</button>';
+    row.querySelector("button").onclick=()=>{row.remove();recalc();};
+    row.querySelector("input").oninput=recalc;
+    iList.appendChild(row); recalc();
+  }
+  (l.instalments||[]).forEach(v=>addRow(v));
+  qEl.oninput=recalc; dEl.oninput=recalc; recalc();
+  overlay.querySelector("#p-add").onclick=()=>addRow(0);
+  const close=()=>overlay.remove();
+  overlay.querySelector("#pclose").onclick=close;
+  overlay.querySelector("#pcancel").onclick=close;
+  overlay.querySelector("#psave").onclick=async()=>{
+    l.priceQuoted=Number(qEl.value||0);
+    l.depositPaid=Number(dEl.value||0);
+    l.instalments=Array.from(iList.querySelectorAll(".inst-val")).map(i=>Number(i.value||0)).filter(n=>n>0);
+    if(l.depositPaid>0&&l.status==="Replied") l.status="Deposit Paid";
+    if(l.priceQuoted>0&&totalPaid(l)>=l.priceQuoted) l.status="Booked";
+    close(); render(); await saveLead(l);
+  };
+}
+
+function exportCSV(){
+  const h=["Couple","Source","Status","Wedding Date","Next Follow-up","Quoted","Paid","Balance","Email","Venue"];
+  const rows=leads.map(l=>[l.name,l.source,l.status,fmtDate(l.wedding),fmtDate(l.nextFollowUp),l.priceQuoted||0,totalPaid(l),balance(l),l.email,l.venue]);
+  const csv=[h,...rows].map(r=>r.map(v=>'"'+String(v||"").replace(/"/g,'""')+'"').join(",")).join("\n");
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download="wbw-leads.csv"; a.click();
+}
+
+function backup(){
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([JSON.stringify({leads,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"})); a.download="wbw-leads-backup.json"; a.click();
+}
+
+async function restore(e){
+  const file=e.target.files?.[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=async()=>{
+    try{
+      const parsed=JSON.parse(reader.result);
+      const imported=parsed.leads||parsed;
+      for(const l of imported) await saveLead(l);
+      leads=imported; render(); alert("Restore complete — "+imported.length+" leads loaded.");
+    } catch { alert("Could not read backup file."); }
+  };
+  reader.readAsText(file);
+}
+</script>
+</body>
+</html>
