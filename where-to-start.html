@@ -1,12 +1,11 @@
-
 <!DOCTYPE html>
 <html lang='en'>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-// ── WIRE UP BUTTONS ────────────────────────────────────────────────
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
 function wireButtons() {
   const on = (id, fn) => { const e = document.getElementById(id); if(e) { e.onclick = fn; } };
   on('tab-in-btn', () => switchTab('in'));
@@ -20,9 +19,6 @@ function wireButtons() {
 setTimeout(wireButtons, 100);
 setTimeout(wireButtons, 500);
 setTimeout(wireButtons, 1500);
-
-})(); // end IIFE
-
 </script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
