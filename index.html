@@ -572,9 +572,9 @@ async function loadLeadData(userId) {
 const SCORE_META = {
   pricing: { label: "Pricing Confidence",     color: "#FB478E", tool: "Income & Pricing Planner", url: "#" },
   leads:   { label: "Lead Tracking",           color: "#FF6B1A", tool: "Lead Tracker",             url: "lead-tracker.html" },
-  ica:     { label: "Most Profitable Couples", color: "#8B5CF6", tool: "Ideal Client Clarity",     url: "#" },
-  social:  { label: "Social Media",            color: "#5B8DEF", tool: "Social Media Planner",     url: "#" },
-  income:  { label: "Income Goals",            color: "#F5A800", tool: "Income & Pricing Planner", url: "#" },
+  ica:     { label: "Most Profitable Couples", color: "#8B5CF6", tool: "Ideal Client Clarity",     url: "ideal-client.html" },
+  social:  { label: "Social Media",            color: "#5B8DEF", tool: "Social Media Planner",     url: "social-planner.html" },
+  income:  { label: "Income Goals",            color: "#F5A800", tool: "Income & Pricing Planner", url: "income-planner.html" },
 };
 
 async function loadWTSResults(userId) {
@@ -593,7 +593,9 @@ function renderWTSResults(scores) {
     .map(([key, val]) => ({ key, pct: Math.round((val.score / val.max) * 100), ...(SCORE_META[key] || { label: key, color: "#3B3C6D", tool: "", url: "#" }) }))
     .sort((a, b) => a.pct - b.pct);
   const weakest = items[0];
+  const strongest = items[items.length - 1];
 
+  // Hide the empty promo state, show results
   area.innerHTML = `
     <div class="score-bars">
       ${items.map(s => `
@@ -606,12 +608,15 @@ function renderWTSResults(scores) {
     ${weakest ? `
     <div class="rec-banner" style="margin-top:20px;">
       <div>
-        <div class="rec-eyebrow">Start here</div>
+        <div class="rec-eyebrow">🚀 Start here first</div>
         <div class="rec-tool">${weakest.tool}</div>
         <div class="rec-why">Your lowest score is ${weakest.label} at ${weakest.pct}% — this is where you'll see the fastest results.</div>
       </div>
-      <a href="${weakest.url}" class="rec-btn">Open tool →</a>
+      ${weakest.url !== "#" ? `<a href="${weakest.url}" class="rec-btn">Open tool →</a>` : `<a href="where-to-start.html" class="rec-btn">View full results →</a>`}
     </div>` : ""}
+    <div style="text-align:right; margin-top:14px;">
+      <a href="where-to-start.html" style="font-size:12px; font-weight:700; color:var(--muted); text-decoration:none; border:1px solid var(--border); padding:6px 12px; border-radius:9px;">View full results & retake →</a>
+    </div>
   `;
 
   requestAnimationFrame(() => {
