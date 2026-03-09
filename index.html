@@ -441,19 +441,41 @@ function showMsg(el, text, type) {
   el.className = "auth-msg " + type;
 }
 
+let _appInitialised = false;
+
+async function initApp(user) {
+  if (_appInitialised) return;
+  _appInitialised = true;
+
+  document.getElementById("auth-screen").style.display = "none";
+  document.getElementById("app-screen").style.display = "block";
+  document.getElementById("nav-user").textContent = user.email;
+  const h = new Date().getHours();
+  document.getElementById("hero-greeting").textContent =
+    (h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening") + " ✨";
+
+  // Show loading placeholder in WTS area while fetching
+  document.getElementById("wts-results-area").innerHTML =
+    '<div style="padding:16px 0; font-size:13px; font-weight:700; color:var(--muted);">Loading your results…</div>';
+
+  await Promise.all([
+    loadWTSResults(user.id),
+    loadLeadData(user.id)
+  ]);
+}
+
+// getSession fires immediately on page load — handles nav link & back button
+sb.auth.getSession().then(({ data: { session } }) => {
+  if (session?.user) initApp(session.user);
+});
+
+// onAuthStateChange handles sign-in
 sb.auth.onAuthStateChange(async (event, session) => {
-  if (session?.user) {
-    document.getElementById("auth-screen").style.display = "none";
-    document.getElementById("app-screen").style.display = "block";
-    document.getElementById("nav-user").textContent = session.user.email;
-    const h = new Date().getHours();
-    document.getElementById("hero-greeting").textContent =
-      (h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening") + " ✨";
-    await Promise.all([
-      loadWTSResults(session.user.id),
-      loadLeadData(session.user.id)
-    ]);
-  } else {
+  if (event === "SIGNED_IN" && session?.user) {
+    _appInitialised = false; // allow re-init on fresh sign in
+    initApp(session.user);
+  } else if (event === "SIGNED_OUT") {
+    _appInitialised = false;
     document.getElementById("app-screen").style.display = "none";
     document.getElementById("auth-screen").style.display = "flex";
   }
@@ -579,18 +601,38 @@ const SCORE_META = {
 
 async function loadWTSResults(userId) {
   try {
-    const { data } = await sb.from("where_to_start").select("data").eq("user_id", userId).order("updated_at", { ascending: false }).limit(1);
-    if (data && data.length > 0 && data[0].data?.scores) {
-      renderWTSResults(data[0].data.scores);
-      document.getElementById("wts-action-link").textContent = "Retake assessment →";
+    console.log("WTS: loading for", userId);
+    const { data, error } = await sb.from("where_to_start").select("*").eq("user_id", userId).order("updated_at", { ascending: false }).limit(1);
+    console.log("WTS: data=", JSON.stringify(data), "error=", error);
+    if (data && data.length > 0) {
+      const scores = data[0].data?.scores;
+      console.log("WTS: scores=", JSON.stringify(scores));
+      if (scores) {
+        renderWTSResults(scores);
+        document.getElementById("wts-action-link").textContent = "Retake assessment →";
+      } else {
+        console.log("WTS: no scores found in data");
+        showWTSEmpty();
+      }
+    } else {
+      console.log("WTS: no rows returned");
+      showWTSEmpty();
     }
-  } catch(e) { console.log("WTS load:", e.message); }
+  } catch(e) { console.log("WTS load error:", e.message); showWTSEmpty(); }
+}
+
+function showWTSEmpty() {
+  document.getElementById("wts-results-area").innerHTML = `
+    <div class="wts-empty">
+      <p>Answer 10 quick questions across 5 areas of your business.<br>We'll score each area and show you exactly where to focus first for the fastest results.</p>
+      <a href="where-to-start.html" class="wts-start-btn">Take the assessment →</a>
+    </div>`;
 }
 
 function renderWTSResults(scores) {
   const area = document.getElementById("wts-results-area");
   const items = Object.entries(scores)
-    .map(([key, val]) => ({ key, pct: val.pct ?? (val.max ? Math.round((val.raw / val.max) * 100) : 0), ...(SCORE_META[key] || { label: key, color: "#3B3C6D", tool: "", url: "#" }) }))
+    .map(([key, val]) => { const pct = Number.isFinite(val.pct) ? val.pct : (val.max ? Math.round((val.raw / val.max) * 100) : 0); return { key, pct, ...(SCORE_META[key] || { label: key, color: "#3B3C6D", tool: "", url: "#" }) }; })
     .sort((a, b) => a.pct - b.pct);
   const weakest = items[0];
   const strongest = items[items.length - 1];
