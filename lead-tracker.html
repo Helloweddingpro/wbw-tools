@@ -369,25 +369,40 @@ async function signUp() {
 
 function setMsg(el,text,type) { el.textContent=text; el.className="auth-msg "+type; }
 
+let _ltInitialised = false;
+
+async function initApp(user) {
+  if (_ltInitialised) return;
+  _ltInitialised = true;
+
+  currentUser = user;
+  document.getElementById("auth-screen").style.display = "none";
+  document.getElementById("app-screen").style.display  = "block";
+  document.getElementById("nav-user").textContent = currentUser.email;
+  document.getElementById("today-display").textContent = "Today: "+fmtDate(todayISO());
+  document.getElementById("f-enquiry").value = todayISO();
+
+  document.getElementById("signout-btn").onclick    = signOut;
+  document.getElementById("add-lead-btn").onclick   = addLead;
+  document.getElementById("export-btn").onclick     = exportCSV;
+  document.getElementById("backup-btn").onclick     = backup;
+  document.getElementById("restore-input").onchange = restore;
+
+  await loadLeads();
+  render();
+}
+
+// Fire immediately on page load — handles navigation from dashboard
+sb.auth.getSession().then(({ data: { session } }) => {
+  if (session?.user) initApp(session.user);
+});
+
 sb.auth.onAuthStateChange(async (event, session) => {
-  if (session?.user) {
-    currentUser = session.user;
-    document.getElementById("auth-screen").style.display = "none";
-    document.getElementById("app-screen").style.display  = "block";
-    document.getElementById("nav-user").textContent = currentUser.email;
-    document.getElementById("today-display").textContent = "Today: "+fmtDate(todayISO());
-    document.getElementById("f-enquiry").value = todayISO();
-
-    // Wire buttons here — DOM guaranteed ready
-    document.getElementById("signout-btn").onclick   = signOut;
-    document.getElementById("add-lead-btn").onclick  = addLead;
-    document.getElementById("export-btn").onclick    = exportCSV;
-    document.getElementById("backup-btn").onclick    = backup;
-    document.getElementById("restore-input").onchange = restore;
-
-    await loadLeads();
-    render();
-  } else {
+  if (event === "SIGNED_IN" && session?.user) {
+    _ltInitialised = false;
+    initApp(session.user);
+  } else if (event === "SIGNED_OUT") {
+    _ltInitialised = false;
     currentUser = null;
     document.getElementById("app-screen").style.display  = "none";
     document.getElementById("auth-screen").style.display = "flex";
