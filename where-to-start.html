@@ -606,14 +606,29 @@ async function signOut() {
 }
 function showMsg(el,text,type) { el.textContent=text; el.className='auth-msg '+type; }
 
-sb.auth.onAuthStateChange(async (event,session) => {
-  if (session?.user) {
-    currentUser = session.user;
-    document.getElementById('auth-screen').style.display='none';
-    document.getElementById('app-screen').style.display='block';
-    document.getElementById('user-email').textContent = currentUser.email;
-    await checkExistingResults();
-  } else {
+let _wtsInitialised = false;
+
+async function initApp(user) {
+  if (_wtsInitialised) return;
+  _wtsInitialised = true;
+  currentUser = user;
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('app-screen').style.display='block';
+  document.getElementById('user-email').textContent = currentUser.email;
+  await checkExistingResults();
+}
+
+// Fire immediately on page load — handles navigation from dashboard
+sb.auth.getSession().then(({ data: { session } }) => {
+  if (session?.user) initApp(session.user);
+});
+
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (event === "SIGNED_IN" && session?.user) {
+    _wtsInitialised = false;
+    initApp(session.user);
+  } else if (event === "SIGNED_OUT") {
+    _wtsInitialised = false;
     currentUser = null;
     document.getElementById('app-screen').style.display='none';
     document.getElementById('auth-screen').style.display='flex';
