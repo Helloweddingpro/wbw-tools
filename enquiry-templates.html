@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enquiry Response — Wedding Business Workspace</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:   #3B3C6D;
+  --pink:   #FB478E;
+  --purple: #7C3AED;
+  --purple-light: rgba(124,58,237,.1);
+  --purple-mid:   rgba(124,58,237,.18);
+  --cream:  #FAF8F6;
+  --white:  #FFFFFF;
+  --border: rgba(59,60,109,.12);
+  --muted:  rgba(59,60,109,.5);
+  --text:   #2A2B4A;
+  --green:  #27ae60;
+  --red:    #c0392b;
+}
+body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
+
+/* ── AUTH ─────────────────────────────────────────────── */
+#auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+.auth-card { background:var(--white); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; box-shadow:0 8px 40px rgba(59,60,109,.1); }
+.auth-logo { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+.auth-tagline { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:32px; }
+.auth-tabs { display:flex; gap:6px; background:var(--cream); border-radius:14px; padding:5px; margin-bottom:24px; }
+.auth-tab { flex:1; padding:9px; border-radius:10px; border:none; background:transparent; color:var(--muted); font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+.auth-tab.active { background:var(--white); color:var(--navy); box-shadow:0 2px 8px rgba(59,60,109,.1); }
+.auth-field { margin-bottom:14px; }
+.auth-field label { display:block; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.auth-field input { width:100%; padding:12px 16px; background:var(--cream); border:1.5px solid var(--border); border-radius:12px; color:var(--text); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; transition:border-color .2s; }
+.auth-field input:focus { outline:none; border-color:var(--purple); }
+.auth-submit { width:100%; padding:14px; background:var(--purple); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; margin-top:6px; transition:opacity .2s; }
+.auth-submit:hover { opacity:.88; }
+.auth-submit:disabled { opacity:.5; cursor:not-allowed; }
+.auth-msg { margin-top:12px; font-size:13px; font-weight:700; text-align:center; min-height:18px; }
+.auth-msg.error { color:var(--red); }
+.auth-msg.success { color:var(--green); }
+
+/* ── APP ──────────────────────────────────────────────── */
+#app-screen { display:none; }
+.topnav { background:var(--navy); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:64px; position:sticky; top:0; z-index:100; }
+.nav-left { display:flex; align-items:center; gap:16px; }
+.nav-back { font-size:13px; font-weight:700; color:rgba(255,255,255,.6); text-decoration:none; transition:color .2s; }
+.nav-back:hover { color:#fff; }
+.nav-logo { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:#fff; }
+.nav-logo span { color:var(--pink); }
+.nav-right { display:flex; align-items:center; gap:14px; }
+.nav-user { font-size:12px; font-weight:600; color:rgba(255,255,255,.6); }
+.nav-signout { padding:8px 16px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:10px; color:rgba(255,255,255,.8); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; cursor:pointer; }
+.nav-signout:hover { background:rgba(255,255,255,.2); }
+
+.main { max-width:960px; margin:0 auto; padding:36px 24px 80px; }
+.page-header { margin-bottom:32px; }
+.page-header h1 { font-family:'Cormorant Garamond',serif; font-size:36px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+.page-header p { font-size:14px; font-weight:600; color:var(--muted); }
+
+/* ── COUPLE SELECTOR ──────────────────────────────────── */
+.selector-card { background:var(--white); border:1px solid var(--border); border-radius:18px; padding:24px; margin-bottom:24px; }
+.selector-title { font-size:15px; font-weight:900; color:var(--navy); margin-bottom:16px; }
+.selector-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.selector-grid.three { grid-template-columns:1fr 1fr 1fr; }
+.field-group { display:flex; flex-direction:column; gap:6px; }
+.field-group label { font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); }
+.field-group input, .field-group select { padding:11px 13px; border:1.5px solid var(--border); border-radius:11px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; color:var(--text); background:var(--white); transition:border-color .2s; }
+.field-group input:focus, .field-group select:focus { outline:none; border-color:var(--purple); }
+.field-group select option[value=""] { color:var(--muted); }
+
+.or-divider { display:flex; align-items:center; gap:12px; margin:16px 0; }
+.or-divider::before, .or-divider::after { content:''; flex:1; height:1px; background:var(--border); }
+.or-divider span { font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+
+/* ── SEQUENCE STRIP ───────────────────────────────────── */
+.sequence-strip { display:flex; gap:8px; margin-bottom:24px; overflow-x:auto; padding-bottom:4px; }
+.seq-btn { flex-shrink:0; padding:10px 16px; border-radius:12px; border:1.5px solid var(--border); background:var(--white); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; color:var(--muted); cursor:pointer; transition:all .2s; white-space:nowrap; }
+.seq-btn:hover { border-color:var(--purple); color:var(--purple); }
+.seq-btn.active { background:var(--purple); color:#fff; border-color:var(--purple); }
+.seq-btn.done { background:var(--purple-light); color:var(--purple); border-color:var(--purple-mid); }
+.seq-btn .seq-num { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,.25); font-size:11px; font-weight:900; margin-right:6px; }
+.seq-btn:not(.active) .seq-num { background:rgba(124,58,237,.12); color:var(--purple); }
+
+/* ── EMAIL CARD ───────────────────────────────────────── */
+.email-card { background:var(--white); border:1px solid var(--border); border-radius:18px; overflow:hidden; }
+.email-card-header { padding:20px 24px; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.email-meta { flex:1; }
+.email-tag { display:inline-block; padding:4px 12px; background:var(--purple-light); color:var(--purple); border-radius:999px; font-size:11px; font-weight:800; letter-spacing:.05em; margin-bottom:8px; }
+.email-title { font-size:18px; font-weight:900; color:var(--navy); margin-bottom:4px; }
+.email-when { font-size:12px; font-weight:700; color:var(--muted); }
+.copy-btn { padding:10px 20px; background:var(--purple); color:#fff; border:none; border-radius:12px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:all .2s; white-space:nowrap; flex-shrink:0; }
+.copy-btn:hover { opacity:.88; }
+.copy-btn.copied { background:var(--green); }
+
+.email-body { padding:24px; }
+.email-subject-row { display:flex; align-items:center; gap:10px; margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+.subject-label { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); white-space:nowrap; }
+.subject-text { font-size:14px; font-weight:700; color:var(--text); }
+.email-content { font-size:14px; font-weight:600; color:var(--text); line-height:1.85; white-space:pre-wrap; }
+.email-content .highlight { background:rgba(124,58,237,.12); color:var(--purple); border-radius:4px; padding:1px 4px; font-weight:800; }
+
+/* ── PLACEHOLDER HINT ─────────────────────────────────── */
+.hint-bar { background:var(--purple-light); border:1px solid var(--purple-mid); border-radius:12px; padding:12px 16px; margin-bottom:20px; font-size:13px; font-weight:700; color:var(--purple); display:flex; align-items:center; gap:8px; }
+
+/* ── NAV FOOTER ───────────────────────────────────────── */
+.email-footer { padding:16px 24px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+.nav-btns { display:flex; gap:8px; }
+.nav-btn { padding:10px 18px; border-radius:11px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; border:none; transition:opacity .2s; }
+.nav-btn:hover { opacity:.85; }
+.nav-btn-prev { background:var(--cream); color:var(--navy); border:1px solid var(--border) !important; }
+.nav-btn-next { background:var(--purple); color:#fff; }
+.nav-btn:disabled { opacity:.35; cursor:not-allowed; }
+.email-progress { font-size:12px; font-weight:700; color:var(--muted); }
+
+#toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:11px 20px; border-radius:12px; font-size:13px; font-weight:800; opacity:0; pointer-events:none; transition:opacity .3s; z-index:99999; }
+#toast.show { opacity:1; }
+
+@media(max-width:640px){
+  .topnav { padding:0 16px; }
+  .main { padding:20px 14px 60px; }
+  .selector-grid, .selector-grid.three { grid-template-columns:1fr; }
+  .email-card-header { flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">Enquiry Response</div>
+    <div class="auth-tagline">Wedding Business Workspace</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-in">Sign In</button>
+      <button class="auth-tab" id="tab-up">Create Account</button>
+    </div>
+    <div id="form-in">
+      <div class="auth-field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="in-pass" placeholder="Your password"></div>
+      <button class="auth-submit" id="signin-btn">Sign In</button>
+      <div class="auth-msg" id="in-msg"></div>
+    </div>
+    <div id="form-up" style="display:none;">
+      <div class="auth-field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="up-pass" placeholder="Min 6 characters"></div>
+      <button class="auth-submit" id="signup-btn">Create Account</button>
+      <div class="auth-msg" id="up-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-screen">
+  <nav class="topnav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-back">← Dashboard</a>
+      <div class="nav-logo">Enquiry <span>Response</span></div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-user" id="nav-user"></div>
+      <button class="nav-signout" id="signout-btn">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="main">
+
+    <div class="page-header">
+      <h1>Enquiry Response</h1>
+      <p>Select a couple and the right email appears — personalised and ready to copy.</p>
+    </div>
+
+    <!-- COUPLE SELECTOR -->
+    <div class="selector-card">
+      <div class="selector-title">Who are you writing to?</div>
+      <p style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:16px;">Send Email 1 first, then add the couple to your Lead Tracker — your follow-up schedule starts from there.</p>
+
+      <!-- Pull from Lead Tracker -->
+      <div class="field-group" style="margin-bottom:16px;">
+        <label>Pick from your leads</label>
+        <select id="lead-select">
+          <option value="">— Select a lead —</option>
+        </select>
+      </div>
+
+      <div class="or-divider"><span>or enter manually</span></div>
+
+      <div class="selector-grid three">
+        <div class="field-group">
+          <label>First Name *</label>
+          <input type="text" id="m-name" placeholder="e.g. Laura">
+        </div>
+        <div class="field-group">
+          <label>Venue</label>
+          <input type="text" id="m-venue" placeholder="e.g. Faithlegg House">
+        </div>
+        <div class="field-group">
+          <label>Your Name</label>
+          <input type="text" id="m-sender" placeholder="e.g. Darina">
+        </div>
+        <div class="field-group">
+          <label>Starting From Price (€)</label>
+          <input type="text" id="m-price-from" placeholder="e.g. 950">
+        </div>
+        <div class="field-group">
+          <label>Your Service <span style="font-size:10px;font-weight:700;color:var(--purple);">saved automatically</span></label>
+          <input type="text" id="m-service" placeholder="e.g. content creator">
+        </div>
+      </div>
+    </div>
+
+    <!-- HINT BAR -->
+    <div class="hint-bar" id="hint-bar" style="display:none;">
+      ✏️ <span id="hint-text"></span>
+    </div>
+
+    <!-- SEQUENCE STRIP -->
+    <div class="sequence-strip" id="sequence-strip"></div>
+
+    <!-- EMAIL DISPLAY -->
+    <div class="email-card" id="email-card">
+      <div class="email-card-header">
+        <div class="email-meta">
+          <div class="email-tag" id="email-tag"></div>
+          <div class="email-title" id="email-title"></div>
+          <div class="email-when" id="email-when"></div>
+        </div>
+        <button class="copy-btn" id="copy-btn">Copy email</button>
+      </div>
+      <div id="email-why-box" style="display:none; padding:14px 24px; background:var(--purple-light); border-bottom:1px solid var(--purple-mid);">
+        <div id="email-why-label" style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--purple);margin-bottom:5px;"></div>
+        <div id="email-why-text" style="font-size:13px;font-weight:600;color:var(--navy);line-height:1.7;"></div>
+      </div>
+      <!-- Per-email editable fields -->
+      <div id="per-email-fields" style="display:none; padding:16px 24px; border-bottom:1px solid var(--border); display:grid; grid-template-columns:1fr; gap:12px;"></div>
+
+      <div style="padding:10px 24px 0; display:flex; align-items:center; justify-content:flex-end;">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);font-style:italic;">✏️ Copy and edit as desired before sending</span>
+      </div>
+
+      <div class="email-body">
+        <div class="email-subject-row">
+          <div class="subject-label">Subject</div>
+          <div class="subject-text" id="email-subject"></div>
+        </div>
+        <div class="email-content" id="email-content"></div>
+      </div>
+      <div class="email-footer">
+        <div class="email-progress" id="email-progress"></div>
+        <div class="nav-btns">
+          <button class="nav-btn nav-btn-prev" id="prev-btn">← Previous</button>
+          <button class="nav-btn nav-btn-next" id="next-btn">Next →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SUPABASE_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_CS3XLLfWaZNA-B2oE37N-g_z2FMWCzq";
+if (!window._wbwSb) {
+  window._wbwSb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { storageKey: 'wbw-auth', autoRefreshToken: true, persistSession: true }
+  });
+}
+const sb = window._wbwSb;
+let currentUser = null;
+let leads = [];
+let currentEmail = 0;
+
+// ── EMAIL TEMPLATES ───────────────────────────────────────────────────
+// [name] = first name, [venue] = venue name, [sender] = your name
+const EMAILS = [
+  {
+    tag: "Email 1 — First Reply",
+    title: "First Reply",
+    when: "Send immediately after receiving an enquiry",
+    why: "This tool uses the CAPE system for your first reply — a simple structure that makes your response feel warm and professional rather than generic.\n\nC — Connect: Open with something genuine about their venue. This shows you read their enquiry and makes them feel seen straight away.\n\nA — Availability: Confirm you're free for their date early. This stops them shopping around while waiting for a reply.\n\nP — Price: Share your starting price clearly. Couples appreciate knowing upfront — it saves time for both of you.\n\nE — Excitement: Close with genuine warmth about their venue or their day. It makes them feel chosen, not just sold to.",
+    subject: "Re: Your wedding at [venue]",
+    fields: [
+      { id: "f-details", label: "Brief package details", placeholder: "e.g. Full day coverage from getting ready through to the evening, delivered within 5 days…", hint: "A line or two about what's included. Use this if you don't have a brochure, or alongside one." },
+      { id: "f-brochure", label: "Brochure or info link (optional)", placeholder: "e.g. https://yourwebsite.com/packages", hint: "Leave blank if you don't have one — the brief details above will show instead." },
+    ],
+    body: `Hi [name],
+
+I was delighted to see your enquiry and that you're getting married in [venue].
+
+It's a beautiful place to work — the space, the atmosphere, and the team there are wonderful.
+
+I'm currently available for your date.
+
+My packages start from €[starting from].
+
+[brief details]
+
+[brochure link]
+
+I'm really excited for you — [venue] is such a beautiful place to celebrate a wedding.
+
+Would it be helpful if I shared a little more about how it all works?
+
+[sender]`
+  },
+  {
+    tag: "Follow-up 1",
+    title: "Follow-up 1",
+    when: "Send 2 days after Email 1 — only if no reply",
+    why: "Instead of chasing, you're giving. Sending something of value about their venue shows you're paying attention and keeps you front of mind without any pressure. It feels helpful, not salesy — and it's a natural conversation opener.",
+    subject: "Your wedding at [venue] 💛",
+    fields: [
+      { id: "f-blog", label: "Blog post / link about their venue", placeholder: "e.g. https://venueblog.com/faithlegg", hint: "Find a blog post, article or feature about their venue — personalises this completely." },
+    ],
+    body: `Hi [name],
+
+I thought I'd send you this blog post I came across about [venue]. It has some lovely details about the space and a few features I think would work beautifully for your wedding.
+
+[blog link]
+
+Hope it helps,
+[sender]`
+  },
+  {
+    tag: "Follow-up 2",
+    title: "Follow-up 2",
+    when: "Send 3 days after Follow-up 1 — only if no reply",
+    why: "You're now positioning yourself as someone already thinking creatively about their day. Mentioning specific ideas for their venue shows this isn't a generic sequence — and offering a chat gives them an easy, low-pressure next step.",
+    subject: "A few ideas for your day at [venue]",
+    fields: [
+      { id: "f-ideas", label: "Your ideas for their wedding", placeholder: "e.g. the entrance shot at Faithlegg is stunning — I'd love to capture that moment…", hint: "Keep it personal to their venue. Two or three specific ideas works best." },
+      { id: "f-availability", label: "Your availability this week", placeholder: "e.g. Tuesday, Thursday or Friday afternoon", hint: "Give real days so it feels genuine." },
+    ],
+    body: `Hi [name],
+
+I've been thinking of a few ideas that could work really well for you on your wedding day — here's what I was thinking:
+
+[ideas]
+
+If you'd like to chat through any of this, I'm available this week on [availability], or if you prefer to keep things on email, I'd love to share more with you.
+
+Talk soon,
+[sender]`
+  },
+  {
+    tag: "Follow-up 3",
+    title: "Follow-up 3",
+    when: "Send 3 days after Follow-up 2 — only if no reply",
+    why: "This gently introduces the idea of holding their date — creating soft urgency without being pushy. It also normalises exactly where they are in the decision process, which reduces anxiety and keeps the door open.",
+    subject: "Just checking in — your date at [venue]",
+    fields: [],
+    body: `Hi [name],
+
+I know life is busy and you may not have decided on your [service] yet — that's totally normal at this stage. Most couples make their decision around now, once they've had a proper chat about it.
+
+If you are leaning towards having me on the day, I'm happy to pop a little note beside your date while you're deciding.
+
+Either way, it's usually around this point that things start falling into place, and it's such an exciting stage to be in.
+
+Many thanks,
+[sender]`
+  },
+  {
+    tag: "Follow-up 4",
+    title: "Follow-up 4",
+    when: "Send 3 days after Follow-up 3 — only if no reply",
+    why: "Many couples don't book because they're not sure what they'll actually get. This email invites you to paint a picture of real value — not features or specs. Help them imagine the experience before they've committed.",
+    subject: "Still thinking it over?",
+    fields: [
+      { id: "f-details2", label: "Details to share", placeholder: "e.g. here's a recent example from a wedding at a similar venue…", hint: "Share examples, a link to past work, or a short description of what they'd receive." },
+    ],
+    body: `Hi [name],
+
+As I haven't heard from you, I'm not sure if you're still considering having me as part of your wedding day, and that's absolutely fine either way. Most couples tend to make their decision around this point, once they've had a proper chat and narrowed it down to the suppliers who will really align with their wedding vision.
+
+If you're still deciding and maybe not fully sure what to expect from me, I thought I'd share some more details with you.
+
+[details]
+
+Hopefully this helps while you're still deciding on your [service].
+
+[sender]`
+  },
+  {
+    tag: "Follow-up 5",
+    title: "Follow-up 5",
+    when: "Send 3 days after Follow-up 4 — only if no reply",
+    why: "A gracious closing does two things: it leaves the door open if they change their mind, and it protects your reputation. Couples talk — being warm even when you don't get the booking is always worth it.",
+    subject: "Wishing you all the best 💛",
+    fields: [],
+    body: `Hi [name],
+
+As I haven't heard anything back, I'm presuming you've gone in another direction, and I genuinely hope everything is coming together beautifully for your wedding.
+
+With that in mind, I'll go ahead and open that date back up on my end.
+
+Thank you so much for reaching out in the first place.
+
+It was lovely connecting with you, and I really do wish you the very best for the big day.
+
+If anything changes on your side later on, you're always welcome to get back in touch.
+
+All the best,
+[sender]`
+  },
+];
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+function setMsg(el, text, type) { el.textContent = text; el.className = "auth-msg " + type; }
+
+function getFields() {
+  const name      = document.getElementById("m-name").value.trim()      || "[name]";
+  const venue     = document.getElementById("m-venue").value.trim()     || "[venue]";
+  const sender    = document.getElementById("m-sender").value.trim()    || "[sender]";
+  const priceFrom = document.getElementById("m-price-from").value.trim()|| "[starting from]";
+  const service   = document.getElementById("m-service").value.trim()   || "[service]";
+  return { name, venue, sender, priceFrom, service };
+}
+
+function getEmailFields(email) {
+  const vals = {};
+  (email.fields || []).forEach(f => {
+    const el = document.getElementById(f.id);
+    vals[f.id] = el ? (el.value.trim() || "["+f.label.toLowerCase()+"]") : "["+f.label.toLowerCase()+"]";
+  });
+  return vals;
+}
+
+function fillTemplate(text, name, venue, sender, priceFrom, service, emailFieldVals) {
+  let out = text
+    .replace(/\[name\]/g,         name)
+    .replace(/\[venue\]/g,        venue)
+    .replace(/\[sender\]/g,       sender)
+    .replace(/\[starting from\]/g, priceFrom)
+    .replace(/\[service\]/g,      service);
+  // Replace per-email field placeholders
+  if (emailFieldVals) {
+    out = out.replace(/\[brief details\]/g,  emailFieldVals["f-details"]  || "[brief details]");
+    const brochureVal = emailFieldVals["f-brochure"];
+    if (brochureVal && brochureVal !== "[brochure or info link (optional)]") {
+      out = out.replace(/\[brochure link\]/g, "You can see more details here:\n" + brochureVal);
+    } else {
+      out = out.replace(/\[brochure link\]\n?/g, "");
+    }
+    out = out.replace(/\[blog link\]/g,      emailFieldVals["f-blog"]     || "[blog link]");
+    out = out.replace(/\[ideas\]/g,          emailFieldVals["f-ideas"]    || "[ideas]");
+    out = out.replace(/\[availability\]/g,   emailFieldVals["f-availability"] || "[availability]");
+    out = out.replace(/\[details\]/g,        emailFieldVals["f-details2"] || "[details]");
+  }
+  return out;
+}
+
+function renderEmailContent(raw, name, venue, sender, priceFrom, service, emailFieldVals) {
+  const filled = fillTemplate(raw, name, venue, sender, priceFrom, service, emailFieldVals);
+  return filled.replace(/\[[^\]]+\]/g, m =>
+    `<span class="highlight">${m}</span>`
+  );
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────
+function renderStrip() {
+  const strip = document.getElementById("sequence-strip");
+  strip.innerHTML = EMAILS.map((e, i) => `
+    <button class="seq-btn ${i === currentEmail ? 'active' : ''}" data-i="${i}">
+      <span class="seq-num">${i + 1}</span>${e.title}
+    </button>`).join("");
+  strip.querySelectorAll("[data-i]").forEach(btn => {
+    btn.onclick = () => { currentEmail = Number(btn.getAttribute("data-i")); renderEmail(); };
+  });
+}
+
+function renderEmailFields(email) {
+  const container = document.getElementById("per-email-fields");
+  container.innerHTML = "";
+  if (!email.fields || !email.fields.length) { container.style.display = "none"; return; }
+  container.style.display = "grid";
+  email.fields.forEach(f => {
+    const div = document.createElement("div");
+    div.className = "field-group";
+    div.innerHTML = `
+      <label>${f.label}${f.hint ? ' <span style="font-size:10px;font-weight:600;color:var(--muted);">— '+f.hint+'</span>' : ''}</label>
+      <textarea id="${f.id}" placeholder="${f.placeholder}" rows="2"
+        style="padding:11px 13px;border:1.5px solid var(--border);border-radius:11px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:var(--white);resize:vertical;transition:border-color .2s;"
+        oninput="renderEmail()" onfocus="this.style.borderColor='var(--purple)'" onblur="this.style.borderColor='var(--border)'"
+      ></textarea>`;
+    container.appendChild(div);
+  });
+}
+
+function renderEmail() {
+  const e = EMAILS[currentEmail];
+  const { name, venue, sender, priceFrom, service } = getFields();
+  const emailFieldVals = getEmailFields(e);
+
+  // Hint bar
+  const missing = [];
+  if (name      === "[name]")         missing.push("first name");
+  if (venue     === "[venue]")        missing.push("venue");
+  if (sender    === "[sender]")       missing.push("your name");
+  if (currentEmail === 0 && priceFrom === "[starting from]") missing.push("a starting price");
+  const hintBar = document.getElementById("hint-bar");
+  if (missing.length) {
+    hintBar.style.display = "flex";
+    document.getElementById("hint-text").textContent = "Fill in " + missing.join(", ") + " above to personalise this email.";
+  } else {
+    hintBar.style.display = "none";
+  }
+
+  document.getElementById("email-tag").textContent   = e.tag;
+  document.getElementById("email-title").textContent = e.title;
+  document.getElementById("email-when").textContent  = "⏰ " + e.when;
+
+  // Why box
+  const whyBox = document.getElementById("email-why-box");
+  if (e.why) {
+    whyBox.style.display = "block";
+    document.getElementById("email-why-text").innerHTML    = e.why.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+    document.getElementById("email-why-label").textContent = currentEmail === 0 ? "💡 The CAPE System" : "💡 Why this works";
+  } else {
+    whyBox.style.display = "none";
+  }
+
+  // Per-email fields — only re-render DOM when email changes
+  const card = document.getElementById("email-card");
+  if (card.getAttribute("data-email-idx") !== String(currentEmail)) {
+    card.setAttribute("data-email-idx", currentEmail);
+    renderEmailFields(e);
+  }
+
+  document.getElementById("email-subject").textContent  = fillTemplate(e.subject, name, venue, sender, priceFrom, service, emailFieldVals);
+  document.getElementById("email-content").innerHTML    = renderEmailContent(e.body, name, venue, sender, priceFrom, service, emailFieldVals);
+  document.getElementById("email-progress").textContent = `Email ${currentEmail + 1} of ${EMAILS.length}`;
+
+  document.getElementById("prev-btn").disabled = currentEmail === 0;
+  document.getElementById("next-btn").disabled = currentEmail === EMAILS.length - 1;
+
+  renderStrip();
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────
+document.getElementById("tab-in").onclick = () => switchTab("in");
+document.getElementById("tab-up").onclick = () => switchTab("up");
+document.getElementById("signin-btn").onclick = signIn;
+document.getElementById("signup-btn").onclick = signUp;
+
+function switchTab(t) {
+  document.getElementById("form-in").style.display = t === "in" ? "" : "none";
+  document.getElementById("form-up").style.display = t === "up" ? "" : "none";
+  document.getElementById("tab-in").classList.toggle("active", t === "in");
+  document.getElementById("tab-up").classList.toggle("active", t === "up");
+}
+
+async function signIn() {
+  const email = document.getElementById("in-email").value.trim();
+  const pass  = document.getElementById("in-pass").value;
+  const msg   = document.getElementById("in-msg");
+  const btn   = document.getElementById("signin-btn");
+  if (!email || !pass) { setMsg(msg, "Please enter email and password.", "error"); return; }
+  btn.disabled = true; btn.textContent = "Signing in…";
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  btn.disabled = false; btn.textContent = "Sign In";
+  if (error) setMsg(msg, error.message, "error");
+}
+
+async function signUp() {
+  const email = document.getElementById("up-email").value.trim();
+  const pass  = document.getElementById("up-pass").value;
+  const msg   = document.getElementById("up-msg");
+  const btn   = document.getElementById("signup-btn");
+  if (!email || !pass) { setMsg(msg, "Please fill in all fields.", "error"); return; }
+  if (pass.length < 6) { setMsg(msg, "Password must be at least 6 characters.", "error"); return; }
+  btn.disabled = true; btn.textContent = "Creating account…";
+  const { error } = await sb.auth.signUp({ email, password: pass });
+  btn.disabled = false; btn.textContent = "Create Account";
+  if (error) setMsg(msg, error.message, "error");
+  else { setMsg(msg, "Account created! Please sign in.", "success"); switchTab("in"); }
+}
+
+async function signOut() { await sb.auth.signOut(); }
+
+// ── INIT ──────────────────────────────────────────────────────────────
+let _etInitialised = false;
+
+async function initApp(user) {
+  if (_etInitialised) return;
+  _etInitialised = true;
+
+  currentUser = user;
+  document.getElementById("auth-screen").style.display = "none";
+  document.getElementById("app-screen").style.display  = "block";
+  document.getElementById("nav-user").textContent = currentUser.email;
+
+  // Wire buttons
+  document.getElementById("signout-btn").onclick = signOut;
+  document.getElementById("copy-btn").onclick    = copyEmail;
+  document.getElementById("prev-btn").onclick    = () => { if (currentEmail > 0) { currentEmail--; renderEmail(); } };
+  document.getElementById("next-btn").onclick    = () => { if (currentEmail < EMAILS.length - 1) { currentEmail++; renderEmail(); } };
+
+  // Wire live re-render on input change
+  ["m-name", "m-venue", "m-sender", "m-price-from", "m-service"].forEach(id => {
+    document.getElementById(id).addEventListener("input", renderEmail);
+  });
+
+  // Save service type to localStorage and restore it
+  const savedService = localStorage.getItem("wbw-service-type");
+  if (savedService) document.getElementById("m-service").value = savedService;
+  document.getElementById("m-service").addEventListener("input", () => {
+    localStorage.setItem("wbw-service-type", document.getElementById("m-service").value.trim());
+  });
+
+  // Wire lead selector
+  document.getElementById("lead-select").onchange = onLeadSelect;
+
+  await loadLeads();
+  renderEmail();
+}
+
+sb.auth.getSession().then(({ data: { session } }) => {
+  if (session?.user) initApp(session.user);
+});
+
+sb.auth.onAuthStateChange((event, session) => {
+  if (event === "SIGNED_IN" && session?.user) {
+    _etInitialised = false;
+    initApp(session.user);
+  } else if (event === "SIGNED_OUT") {
+    _etInitialised = false;
+    currentUser = null;
+    document.getElementById("app-screen").style.display  = "none";
+    document.getElementById("auth-screen").style.display = "flex";
+  }
+});
+
+// ── LEADS ─────────────────────────────────────────────────────────────
+async function loadLeads() {
+  try {
+    const { data } = await sb.from("leads").select("*").eq("user_id", currentUser.id);
+    leads = (data || []).map(r => r.data || r).filter(l => l && l.id && l.status !== "Lost" && l.status !== "Booked");
+    leads.sort((a, b) => (b.enquiry || "").localeCompare(a.enquiry || ""));
+
+    const sel = document.getElementById("lead-select");
+    // Clear existing options except first
+    while (sel.options.length > 1) sel.remove(1);
+
+    if (leads.length) {
+      leads.forEach(l => {
+        const opt = document.createElement("option");
+        opt.value = l.id;
+        const stage = l.status || "Replied";
+        const wedding = l.wedding ? ` — ${fmtDate(l.wedding)}` : "";
+        opt.textContent = `${l.name}${wedding} (${stage})`;
+        sel.appendChild(opt);
+      });
+    }
+  } catch(e) { console.log("Lead load error:", e); }
+}
+
+function fmtDate(iso) {
+  if (!iso) return "";
+  const [y,m,d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+function onLeadSelect() {
+  const id = document.getElementById("lead-select").value;
+  if (!id) return;
+  const lead = leads.find(l => l.id === id);
+  if (!lead) return;
+
+  // Fill manual fields from lead data
+  const firstName = (lead.name || "").split(/\s*(&|and)\s*/i)[0].trim();
+  document.getElementById("m-name").value  = firstName;
+  document.getElementById("m-venue").value = lead.venue || "";
+
+  // Jump to the right email based on follow-up status
+  const statusMap = {
+    "Replied":    0,
+    "Follow-up 1": 1,
+    "Follow-up 2": 2,
+    "Follow-up 3": 3,
+    "Follow-up 4": 4,
+    "Follow-up 5": 5,
+  };
+  const idx = statusMap[lead.status];
+  if (idx !== undefined) currentEmail = idx;
+
+  renderEmail();
+  showToast("✓ Loaded " + lead.name);
+}
+
+// ── COPY ──────────────────────────────────────────────────────────────
+function copyEmail() {
+  const e = EMAILS[currentEmail];
+  const { name, venue, sender, priceFrom, service } = getFields();
+  const emailFieldVals = getEmailFields(e);
+  const subject = fillTemplate(e.subject, name, venue, sender, priceFrom, service, emailFieldVals);
+  const body    = fillTemplate(e.body, name, venue, sender, priceFrom, service, emailFieldVals);
+  const full    = `Subject: ${subject}\n\n${body}`;
+
+  navigator.clipboard.writeText(full).then(() => {
+    const btn = document.getElementById("copy-btn");
+    btn.textContent = "Copied ✓";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "Copy email"; btn.classList.remove("copied"); }, 2000);
+    showToast("Email copied to clipboard ✓");
+  }).catch(() => {
+    // Fallback for older browsers
+    const ta = document.createElement("textarea");
+    ta.value = full; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    showToast("Email copied ✓");
+  });
+}
+</script>
+</body>
+</html>
