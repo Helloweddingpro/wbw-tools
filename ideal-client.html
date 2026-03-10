@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Your Most Profitable Client — Wedding Business Workspace</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:    #3B3C6D;
+  --pink:    #FB478E;
+  --emerald: #00A878;
+  --cream:   #FAF8F6;
+  --warm:    #F5F0E8;
+  --white:   #FFFFFF;
+  --border:  rgba(59,60,109,.12);
+  --muted:   rgba(59,60,109,.5);
+  --text:    #2A2B4A;
+  --em-light:rgba(0,168,120,.1);
+  --em-mid:  rgba(0,168,120,.2);
+  --green:   #27ae60;
+  --red:     #c0392b;
+}
+body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
+
+/* ── AUTH ─────────────────────────────────────────────── */
+#auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:var(--navy); }
+.auth-card { background:var(--white); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; box-shadow:0 24px 60px rgba(0,0,0,.2); }
+.auth-logo { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:var(--navy); margin-bottom:4px; line-height:1.2; }
+.auth-tagline { font-size:12px; font-weight:700; color:var(--muted); margin-bottom:32px; }
+.auth-tabs { display:flex; gap:6px; background:var(--cream); border-radius:14px; padding:5px; margin-bottom:24px; }
+.auth-tab { flex:1; padding:9px; border-radius:10px; border:none; background:transparent; color:var(--muted); font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+.auth-tab.active { background:var(--white); color:var(--navy); box-shadow:0 2px 8px rgba(59,60,109,.1); }
+.auth-field { margin-bottom:14px; }
+.auth-field label { display:block; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.auth-field input { width:100%; padding:12px 16px; background:var(--cream); border:1.5px solid var(--border); border-radius:12px; color:var(--text); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; transition:border-color .2s; }
+.auth-field input:focus { outline:none; border-color:var(--emerald); }
+.auth-submit { width:100%; padding:14px; background:var(--emerald); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; margin-top:6px; transition:opacity .2s; }
+.auth-submit:hover { opacity:.88; }
+.auth-submit:disabled { opacity:.5; cursor:not-allowed; }
+.auth-msg { margin-top:12px; font-size:13px; font-weight:700; text-align:center; min-height:18px; }
+.auth-msg.error { color:var(--red); } .auth-msg.success { color:var(--green); }
+
+/* ── NAV ──────────────────────────────────────────────── */
+#app-screen { display:none; }
+.topnav { background:var(--navy); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:64px; position:sticky; top:0; z-index:100; }
+.nav-left { display:flex; align-items:center; gap:16px; }
+.nav-back { font-size:13px; font-weight:700; color:rgba(255,255,255,.6); text-decoration:none; transition:color .2s; }
+.nav-back:hover { color:#fff; }
+.nav-logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:700; color:#fff; }
+.nav-logo span { color:var(--pink); }
+.nav-right { display:flex; align-items:center; gap:14px; }
+.nav-user { font-size:12px; font-weight:600; color:rgba(255,255,255,.5); }
+.nav-signout { padding:8px 16px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:10px; color:rgba(255,255,255,.8); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; cursor:pointer; }
+.nav-signout:hover { background:rgba(255,255,255,.18); }
+
+/* ── LESSON LAYOUT ────────────────────────────────────── */
+.lesson-wrap { max-width:720px; margin:0 auto; padding:40px 24px 100px; }
+
+/* ── CHAPTER PROGRESS ─────────────────────────────────── */
+.chapter-nav { display:flex; gap:6px; margin-bottom:40px; }
+.ch-dot { flex:1; height:4px; border-radius:999px; background:var(--border); transition:background .4s; cursor:pointer; }
+.ch-dot.done    { background:var(--emerald); }
+.ch-dot.current { background:var(--navy); }
+
+/* ── CHAPTERS ─────────────────────────────────────────── */
+.chapter { display:none; }
+.chapter.active { display:block; animation:fadeUp .4s ease both; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── HERO ─────────────────────────────────────────────── */
+.ch-hero { margin-bottom:32px; }
+.ch-eyebrow { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--emerald); margin-bottom:10px; }
+.ch-title { font-family:'Cormorant Garamond',serif; font-size:36px; font-weight:700; color:var(--navy); line-height:1.15; margin-bottom:14px; }
+.ch-intro { font-size:15px; font-weight:600; color:var(--muted); line-height:1.9; }
+
+/* ── LESSON CARDS ─────────────────────────────────────── */
+.lc { background:var(--white); border:1px solid var(--border); border-radius:20px; padding:28px; margin-bottom:18px; }
+.lc.navy { background:var(--navy); border-color:transparent; }
+.lc.warm { background:var(--warm); border-color:rgba(201,168,76,.2); }
+.lc.emerald { background:var(--emerald); border-color:transparent; }
+.lc-eyebrow { font-size:11px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:var(--emerald); margin-bottom:8px; }
+.lc.navy .lc-eyebrow { color:rgba(255,255,255,.5); }
+.lc.emerald .lc-eyebrow { color:rgba(255,255,255,.7); }
+.lc-title { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:700; color:var(--navy); margin-bottom:12px; line-height:1.2; }
+.lc.navy .lc-title { color:#fff; }
+.lc.emerald .lc-title { color:#fff; }
+.lc-body { font-size:14px; font-weight:600; color:var(--muted); line-height:1.85; }
+.lc.navy .lc-body { color:rgba(255,255,255,.75); }
+.lc.emerald .lc-body { color:rgba(255,255,255,.88); }
+.lc-body p { margin-bottom:12px; }
+.lc-body p:last-child { margin-bottom:0; }
+
+/* ── CALLOUT ──────────────────────────────────────────── */
+.callout { border-left:3px solid var(--emerald); padding:16px 20px; background:var(--em-light); border-radius:0 14px 14px 0; margin:6px 0 18px; }
+.callout p { font-size:14px; font-weight:700; color:var(--navy); line-height:1.75; font-style:italic; margin:0; }
+
+/* ── STAT ROW ─────────────────────────────────────────── */
+.stat-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
+.stat-box { background:rgba(255,255,255,.1); border-radius:14px; padding:16px; text-align:center; }
+.stat-num { font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:700; color:#fff; line-height:1; }
+.stat-label { font-size:11px; font-weight:700; color:rgba(255,255,255,.55); margin-top:6px; }
+
+/* ── AVATAR CARD ──────────────────────────────────────── */
+.avatar-card { background:var(--white); border:1px solid var(--border); border-radius:20px; overflow:hidden; margin-bottom:18px; }
+.avatar-header { background:linear-gradient(135deg,#252660,var(--navy)); padding:24px 28px; }
+.av-name { font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:700; color:#fff; }
+.av-sub  { font-size:13px; font-weight:600; color:rgba(255,255,255,.55); margin-top:4px; }
+.avatar-grid { display:grid; grid-template-columns:1fr 1fr; }
+.av-col { padding:22px 24px; }
+.av-col:first-child { border-right:1px solid var(--border); }
+.av-sec-label { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:var(--emerald); margin-bottom:10px; }
+.av-item { font-size:13px; font-weight:600; color:var(--text); margin-bottom:6px; line-height:1.6; }
+.av-item strong { font-weight:800; color:var(--navy); }
+.av-divider { border:none; border-top:1px solid var(--border); margin:0; }
+.av-tag { display:inline-block; padding:3px 9px; background:var(--em-light); color:var(--emerald); border-radius:999px; font-size:11px; font-weight:800; margin:2px 2px 0 0; }
+
+/* ── INSIGHT STRIP ────────────────────────────────────── */
+.insight-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:18px 0; }
+.ins { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:16px; text-align:center; }
+.ins-icon  { font-size:20px; margin-bottom:6px; }
+.ins-label { font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+.ins-value { font-size:13px; font-weight:800; color:var(--navy); margin-top:4px; }
+
+/* ── YOUR VERSION ─────────────────────────────────────── */
+.your-version { background:var(--white); border:1.5px solid var(--emerald); border-radius:20px; padding:28px; margin-bottom:18px; }
+.yv-title { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+.yv-sub   { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:22px; line-height:1.75; }
+.yv-fields { display:flex; flex-direction:column; gap:16px; }
+.yv-field label { display:block; font-size:11px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.yv-field label span { font-weight:600; color:var(--emerald); text-transform:none; letter-spacing:0; font-size:11px; }
+.yv-field input, .yv-field textarea {
+  width:100%; padding:12px 15px; border:1.5px solid var(--border); border-radius:12px;
+  font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; color:var(--text);
+  background:var(--cream); transition:border-color .2s; resize:vertical;
+}
+.yv-field input:focus, .yv-field textarea:focus { outline:none; border-color:var(--emerald); background:var(--white); }
+.save-row { display:flex; align-items:center; gap:14px; margin-top:20px; flex-wrap:wrap; }
+.save-btn { padding:13px 28px; background:var(--emerald); color:#fff; border:none; border-radius:13px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; cursor:pointer; transition:opacity .2s; }
+.save-btn:hover { opacity:.88; }
+/* ── CHIPS ────────────────────────────────────────────── */
+.q-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.q-chip { padding:9px 16px; border-radius:999px; border:1.5px solid var(--border); background:var(--white); font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:var(--muted); cursor:pointer; transition:all .2s; }
+.q-chip:hover { border-color:var(--emerald); color:var(--emerald); }
+.q-chip.selected { background:var(--emerald); color:#fff; border-color:var(--emerald); }
+
+.save-note { font-size:12px; font-weight:700; color:var(--muted); }
+
+/* ── CHAPTER FOOTER ───────────────────────────────────── */
+.ch-footer { display:flex; align-items:center; justify-content:space-between; margin-top:36px; padding-top:24px; border-top:1px solid var(--border); }
+.cf-back { padding:12px 22px; background:var(--white); color:var(--navy); border:1.5px solid var(--border); border-radius:13px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; cursor:pointer; transition:all .2s; }
+.cf-back:hover { border-color:var(--navy); }
+.cf-next { padding:13px 26px; background:var(--navy); color:#fff; border:none; border-radius:13px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; cursor:pointer; transition:opacity .2s; }
+.cf-next:hover { opacity:.88; }
+.cf-next.em { background:var(--emerald); }
+
+#toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:11px 20px; border-radius:12px; font-size:13px; font-weight:800; opacity:0; pointer-events:none; transition:opacity .3s; z-index:9999; }
+#toast.show { opacity:1; }
+
+@media(max-width:620px){
+  .topnav { padding:0 16px; }
+  .lesson-wrap { padding:24px 14px 80px; }
+  .ch-title { font-size:27px; }
+  .stat-row, .insight-strip { grid-template-columns:1fr; }
+  .avatar-grid { grid-template-columns:1fr; }
+  .av-col:first-child { border-right:none; border-bottom:1px solid var(--border); }
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">Find Your Most Profitable Client</div>
+    <div class="auth-tagline">Wedding Business Workspace</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-in">Sign In</button>
+      <button class="auth-tab" id="tab-up">Create Account</button>
+    </div>
+    <div id="form-in">
+      <div class="auth-field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="in-pass" placeholder="Your password"></div>
+      <button class="auth-submit" id="signin-btn">Sign In</button>
+      <div class="auth-msg" id="in-msg"></div>
+    </div>
+    <div id="form-up" style="display:none;">
+      <div class="auth-field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="up-pass" placeholder="Min 6 characters"></div>
+      <button class="auth-submit" id="signup-btn">Create Account</button>
+      <div class="auth-msg" id="up-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-screen">
+  <nav class="topnav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-back">← Dashboard</a>
+      <div class="nav-logo">Find Your Most <span>Profitable Client</span></div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-user" id="nav-user"></div>
+      <button class="nav-signout" id="signout-btn">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="lesson-wrap">
+    <div class="chapter-nav" id="chapter-nav"></div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- CH 1 — What is an ICA?                  -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="chapter" id="ch-0">
+      <div class="ch-hero">
+        <div class="ch-eyebrow">Chapter 1 of 5</div>
+        <div class="ch-title">What is an Ideal Client Avatar — and why does it matter?</div>
+        <div class="ch-intro">Before we talk about who your most profitable client is, let's make sure you understand what an ICA actually is — and why most wedding suppliers get this completely wrong.</div>
+      </div>
+
+      <div class="lc">
+        <div class="lc-eyebrow">The Concept</div>
+        <div class="lc-title">An ICA is a detailed picture of one specific person</div>
+        <div class="lc-body">
+          <p>An Ideal Client Avatar — ICA for short — is a detailed description of the one type of client you most want to work with. Not a vague category like "couples with a budget over €2k." A real, specific person with a name, a lifestyle, values, habits, fears and dreams.</p>
+          <p>When you know exactly who she is, everything in your business gets easier. Your content speaks directly to her. Your pricing reflects what she's willing to invest. Your enquiry responses feel personal, not generic. She feels like you understand her before you've even met.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <p>"When you try to speak to everyone, you speak to no one. The more specific you are about who you want to attract, the more magnetic your marketing becomes."</p>
+      </div>
+
+      <div class="lc">
+        <div class="lc-eyebrow">The Mistake Most Suppliers Make</div>
+        <div class="lc-title">They describe their current clients — not their dream ones</div>
+        <div class="lc-body">
+          <p>Here's the trap: when wedding suppliers are asked to describe their ideal client, they describe the couples they're already getting. If you're currently attracting mid-range bookings, you'll describe a mid-range client. And then your marketing keeps attracting more of the same.</p>
+          <p>This tool works differently. We're going to show you who your <em>most profitable</em> client is — based on real market insight — and then help you understand her well enough to start attracting her, even if she's not who you're working with right now.</p>
+        </div>
+      </div>
+
+      <div class="lc navy">
+        <div class="lc-eyebrow">What You'll Have By The End</div>
+        <div class="lc-title">A clear picture of your most profitable client — and how to reach her</div>
+        <div class="lc-body">
+          <p>By the time you finish this lesson you'll know exactly who your most profitable wedding client is, what she values, where she spends her time, what she's afraid of, and what makes her book. You'll also have a personalised version of her profile saved to your account — ready to connect directly with your Social Media Planner.</p>
+        </div>
+      </div>
+
+      <div class="ch-footer">
+        <div></div>
+        <button class="cf-next" onclick="goChapter(1)">Next: The Market Insight →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- CH 2 — The Venue Strategy               -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="chapter" id="ch-1">
+      <div class="ch-hero">
+        <div class="ch-eyebrow">Chapter 2 of 5</div>
+        <div class="ch-title">The insight that changes everything</div>
+        <div class="ch-intro">There is one shift in thinking that can multiply what you earn — without changing what you do or how you do it. It has nothing to do with talent.</div>
+      </div>
+
+      <div class="lc navy">
+        <div class="lc-eyebrow">The Big Insight</div>
+        <div class="lc-title">Your most profitable client is already choosing her venue</div>
+        <div class="lc-body">
+          <p>Career couples — working professionals with strong household incomes — don't shop for suppliers the same way budget-conscious couples do. They don't spend weeks comparing prices on Google. They book their dream venue first, then build their supplier list around it.</p>
+          <p>This means the venue is your shortcut. When you become known at the top venues in your area, the right clients find you naturally — because those are the only weddings they're planning.</p>
+        </div>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-num">1×</div>
+            <div class="stat-label">What you earn now</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">4×</div>
+            <div class="stat-label">What venue-focused suppliers earn — same service</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lc">
+        <div class="lc-eyebrow">Why This Works</div>
+        <div class="lc-title">Top venues attract a specific type of couple</div>
+        <div class="lc-body">
+          <p>Couples booking at 4 and 5-star country house hotels and estate venues are not the same as couples booking a local hotel. They have higher budgets, value quality over bargain, and almost never haggle. They've already decided to invest in the best — they just need to know you're the right supplier for their venue.</p>
+          <p>When they search for a supplier, they often search by venue. "Wedding videographer Faithlegg." "Content creator Mount Juliet." If you're not showing up in those searches, you're invisible to your most profitable client.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <p>"You don't need to find better clients. You need to show up where they already are. The venue is the filter — it does the qualifying for you."</p>
+      </div>
+
+      <div class="lc warm">
+        <div class="lc-eyebrow">Before You Move On</div>
+        <div class="lc-title">Start thinking about your top venues</div>
+        <div class="lc-body">
+          <p>Which venues in your area attract the type of couple you want to work with? These are typically 4 or 5-star country house hotels, historic estates, or destination venues outside the city centre. You'll save these in Chapter 5. For now, just start thinking about them.</p>
+        </div>
+      </div>
+
+      <div class="ch-footer">
+        <button class="cf-back" onclick="goChapter(0)">← Back</button>
+        <button class="cf-next" onclick="goChapter(2)">Next: Meet the Couple →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- CH 3 — Meet Amy                         -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="chapter" id="ch-2">
+      <div class="ch-hero">
+        <div class="ch-eyebrow">Chapter 3 of 5</div>
+        <div class="ch-title">Meet Amy — your most profitable client</div>
+        <div class="ch-intro">We've built a detailed avatar of the career couple most likely to book premium wedding suppliers. This is who you're marketing to. Read her profile carefully — every piece of content you create should speak directly to her.</div>
+      </div>
+
+      <div class="avatar-card">
+        <div class="avatar-header">
+          <div class="av-name">Amy</div>
+          <div class="av-sub">Aged 28–36 · Working professional · Getting married at a top local venue</div>
+        </div>
+        <div class="avatar-grid">
+          <div class="av-col">
+            <div class="av-sec-label">Who She Is</div>
+            <div class="av-item"><strong>Age:</strong> 28–36</div>
+            <div class="av-item"><strong>Location:</strong> Rural or commuter town, owns her home</div>
+            <div class="av-item"><strong>Career:</strong> Working professional, €50k+ salary</div>
+            <div class="av-item"><strong>Partner:</strong> Also a professional, €50k+ salary</div>
+            <div class="av-item"><strong>Education:</strong> College educated</div>
+          </div>
+          <div class="av-col">
+            <div class="av-sec-label">Her Wedding</div>
+            <div class="av-item"><strong>Venue:</strong> 4–5 star hotel or country estate</div>
+            <div class="av-item"><strong>Budget:</strong> €30,000 – €45,000 total</div>
+            <div class="av-item"><strong>Aesthetic:</strong> Minimal, classic, quality over excess</div>
+            <div class="av-item"><strong>Approach:</strong> Organised, detail-oriented, researches every supplier</div>
+          </div>
+        </div>
+        <hr class="av-divider">
+        <div class="avatar-grid">
+          <div class="av-col">
+            <div class="av-sec-label">Her Personality</div>
+            <div class="av-item">Reserved but wants to impress her guests</div>
+            <div class="av-item">Values quality and craftsmanship deeply</div>
+            <div class="av-item">Looks after her appearance — skin, hair, fitness</div>
+            <div class="av-item">Travels regularly, loves fine dining and city breaks</div>
+            <div class="av-item">Home decor is modern and minimal</div>
+            <div class="av-item" style="margin-top:8px;">Interests: <span class="av-tag">Travel</span><span class="av-tag">Fitness</span><span class="av-tag">Fashion</span><span class="av-tag">Fine dining</span></div>
+          </div>
+          <div class="av-col">
+            <div class="av-sec-label">Her Social Circle & Family</div>
+            <div class="av-item">Close group of lifelong friends</div>
+            <div class="av-item">Currently attending lots of weddings — very aware of suppliers</div>
+            <div class="av-item">Parents in their 50s–60s, very involved in wedding planning</div>
+            <div class="av-item">Grandparents in their 70s–80s — important to include</div>
+            <div class="av-item">May have 1–2 young children</div>
+          </div>
+        </div>
+        <hr class="av-divider">
+        <div class="avatar-grid">
+          <div class="av-col">
+            <div class="av-sec-label">Where She Hangs Out</div>
+            <div class="av-item"><strong>Main platform:</strong> Instagram</div>
+            <div class="av-item"><strong>Also uses:</strong> Pinterest, some Facebook</div>
+            <div class="av-item"><strong>Active:</strong> Friday evenings &amp; Saturdays</div>
+            <div class="av-item"><strong>Enquires by:</strong> Email</div>
+          </div>
+          <div class="av-col">
+            <div class="av-sec-label">What She Wants From You</div>
+            <div class="av-item">Someone who feels like a guest, not a supplier</div>
+            <div class="av-item">Knows her venue inside out</div>
+            <div class="av-item">Fast, warm, personal response to her enquiry</div>
+            <div class="av-item">Clear pricing — no surprises</div>
+            <div class="av-item">Real moments captured, not just posed shots</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lc">
+        <div class="lc-eyebrow">What Makes Amy Different</div>
+        <div class="lc-title">She doesn't book on price — she books on trust and fit</div>
+        <div class="lc-body">
+          <p>Amy isn't looking for the cheapest option. She's already made peace with spending money on her wedding — she just needs to feel confident you're the right person for her day. The thing that tips her over the line is almost never price. It's seeing your work from her venue, or receiving a warm and personal reply to her enquiry that makes her feel understood rather than processed.</p>
+          <p>This is why the CAPE response system in your Enquiry Response tool matters so much. She'll sense immediately whether your reply was written for her or copied from a template.</p>
+        </div>
+      </div>
+
+      <div class="insight-strip">
+        <div class="ins">
+          <div class="ins-icon">📧</div>
+          <div class="ins-label">Enquires by</div>
+          <div class="ins-value">Email</div>
+        </div>
+        <div class="ins">
+          <div class="ins-icon">📱</div>
+          <div class="ins-label">Discovers you on</div>
+          <div class="ins-value">Instagram</div>
+        </div>
+        <div class="ins">
+          <div class="ins-icon">🏛️</div>
+          <div class="ins-label">Books based on</div>
+          <div class="ins-value">Venue fit</div>
+        </div>
+      </div>
+
+      <div class="ch-footer">
+        <button class="cf-back" onclick="goChapter(1)">← Back</button>
+        <button class="cf-next" onclick="goChapter(3)">Next: How to Reach Her →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- CH 4 — What This Means For Marketing    -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="chapter" id="ch-3">
+      <div class="ch-hero">
+        <div class="ch-eyebrow">Chapter 4 of 6</div>
+        <div class="ch-title">What this means for your marketing</div>
+        <div class="ch-intro">Now that you know who Amy is, here's exactly how to put her in front of your content — and your content in front of her.</div>
+      </div>
+
+      <div class="lc">
+        <div class="lc-eyebrow">Insight 1</div>
+        <div class="lc-title">Make your venues the centre of your content</div>
+        <div class="lc-body">
+          <p>Amy searches by venue. Once she books Faithlegg House or Mount Juliet, she immediately looks for suppliers who have worked there before. She wants someone who knows the light, the layout, the team, the hidden spots. Post content from your top venues consistently. Tag the venues. Use their names in your captions.</p>
+          <p>This also builds your relationship with venue coordinators. When you show up consistently tagging their venue, they notice — and they start recommending you to couples who enquire directly with them.</p>
+        </div>
+      </div>
+
+      <div class="lc">
+        <div class="lc-eyebrow">Insight 2</div>
+        <div class="lc-title">Speak to her emotions, not her spreadsheet</div>
+        <div class="lc-body">
+          <p>Amy isn't comparing your package features line by line. She's imagining her wedding day and asking: does this person get it? Your captions, your website copy, your enquiry responses — they should describe feelings and moments, not megapixels and durations.</p>
+          <p>Think about what she's afraid of: a supplier who's too intrusive, who misses the quiet moments, who makes the day feel like a production. Speak to those fears directly in your content — reassure her without ever naming them.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <p>"She's going to a lot of weddings right now. She's watching what her friends get and making mental notes. If you worked at a wedding in her circle and they loved you — she already trusts you before she ever contacts you."</p>
+      </div>
+
+      <div class="lc">
+        <div class="lc-eyebrow">Insight 3</div>
+        <div class="lc-title">Be on Instagram — at the right time</div>
+        <div class="lc-body">
+          <p>Amy is active on Instagram on Friday evenings and Saturdays. She browses Pinterest for wedding inspiration. She barely uses TikTok and only dips into Facebook occasionally. This tells you where to spend your energy — and when to post for maximum reach with her specifically.</p>
+          <p>Your Social Media Planner — the next tool in this workspace — will use your profile to build a posting strategy built around Amy and your top venues.</p>
+        </div>
+      </div>
+
+      <div class="lc">
+        <div class="lc-eyebrow">Insight 4</div>
+        <div class="lc-title">Your enquiry response is your first impression</div>
+        <div class="lc-body">
+          <p>Amy is organised and detail-oriented. She sends a considered enquiry and expects a considered reply. A slow, generic, copy-paste response tells her everything she needs to know — and not in a good way. A fast, warm, personalised reply that mentions her venue? That puts you ahead of 90% of your competition immediately.</p>
+          <p>This is exactly what your Enquiry Response tool is built for. The two tools are designed to work together.</p>
+        </div>
+      </div>
+
+      <div class="lc warm">
+        <div class="lc-eyebrow">Three Things You Can Do This Week</div>
+        <div class="lc-body">
+          <p><strong>1. List your top 5 venues.</strong> These become the anchor of your content strategy. Every piece of content you create should connect back to one of them.</p>
+          <p><strong>2. Look at your last 5 Instagram posts.</strong> Do they feel like they're speaking to Amy? Are they tagged at venues? Do the captions describe moments and feelings, or just facts?</p>
+          <p><strong>3. Open your Enquiry Response tool.</strong> Read your First Reply — does it sound like it was written for her specifically, or for everyone?</p>
+        </div>
+      </div>
+
+      <div class="ch-footer">
+        <button class="cf-back" onclick="goChapter(2)">← Back</button>
+        <button class="cf-next em" onclick="goChapter(4)">Next: Build Your Version →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- CH 5 — Your Local Version               -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="chapter" id="ch-4">
+      <div class="ch-hero">
+        <div class="ch-eyebrow">Chapter 5 of 6</div>
+        <div class="ch-title">Now make it yours</div>
+        <div class="ch-intro">Amy is the template — but every market is different. Fill in the details below to create your local version. This profile connects directly to your Social Media Planner.</div>
+      </div>
+
+      <div class="lc warm" style="margin-bottom:20px;">
+        <div class="lc-body" style="margin:0;">
+          <p style="margin:0;">The venues, price points and location details are different in every area. Filling this in makes everything else in your workspace — social content, enquiry responses, pricing — specific to <em>your</em> market.</p>
+        </div>
+      </div>
+
+      <div class="your-version">
+        <div class="yv-title">Your Local Version of Amy</div>
+        <div class="yv-sub">These details are saved to your account and used across the workspace — including your Social Media Planner.</div>
+        <div class="yv-fields">
+          <div class="yv-field">
+            <label>Your top venues <span>— The 3–5 venues in your area that attract the couple you want to work with</span></label>
+            <textarea id="yv-venues" rows="3" placeholder="e.g. Faithlegg House, Mount Juliet Estate, Ballynatray House…"></textarea>
+          </div>
+          <div class="yv-field">
+            <label>Your area <span>— Where you're based and where you work</span></label>
+            <input type="text" id="yv-location" placeholder="e.g. Waterford & Kilkenny">
+          </div>
+          <div class="yv-field">
+            <label>Your service <span>— What you do (used in your Enquiry Response templates)</span></label>
+            <input type="text" id="yv-service" placeholder="e.g. wedding content creator, videographer, photographer…">
+          </div>
+          <div class="yv-field">
+            <label>Your starting price <span>— What your packages start from for this type of client</span></label>
+            <input type="text" id="yv-price" placeholder="e.g. €1,500">
+          </div>
+          <div class="yv-field">
+            <label>What makes you different <span>— One or two sentences on what sets you apart for this couple</span></label>
+            <textarea id="yv-diff" rows="2" placeholder="e.g. I've worked at all the top venues in Waterford and know how to stay invisible while capturing everything that matters…"></textarea>
+          </div>
+        </div>
+        <div class="save-row">
+          <button class="save-btn" id="save-btn">Save my profile</button>
+          <div class="save-note" id="save-note"></div>
+        </div>
+      </div>
+
+      <div id="saved-summary" style="display:none;">
+        <div class="lc navy">
+          <div class="lc-eyebrow">✓ Profile Saved</div>
+          <div class="lc-title">Your local version is ready</div>
+          <div class="lc-body">
+            <p>Your profile is saved and connected to the rest of your workspace. Your venues and service details will feed into your Social Media Planner.</p>
+          </div>
+          <div id="saved-venues-tags" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;"></div>
+        </div>
+      </div>
+
+      <div class="ch-footer">
+        <button class="cf-back" onclick="goChapter(3)">← Back</button>
+        <button class="cf-next em" onclick="goChapter(5)">Next: Build Your Avatar →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- CH 6 — Build Your Avatar                -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="chapter" id="ch-5">
+      <div class="ch-hero">
+        <div class="ch-eyebrow">Chapter 6 of 6</div>
+        <div class="ch-title">Build your own avatar</div>
+        <div class="ch-intro">You've met Amy. Now build your version of her — the specific person you want to attract in your market. Work through each section and we'll turn your answers into a full profile you can save and refer back to.</div>
+      </div>
+
+      <!-- STEP PROGRESS -->
+      <div style="display:flex;gap:6px;margin-bottom:28px;" id="step-nav"></div>
+
+      <!-- STEP CARDS -->
+      <div id="avatar-steps">
+
+        <!-- STEP 1: Who She Is -->
+        <div class="avatar-step" id="step-0">
+          <div class="lc" style="margin-bottom:0;">
+            <div class="lc-eyebrow">Step 1 of 6 · Demographics</div>
+            <div class="lc-title">Who is she?</div>
+            <div class="lc-body" style="margin-bottom:20px;">Give her a real name and fill in the basics. The more specific you are, the more useful this profile becomes.</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="yv-field">
+                <label>Her name <span>— Give your ideal client a real first name</span></label>
+                <input type="text" id="a-name" placeholder="e.g. Amy, Sarah, Emma…">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="yv-field">
+                  <label>Age range</label>
+                  <select id="a-age" style="width:100%;padding:12px 15px;border:1.5px solid var(--border);border-radius:12px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;color:var(--text);background:var(--cream);">
+                    <option value="">Select…</option>
+                    <option>25–30</option><option>28–35</option><option>30–38</option><option>35–42</option>
+                  </select>
+                </div>
+                <div class="yv-field">
+                  <label>Household income</label>
+                  <select id="a-income" style="width:100%;padding:12px 15px;border:1.5px solid var(--border);border-radius:12px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;color:var(--text);background:var(--cream);">
+                    <option value="">Select…</option>
+                    <option>€60–80k</option><option>€80–100k</option><option>€100–130k</option><option>€130k+</option>
+                  </select>
+                </div>
+              </div>
+              <div class="yv-field">
+                <label>Where she is getting married <span>— County, region or type of venue area</span></label>
+                <input type="text" id="a-location" placeholder="e.g. Waterford, Kilkenny, rural estate…">
+              </div>
+              <div class="yv-field">
+                <label>Her career <span>— What does she do for work?</span></label>
+                <input type="text" id="a-career" placeholder="e.g. Teacher, nurse, accountant, manager…">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Her Wedding -->
+        <div class="avatar-step" id="step-1" style="display:none;">
+          <div class="lc" style="margin-bottom:0;">
+            <div class="lc-eyebrow">Step 2 of 6 · Venue & Budget</div>
+            <div class="lc-title">Her wedding</div>
+            <div class="lc-body" style="margin-bottom:20px;">This is the most important section. Her venue tells you everything about her budget, her taste, and what she expects from suppliers.</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="yv-field">
+                <label>Her top venues <span>— Which venues in your area is she booking?</span></label>
+                <textarea id="a-venues" rows="3" placeholder="e.g. Faithlegg House, Mount Juliet, Ballynatray Estate…"></textarea>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="yv-field">
+                  <label>Total wedding budget</label>
+                  <select id="a-budget" style="width:100%;padding:12px 15px;border:1.5px solid var(--border);border-radius:12px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;color:var(--text);background:var(--cream);">
+                    <option value="">Select…</option>
+                    <option>€20–30k</option><option>€30–40k</option><option>€40–55k</option><option>€55k+</option>
+                  </select>
+                </div>
+                <div class="yv-field">
+                  <label>She'd spend on you</label>
+                  <input type="text" id="a-spend" placeholder="e.g. €1,500–€3,000">
+                </div>
+              </div>
+              <div class="yv-field">
+                <label>Her wedding aesthetic <span>— How would you describe her style?</span></label>
+                <input type="text" id="a-aesthetic" placeholder="e.g. Minimal, classic, elegant, timeless…">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: Personality & Values -->
+        <div class="avatar-step" id="step-2" style="display:none;">
+          <div class="lc" style="margin-bottom:0;">
+            <div class="lc-eyebrow">Step 3 of 6 · Personality & Values</div>
+            <div class="lc-title">Who is she as a person?</div>
+            <div class="lc-body" style="margin-bottom:20px;">Understanding her personality helps you write content that feels like it was made for her. Think about the couples you've loved working with most.</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="yv-field">
+                <label>Her personality <span>— Pick the words that best describe her</span></label>
+                <div class="q-chips" id="chips-personality" style="margin-top:4px;">
+                  <button type="button" class="q-chip" data-group="personality">Organised</button>
+                  <button type="button" class="q-chip" data-group="personality">Detail-oriented</button>
+                  <button type="button" class="q-chip" data-group="personality">Reserved</button>
+                  <button type="button" class="q-chip" data-group="personality">Quietly confident</button>
+                  <button type="button" class="q-chip" data-group="personality">Wants to impress</button>
+                  <button type="button" class="q-chip" data-group="personality">Quality over price</button>
+                  <button type="button" class="q-chip" data-group="personality">Minimal aesthetic</button>
+                  <button type="button" class="q-chip" data-group="personality">Emotionally driven</button>
+                </div>
+              </div>
+              <div class="yv-field">
+                <label>Her lifestyle interests <span>— What does she do outside of work?</span></label>
+                <div class="q-chips" id="chips-lifestyle" style="margin-top:4px;">
+                  <button type="button" class="q-chip" data-group="lifestyle">Travel & city breaks</button>
+                  <button type="button" class="q-chip" data-group="lifestyle">Fitness & wellness</button>
+                  <button type="button" class="q-chip" data-group="lifestyle">Fine dining</button>
+                  <button type="button" class="q-chip" data-group="lifestyle">Fashion conscious</button>
+                  <button type="button" class="q-chip" data-group="lifestyle">Home interiors</button>
+                  <button type="button" class="q-chip" data-group="lifestyle">GAA / sport</button>
+                  <button type="button" class="q-chip" data-group="lifestyle">Career focused</button>
+                </div>
+              </div>
+              <div class="yv-field">
+                <label>Her biggest fear when hiring you <span>— What keeps her up at night?</span></label>
+                <div class="q-chips" id="chips-fears" style="margin-top:4px;">
+                  <button type="button" class="q-chip" data-group="fears">Supplier needing hand-holding</button>
+                  <button type="button" class="q-chip" data-group="fears">Supplier not gelling with her bridal party</button>
+                  <button type="button" class="q-chip" data-group="fears">Not impressing her wedding guests</button>
+                  <button type="button" class="q-chip" data-group="fears">Friends and family not having a good time</button>
+                  <button type="button" class="q-chip" data-group="fears">That she won't look her best</button>
+                  <button type="button" class="q-chip" data-group="fears">Supplier not being professional</button>
+                  <button type="button" class="q-chip" data-group="fears">Not getting value for money</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: Social & Communication -->
+        <div class="avatar-step" id="step-3" style="display:none;">
+          <div class="lc" style="margin-bottom:0;">
+            <div class="lc-eyebrow">Step 4 of 6 · Social & Communication</div>
+            <div class="lc-title">Where does she spend her time?</div>
+            <div class="lc-body" style="margin-bottom:20px;">With your best clients in mind — the ones you loved working with most — choose what you believe to be true about how they find suppliers and when they're online.</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="yv-field">
+                <label>Where she discovers suppliers <span>— Pick all that apply</span></label>
+                <div class="q-chips" id="chips-social" style="margin-top:4px;">
+                  <button type="button" class="q-chip" data-group="social">Instagram</button>
+                  <button type="button" class="q-chip" data-group="social">Pinterest</button>
+                  <button type="button" class="q-chip" data-group="social">Facebook</button>
+                  <button type="button" class="q-chip" data-group="social">TikTok</button>
+                  <button type="button" class="q-chip" data-group="social">Google search</button>
+                  <button type="button" class="q-chip" data-group="social">Word of mouth</button>
+                  <button type="button" class="q-chip" data-group="social">Venue recommendation</button>
+                </div>
+              </div>
+              <div class="yv-field">
+                <label>When she's most active online</label>
+                <div class="q-chips" id="chips-active" style="margin-top:4px;">
+                  <button type="button" class="q-chip" data-group="active">Weekday lunchtimes</button>
+                  <button type="button" class="q-chip" data-group="active">Weekday evenings</button>
+                  <button type="button" class="q-chip" data-group="active">Friday evenings</button>
+                  <button type="button" class="q-chip" data-group="active">Saturday mornings</button>
+                  <button type="button" class="q-chip" data-group="active">Sunday evenings</button>
+                </div>
+              </div>
+              <div class="yv-field">
+                <label>How she prefers to enquire</label>
+                <div class="q-chips" id="chips-comms" style="margin-top:4px;">
+                  <button type="button" class="q-chip" data-group="comms">Email</button>
+                  <button type="button" class="q-chip" data-group="comms">Instagram DM</button>
+                  <button type="button" class="q-chip" data-group="comms">Website contact form</button>
+                  <button type="button" class="q-chip" data-group="comms">WhatsApp</button>
+                  <button type="button" class="q-chip" data-group="comms">Phone call</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5: Family & Circle -->
+        <div class="avatar-step" id="step-4" style="display:none;">
+          <div class="lc" style="margin-bottom:0;">
+            <div class="lc-eyebrow">Step 5 of 6 · Family & Social Circle</div>
+            <div class="lc-title">Who matters most to her?</div>
+            <div class="lc-body" style="margin-bottom:20px;">Her family and friends aren't just guests — they influence her decisions and often how she finds suppliers. Understanding this shapes how you talk about your work.</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="yv-field">
+                <label>Her family situation</label>
+                <div class="q-chips" id="chips-family" style="margin-top:4px;">
+                  <button type="button" class="q-chip" data-group="family">Parents very involved in planning</button>
+                  <button type="button" class="q-chip" data-group="family">Grandparents important to include</button>
+                  <button type="button" class="q-chip" data-group="family">1–2 young children of her own</button>
+                  <button type="button" class="q-chip" data-group="family">Immediate family only</button>
+                  <button type="button" class="q-chip" data-group="family">Large extended family</button>
+                </div>
+              </div>
+              <div class="yv-field">
+                <label>Her friends' influence</label>
+                <div class="q-chips" id="chips-friends" style="margin-top:4px;">
+                  <button type="button" class="q-chip" data-group="friends">Close lifelong friend group</button>
+                  <button type="button" class="q-chip" data-group="friends">Friends are all getting married now</button>
+                  <button type="button" class="q-chip" data-group="friends">Friends' opinions heavily influence her</button>
+                  <button type="button" class="q-chip" data-group="friends">Bridesmaids very involved</button>
+                  <button type="button" class="q-chip" data-group="friends">Word of mouth from friends is key</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 6: What She Wants From You -->
+        <div class="avatar-step" id="step-5" style="display:none;">
+          <div class="lc" style="margin-bottom:0;">
+            <div class="lc-eyebrow">Step 6 of 6 · What She Wants From You</div>
+            <div class="lc-title">What does she want most?</div>
+            <div class="lc-body" style="margin-bottom:20px;">This is the heart of your avatar. Every caption you write, every email you send, should speak directly to these answers.</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="yv-field">
+                <label>What makes her book <span>— What finally tips her over the line?</span></label>
+                <div class="q-chips" id="chips-books" style="margin-top:4px;">
+                  <button type="button" class="q-chip" data-group="books">Seeing work from her exact venue</button>
+                  <button type="button" class="q-chip" data-group="books">Personal recommendation from a friend</button>
+                  <button type="button" class="q-chip" data-group="books">A fast, warm, personal reply</button>
+                  <button type="button" class="q-chip" data-group="books">Feeling understood not sold to</button>
+                  <button type="button" class="q-chip" data-group="books">Clear pricing upfront</button>
+                  <button type="button" class="q-chip" data-group="books">Strong portfolio or social presence</button>
+                  <button type="button" class="q-chip" data-group="books">Venue coordinator recommendation</button>
+                </div>
+              </div>
+              <div class="yv-field">
+                <label>In her own words — what does she want from her suppliers? <span>— Think about your best clients and what mattered most to them</span></label>
+                <textarea id="a-wants" rows="3" placeholder="e.g. Professional, high standard of service, no hand-holding required, great communication, easy booking process, personalities align with me and my partner…"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /avatar-steps -->
+
+      <!-- STEP NAV BUTTONS -->
+      <div class="ch-footer" id="step-footer">
+        <button class="cf-back" id="step-back-btn">← Back</button>
+        <div style="font-size:12px;font-weight:700;color:var(--muted);" id="step-count"></div>
+        <button class="cf-next em" id="step-next-btn">Next →</button>
+      </div>
+
+      <!-- GENERATED PROFILE (shown after step 6) -->
+      <div id="ica-profile" style="display:none;">
+        <div class="avatar-card" style="margin-bottom:18px;">
+          <div class="avatar-header">
+            <div class="av-name" id="ica-name"></div>
+            <div class="av-sub" id="ica-sub"></div>
+          </div>
+          <div id="ica-body"></div>
+        </div>
+
+        <div class="lc em" style="margin-bottom:18px;">
+          <div class="lc-eyebrow">✓ Avatar Complete</div>
+          <div class="lc-title">Your ideal client profile is saved</div>
+          <div class="lc-body">This profile is now connected to your Social Media Planner. Every piece of content you create from here should speak directly to her.</div>
+        </div>
+
+        <!-- Save tip -->
+        <div class="lc warm" style="margin-bottom:20px;">
+          <div class="lc-eyebrow">💡 Pro Tip — Save this as a document</div>
+          <div class="lc-title" style="font-size:20px;">Use your avatar with AI tools</div>
+          <div class="lc-body">
+            <p>Download this profile as a PDF and save it somewhere handy. When you're using an AI tool like ChatGPT or Claude to help write captions, emails or content ideas — upload this document at the start of the conversation.</p>
+            <p>The AI will have full context on who your ideal client is, what she values and what she responds to. Instead of generic suggestions, you'll get ideas written specifically for her. The more context you give it, the better the output.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+          <button class="save-btn" id="download-pdf-btn">⬇ Save as PDF</button>
+          <button class="save-btn" onclick="goChapter(0)" style="background:var(--navy);">Start lesson again</button>
+          <a href="index.html" style="text-decoration:none;"><button class="save-btn" style="background:var(--navy);">Back to Dashboard →</button></a>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-top:4px;">PDF saves to your downloads folder — upload to ChatGPT, Claude or any AI tool for personalised content ideas.</div>
+      </div>
+
+
+    </div>
+
+  </div><!-- /lesson-wrap -->
+</div><!-- /app-screen -->
+
+<div id="toast"></div>
+
+<script>
+const SUPABASE_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_CS3XLLfWaZNA-B2oE37N-g_z2FMWCzq";
+if (!window._wbwSb) {
+  window._wbwSb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { storageKey: 'wbw-auth', autoRefreshToken: true, persistSession: true }
+  });
+}
+const sb = window._wbwSb;
+let currentUser = null;
+let currentChapter = 0;
+const TOTAL = 6;
+
+// ── CHAPTER 6 STATE ───────────────────────────────────────────────────
+let currentStep = 0;
+const TOTAL_STEPS = 6;
+const chipSelections = {};
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2800);
+}
+
+// ── CHIP SELECTION ────────────────────────────────────────────────────
+function initChips() {
+  document.querySelectorAll(".q-chip[data-group]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const group = btn.getAttribute("data-group");
+      if (!chipSelections[group]) chipSelections[group] = [];
+      if (btn.classList.contains("selected")) {
+        btn.classList.remove("selected");
+        chipSelections[group] = chipSelections[group].filter(v => v !== btn.textContent);
+      } else {
+        btn.classList.add("selected");
+        chipSelections[group].push(btn.textContent);
+      }
+    });
+  });
+}
+
+// ── STEP NAV ──────────────────────────────────────────────────────────
+function buildStepNav() {
+  const nav = document.getElementById("step-nav");
+  nav.innerHTML = "";
+  for (let i = 0; i < TOTAL_STEPS; i++) {
+    const d = document.createElement("div");
+    d.style.cssText = `flex:1;height:4px;border-radius:999px;transition:background .3s;cursor:${i<=currentStep?'pointer':'default'};`;
+    d.style.background = i < currentStep ? "var(--emerald)" : i === currentStep ? "var(--navy)" : "var(--border)";
+    if (i <= currentStep) d.onclick = () => goStep(i);
+    nav.appendChild(d);
+  }
+}
+
+function goStep(idx) {
+  document.getElementById("step-" + currentStep).style.display = "none";
+  currentStep = idx;
+  document.getElementById("step-" + currentStep).style.display = "block";
+  buildStepNav();
+  document.getElementById("step-count").textContent = `Step ${currentStep + 1} of ${TOTAL_STEPS}`;
+  document.getElementById("step-back-btn").style.visibility = currentStep === 0 ? "hidden" : "visible";
+  document.getElementById("step-next-btn").textContent = currentStep === TOTAL_STEPS - 1 ? "Build my avatar →" : "Next →";
+  document.getElementById("step-footer").style.display = "flex";
+  document.getElementById("ica-profile").style.display = "none";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function initAvatarBuilder() {
+  currentStep = 0;
+  buildStepNav();
+  document.querySelectorAll(".avatar-step").forEach((s,i) => s.style.display = i===0?"block":"none");
+  document.getElementById("step-count").textContent = `Step 1 of ${TOTAL_STEPS}`;
+  document.getElementById("step-back-btn").style.visibility = "hidden";
+  document.getElementById("step-next-btn").textContent = "Next →";
+  document.getElementById("step-footer").style.display = "flex";
+  document.getElementById("ica-profile").style.display = "none";
+
+  document.getElementById("step-back-btn").onclick = () => {
+    if (currentStep > 0) goStep(currentStep - 1);
+    else goChapter(4);
+  };
+  document.getElementById("step-next-btn").onclick = () => {
+    if (currentStep < TOTAL_STEPS - 1) {
+      goStep(currentStep + 1);
+    } else {
+      buildAndSaveProfile();
+    }
+  };
+}
+
+// ── PROFILE BUILDER ───────────────────────────────────────────────────
+async function buildAndSaveProfile() {
+  const name     = document.getElementById("a-name").value.trim() || "Your Ideal Client";
+  const age      = document.getElementById("a-age").value;
+  const income   = document.getElementById("a-income").value;
+  const location = document.getElementById("a-location").value.trim();
+  const career   = document.getElementById("a-career").value.trim();
+  const venues   = document.getElementById("a-venues").value.trim();
+  const budget   = document.getElementById("a-budget").value;
+  const spend    = document.getElementById("a-spend").value.trim();
+  const aesthetic= document.getElementById("a-aesthetic").value.trim();
+  const wants    = document.getElementById("a-wants").value.trim();
+
+  const personality = (chipSelections.personality || []).join(", ");
+  const lifestyle   = (chipSelections.lifestyle   || []).join(", ");
+  const fears       = (chipSelections.fears       || []).join(", ");
+  const social      = (chipSelections.social      || []).join(", ");
+  const active      = (chipSelections.active      || []).join(", ");
+  const comms       = (chipSelections.comms       || []).join(", ");
+  const family      = (chipSelections.family      || []).join(", ");
+  const friends     = (chipSelections.friends     || []).join(", ");
+  const books       = (chipSelections.books       || []).join(", ");
+
+  // Build profile card
+  document.getElementById("ica-name").textContent = name;
+  document.getElementById("ica-sub").textContent  = [age, location, career].filter(Boolean).join(" · ");
+
+  document.getElementById("ica-body").innerHTML = `
+    <div class="avatar-grid">
+      <div class="av-col">
+        <div class="av-sec-label">Who She Is</div>
+        ${arow("Age",      age)}
+        ${arow("Location", location)}
+        ${arow("Career",   career)}
+        ${arow("Income",   income)}
+      </div>
+      <div class="av-col">
+        <div class="av-sec-label">Her Wedding</div>
+        ${arow("Venues",    venues)}
+        ${arow("Budget",    budget)}
+        ${arow("Spends on you", spend)}
+        ${arow("Aesthetic", aesthetic)}
+      </div>
+    </div>
+    <hr class="av-divider">
+    <div class="avatar-grid">
+      <div class="av-col">
+        <div class="av-sec-label">Personality & Values</div>
+        ${arow("Personality", personality)}
+        ${arow("Lifestyle",   lifestyle)}
+        ${arow("Fears",       fears)}
+      </div>
+      <div class="av-col">
+        <div class="av-sec-label">Social & Communication</div>
+        ${arow("Finds you on",  social)}
+        ${arow("Active",        active)}
+        ${arow("Enquires by",   comms)}
+      </div>
+    </div>
+    <hr class="av-divider">
+    <div class="avatar-grid">
+      <div class="av-col">
+        <div class="av-sec-label">Family & Circle</div>
+        ${arow("Family",  family)}
+        ${arow("Friends", friends)}
+      </div>
+      <div class="av-col">
+        <div class="av-sec-label">What She Wants</div>
+        ${arow("Books when", books)}
+        ${wants ? `<div class="av-item" style="font-style:italic;color:var(--muted);margin-top:6px;">"${wants}"</div>` : ""}
+      </div>
+    </div>
+  `;
+
+  // Wire PDF button
+  document.getElementById("download-pdf-btn").onclick = downloadProfilePDF;
+
+  // Hide steps, show profile
+  document.getElementById("step-footer").style.display = "none";
+  document.getElementById("ica-profile").style.display = "block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  showToast("✓ Avatar saved");
+
+  // Save to Supabase — merge with existing data
+  try {
+    const { data: existing } = await sb.from("ideal_client").select("*").eq("user_id", currentUser.id).limit(1);
+    const prev = (existing && existing.length) ? (existing[0].data || {}) : {};
+    await sb.from("ideal_client").upsert({
+      id: currentUser.id, user_id: currentUser.id,
+      data: {
+        ...prev,
+        avatar: { name, age, income, location, career, venues, budget, spend, aesthetic, wants, personality, lifestyle, fears, social, active, comms, family, friends, books },
+        savedAt: new Date().toISOString()
+      },
+      updated_at: new Date().toISOString()
+    }, { onConflict: "id" });
+  } catch(e) { console.log("avatar save:", e); }
+}
+
+function downloadProfilePDF() {
+  const name   = document.getElementById("ica-name").textContent || "Ideal Client";
+  const sub    = document.getElementById("ica-sub").textContent  || "";
+  const body   = document.getElementById("ica-body").innerHTML;
+
+  // Gather your-version fields too
+  const venues   = document.getElementById("yv-venues")?.value   || "";
+  const location = document.getElementById("yv-location")?.value || "";
+  const service  = document.getElementById("yv-service")?.value  || "";
+  const price    = document.getElementById("yv-price")?.value    || "";
+  const diff     = document.getElementById("yv-diff")?.value     || "";
+
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>${name} — Ideal Client Profile</title>
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Georgia',serif; color:#2A2B4A; background:#fff; padding:40px; max-width:800px; margin:0 auto; }
+  h1 { font-size:36px; color:#3B3C6D; margin-bottom:4px; }
+  .sub { font-size:14px; color:#888; margin-bottom:28px; }
+  .section { margin-bottom:22px; padding-bottom:22px; border-bottom:1px solid #eee; }
+  .section:last-child { border-bottom:none; }
+  .sec-label { font-family:'Helvetica',sans-serif; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#00A878; margin-bottom:8px; }
+  .item { font-size:14px; margin-bottom:5px; line-height:1.6; }
+  .item strong { color:#3B3C6D; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .tip-box { background:#F5F0E8; border-left:3px solid #00A878; padding:16px 20px; margin-top:28px; border-radius:0 8px 8px 0; }
+  .tip-title { font-family:'Helvetica',sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#00A878; margin-bottom:6px; }
+  .tip-body { font-size:13px; color:#555; line-height:1.75; }
+  hr { border:none; border-top:1px solid #eee; margin:20px 0; }
+  @media print { body { padding:20px; } }
+</style>
+</head>
+<body>
+  <h1>${name}</h1>
+  <div class="sub">${sub} · Ideal Client Profile</div>
+
+  ${venues ? `<div class="section"><div class="sec-label">Top Venues</div><div class="item">${venues.replace(/\n/g,'<br>')}</div></div>` : ''}
+
+  <div class="grid">
+    ${location ? `<div class="section"><div class="sec-label">Location</div><div class="item">${location}</div></div>` : ''}
+    ${service  ? `<div class="section"><div class="sec-label">Your Service</div><div class="item">${service}</div></div>` : ''}
+    ${price    ? `<div class="section"><div class="sec-label">Starting Price</div><div class="item">${price}</div></div>` : ''}
+    ${diff     ? `<div class="section"><div class="sec-label">What Makes You Different</div><div class="item">${diff}</div></div>` : ''}
+  </div>
+
+  <hr>
+  <div style="font-family:sans-serif;font-size:13px;color:#555;line-height:1.7;">${body.replace(/<div class="av-sec-label">/g,'<div class="sec-label">').replace(/<div class="av-item">/g,'<div class="item">').replace(/<div class="avatar-grid">/g,'<div class="grid">').replace(/<div class="av-col">/g,'<div>').replace(/<hr class="av-divider">/g,'<hr>')}</div>
+
+  <div class="tip-box">
+    <div class="tip-title">💡 How to use this profile with AI tools</div>
+    <div class="tip-body">Upload this PDF when starting a conversation with ChatGPT, Claude or any AI tool. Ask it to help you write captions, email responses or content ideas — it will use this profile to give you suggestions written specifically for ${name}, not generic advice.</div>
+  </div>
+</body>
+</html>`;
+
+  // Write into a hidden iframe so the page never navigates away
+  let iframe = document.getElementById("pdf-iframe");
+  if (!iframe) {
+    iframe = document.createElement("iframe");
+    iframe.id = "pdf-iframe";
+    iframe.style.cssText = "position:fixed;top:-9999px;left:-9999px;width:800px;height:600px;border:none;";
+    document.body.appendChild(iframe);
+  }
+  iframe.onload = () => {
+    setTimeout(() => {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    }, 400);
+  };
+  iframe.srcdoc = html;
+}
+
+function arow(label, val) {
+  if (!val) return "";
+  return `<div class="av-item"><strong>${label}:</strong> ${val}</div>`;
+}
+
+// ── CHAPTERS ──────────────────────────────────────────────────────────
+function buildNav() {
+  const nav = document.getElementById("chapter-nav");
+  nav.innerHTML = "";
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement("div");
+    d.className = "ch-dot" + (i < currentChapter ? " done" : i === currentChapter ? " current" : "");
+    d.title = "Chapter " + (i + 1);
+    d.onclick = () => { if (i <= currentChapter) goChapter(i); };
+    nav.appendChild(d);
+  }
+}
+
+function goChapter(idx) {
+  document.getElementById("ch-" + currentChapter).classList.remove("active");
+  currentChapter = idx;
+  document.getElementById("ch-" + currentChapter).classList.add("active");
+  buildNav();
+  if (idx === 5) initAvatarBuilder();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────
+document.getElementById("tab-in").onclick = () => switchTab("in");
+document.getElementById("tab-up").onclick = () => switchTab("up");
+document.getElementById("signin-btn").onclick = signIn;
+document.getElementById("signup-btn").onclick = signUp;
+
+function switchTab(t) {
+  document.getElementById("form-in").style.display = t==="in"?"":"none";
+  document.getElementById("form-up").style.display = t==="up"?"":"none";
+  document.getElementById("tab-in").classList.toggle("active", t==="in");
+  document.getElementById("tab-up").classList.toggle("active", t==="up");
+}
+function setMsg(el,txt,type){ el.textContent=txt; el.className="auth-msg "+type; }
+
+async function signIn() {
+  const email=document.getElementById("in-email").value.trim(), pass=document.getElementById("in-pass").value;
+  const msg=document.getElementById("in-msg"), btn=document.getElementById("signin-btn");
+  if(!email||!pass){setMsg(msg,"Please enter email and password.","error");return;}
+  btn.disabled=true; btn.textContent="Signing in…";
+  const{error}=await sb.auth.signInWithPassword({email,password:pass});
+  btn.disabled=false; btn.textContent="Sign In";
+  if(error) setMsg(msg,error.message,"error");
+}
+async function signUp() {
+  const email=document.getElementById("up-email").value.trim(), pass=document.getElementById("up-pass").value;
+  const msg=document.getElementById("up-msg"), btn=document.getElementById("signup-btn");
+  if(!email||!pass){setMsg(msg,"Please fill in all fields.","error");return;}
+  if(pass.length<6){setMsg(msg,"Password must be at least 6 characters.","error");return;}
+  btn.disabled=true; btn.textContent="Creating account…";
+  const{error}=await sb.auth.signUp({email,password:pass});
+  btn.disabled=false; btn.textContent="Create Account";
+  if(error) setMsg(msg,error.message,"error");
+  else{setMsg(msg,"Account created! Please sign in.","success");switchTab("in");}
+}
+async function signOut(){ await sb.auth.signOut(); }
+
+// ── INIT ──────────────────────────────────────────────────────────────
+let _init = false;
+async function initApp(user) {
+  if (_init) return; _init = true;
+  currentUser = user;
+  document.getElementById("auth-screen").style.display = "none";
+  document.getElementById("app-screen").style.display  = "block";
+  document.getElementById("nav-user").textContent      = currentUser.email;
+  document.getElementById("signout-btn").onclick        = signOut;
+  document.getElementById("save-btn").onclick           = saveProfile;
+  initChips();
+  goChapter(0);
+  await loadProfile();
+}
+
+sb.auth.getSession().then(({data:{session}})=>{ if(session?.user) initApp(session.user); });
+sb.auth.onAuthStateChange((event,session)=>{
+  if(event==="SIGNED_IN"&&session?.user){_init=false;initApp(session.user);}
+  else if(event==="SIGNED_OUT"){
+    _init=false; currentUser=null;
+    document.getElementById("app-screen").style.display="none";
+    document.getElementById("auth-screen").style.display="flex";
+  }
+});
+
+// ── LOAD / SAVE ───────────────────────────────────────────────────────
+async function loadProfile() {
+  try {
+    const{data}=await sb.from("ideal_client").select("*").eq("user_id",currentUser.id).limit(1);
+    if(data&&data.length&&data[0].data){
+      const d=data[0].data;
+      if(d.venues)   document.getElementById("yv-venues").value   = d.venues;
+      if(d.location) document.getElementById("yv-location").value = d.location;
+      if(d.service)  document.getElementById("yv-service").value  = d.service;
+      if(d.price)    document.getElementById("yv-price").value    = d.price;
+      if(d.diff)     document.getElementById("yv-diff").value     = d.diff;
+      if(d.venues)   showSaved(d.venues);
+    }
+  } catch(e){ console.log("load:",e); }
+}
+
+async function saveProfile() {
+  const venues   = document.getElementById("yv-venues").value.trim();
+  const location = document.getElementById("yv-location").value.trim();
+  const service  = document.getElementById("yv-service").value.trim();
+  const price    = document.getElementById("yv-price").value.trim();
+  const diff     = document.getElementById("yv-diff").value.trim();
+  const note     = document.getElementById("save-note");
+
+  if(!venues){ note.textContent="Please add at least one venue to save."; return; }
+
+  const btn=document.getElementById("save-btn");
+  btn.textContent="Saving…"; btn.disabled=true;
+  try {
+    await sb.from("ideal_client").upsert({
+      id:currentUser.id, user_id:currentUser.id,
+      data:{ venues, location, service, price, diff, savedAt:new Date().toISOString() },
+      updated_at:new Date().toISOString()
+    },{onConflict:"id"});
+    if(service) localStorage.setItem("wbw-service-type", service);
+    btn.textContent="Saved ✓"; btn.disabled=false;
+    note.textContent="Saved — your Social Media Planner will use this.";
+    showToast("✓ Profile saved");
+    showSaved(venues);
+  } catch(e){
+    btn.textContent="Save my profile"; btn.disabled=false;
+    note.textContent="Something went wrong — please try again.";
+  }
+}
+
+function showSaved(venuesText) {
+  const list = venuesText.split(/[,\n]+/).map(v=>v.trim()).filter(Boolean);
+  document.getElementById("saved-venues-tags").innerHTML =
+    list.map(v=>`<div style="padding:5px 12px;background:rgba(0,168,120,.2);color:#00A878;border-radius:999px;font-size:12px;font-weight:800;">📍 ${v}</div>`).join("");
+  document.getElementById("saved-summary").style.display="block";
+}
+</script>
+</body>
+</html>
