@@ -1011,6 +1011,9 @@ function clearAll() {
     if (el) el.value = '';
   });
   document.getElementById('profitMargin').value = '20';
+  initPackageCards();
+loadSaved();
+switchStage(1);
   selectExp('intermediate');
   document.getElementById('result-strip').classList.remove('show');
   document.getElementById('action-row').className = 'action-row';
