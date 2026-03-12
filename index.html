@@ -18,8 +18,6 @@
   --text: #2A2B4A;
 }
 body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
-
-/* ── AUTH ─────────────────────────────────────────────── */
 #auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:var(--cream); }
 .auth-card { background:var(--white); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; box-shadow:0 8px 40px rgba(59,60,109,.1); }
 .auth-logo { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:var(--navy); margin-bottom:6px; }
@@ -38,8 +36,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .auth-msg { margin-top:12px; font-size:13px; font-weight:700; text-align:center; min-height:18px; }
 .auth-msg.error { color:#c0392b; }
 .auth-msg.success { color:#27ae60; }
-
-/* ── APP ──────────────────────────────────────────────── */
 #app-screen { display:none; }
 .topnav { background:var(--navy); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:64px; position:sticky; top:0; z-index:100; }
 .nav-logo { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:#fff; }
@@ -48,37 +44,29 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .nav-user { font-size:12px; font-weight:600; color:rgba(255,255,255,.6); }
 .nav-signout { padding:8px 16px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:10px; color:rgba(255,255,255,.8); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:background .2s; }
 .nav-signout:hover { background:rgba(255,255,255,.2); }
-
 .main { max-width:1080px; margin:0 auto; padding:40px 24px 80px; }
-
-/* ── HERO ─────────────────────────────────────────────── */
 .hero { margin-bottom:32px; }
 .hero-greeting { font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--pink); margin-bottom:8px; }
 .hero-title { font-family:'Montserrat',sans-serif; font-size:clamp(22px,3vw,32px); font-weight:800; color:var(--navy); line-height:1.3; margin-bottom:8px; }
-.hero-title em { font-style:italic; color:var(--pink); }
 .hero-sub { font-size:14px; font-weight:600; color:var(--muted); max-width:520px; line-height:1.7; }
-
-/* ── BUSINESS SNAPSHOT ────────────────────────────────── */
-.snapshot-card { background: var(--navy); border-radius: 20px; padding: 28px 32px; margin-bottom: 32px; position: relative; overflow: hidden; }
-.snapshot-card::after { content: ''; position: absolute; bottom: -40px; right: -40px; width: 200px; height: 200px; background: rgba(251,71,142,.08); border-radius: 50%; pointer-events: none; }
-.snapshot-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 8px; }
-.snapshot-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: #fff; }
-.snapshot-sub { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.5); margin-top: 2px; }
-.snapshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
-.snap-stat { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 16px 18px; position: relative; }
-.snap-stat.highlight { background: rgba(251,71,142,.15); border-color: rgba(251,71,142,.3); }
-.snap-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: 8px; }
-.snap-value { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: #fff; line-height: 1; margin-bottom: 4px; }
-.snap-value.pink { color: var(--pink); }
-.snap-value.amber { color: #FFD35C; }
-.snap-value.green { color: #52d68a; }
-.snap-meta { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.4); }
-.snap-progress { margin-top: 10px; height: 5px; background: rgba(255,255,255,.1); border-radius: 999px; overflow: hidden; }
-.snap-progress-fill { height: 100%; border-radius: 999px; transition: width 1.2s cubic-bezier(.4,0,.2,1); width: 0%; }
-.snap-unlock { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.35); margin-top: 6px; display: flex; align-items: center; gap: 5px; }
-
-/* ── WTS CARD ─────────────────────────────────────────── */
-.wts-card { background: var(--white); border-radius: 20px; padding: 28px 32px; margin-bottom: 32px; box-shadow: 0 4px 24px rgba(59,60,109,.07); border: 1px solid var(--border); position: relative; overflow: hidden; }
+.snapshot-card { background:var(--navy); border-radius:20px; padding:28px 32px; margin-bottom:32px; position:relative; overflow:hidden; }
+.snapshot-card::after { content:''; position:absolute; bottom:-40px; right:-40px; width:200px; height:200px; background:rgba(251,71,142,.08); border-radius:50%; pointer-events:none; }
+.snapshot-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:8px; }
+.snapshot-title { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:#fff; }
+.snapshot-sub { font-size:12px; font-weight:600; color:rgba(255,255,255,.5); margin-top:2px; }
+.snapshot-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; }
+.snap-stat { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); border-radius:14px; padding:16px 18px; }
+.snap-stat.highlight { background:rgba(251,71,142,.15); border-color:rgba(251,71,142,.3); }
+.snap-label { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.5); margin-bottom:8px; }
+.snap-value { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:#fff; line-height:1; margin-bottom:4px; }
+.snap-value.pink { color:var(--pink); }
+.snap-value.amber { color:#FFD35C; }
+.snap-value.green { color:#52d68a; }
+.snap-meta { font-size:11px; font-weight:700; color:rgba(255,255,255,.4); }
+.snap-progress { margin-top:10px; height:5px; background:rgba(255,255,255,.1); border-radius:999px; overflow:hidden; }
+.snap-progress-fill { height:100%; border-radius:999px; transition:width 1.2s cubic-bezier(.4,0,.2,1); width:0%; }
+.snap-unlock { font-size:11px; font-weight:700; color:rgba(255,255,255,.35); margin-top:6px; display:flex; align-items:center; gap:5px; }
+.wts-card { background:var(--white); border-radius:20px; padding:28px 32px; margin-bottom:32px; box-shadow:0 4px 24px rgba(59,60,109,.07); border:1px solid var(--border); position:relative; overflow:hidden; }
 .wts-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,var(--navy),var(--pink)); border-radius:20px 20px 0 0; }
 .wts-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:10px; }
 .wts-card-title { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:900; color:var(--navy); letter-spacing:-.02em; }
@@ -100,8 +88,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .rec-why { font-size:12px; font-weight:600; color:var(--muted); margin-top:2px; }
 .rec-btn { padding:10px 22px; background:var(--pink); color:#fff; border-radius:12px; font-weight:800; font-size:13px; text-decoration:none; white-space:nowrap; flex-shrink:0; transition:opacity .2s; }
 .rec-btn:hover { opacity:.88; }
-
-/* ── CATEGORIES ───────────────────────────────────────── */
 .category { margin-bottom:40px; }
 .category-header { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
 .cat-label { font-size:11px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
@@ -120,13 +106,10 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .badge-soon { background:rgba(59,60,109,.08); color:var(--muted); }
 .tool-arrow { font-size:16px; color:var(--muted); transition:transform .2s,color .2s; }
 .tool-card:hover .tool-arrow { transform:translateX(4px); color:var(--navy); }
-
-/* ── FOOTER ───────────────────────────────────────────── */
 .dash-footer { border-top:1px solid var(--border); padding:22px 32px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
 .footer-logo { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:700; color:var(--navy); }
 .footer-logo span { color:var(--pink); }
 .footer-copy { font-size:12px; font-weight:600; color:var(--muted); }
-
 @media(max-width:640px){
   .topnav{padding:0 16px;}
   .main{padding:24px 16px 60px;}
@@ -140,7 +123,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 </head>
 <body>
 
-<!-- AUTH -->
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">Wedding Business Workspace</div>
@@ -164,7 +146,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
   </div>
 </div>
 
-<!-- APP -->
 <div id="app-screen">
   <nav class="topnav">
     <div class="nav-logo">Wedding Business <span>Workspace</span></div>
@@ -176,14 +157,12 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 
   <div class="main">
 
-    <!-- HERO -->
     <div class="hero">
-      <div class="hero-greeting" id="hero-greeting">Good morning ✨</div>
+      <div class="hero-greeting" id="hero-greeting">Good morning</div>
       <h1 class="hero-title">Welcome back to your wedding business control centre.</h1>
       <p class="hero-sub">Your snapshot updates as you use your tools. The more you use them, the clearer your picture becomes.</p>
     </div>
 
-    <!-- BUSINESS SNAPSHOT -->
     <div class="snapshot-card">
       <div class="snapshot-header">
         <div>
@@ -194,26 +173,21 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       <div class="snapshot-grid" id="snapshot-grid"></div>
     </div>
 
-    <!-- WHERE TO START -->
     <div class="wts-card">
       <div class="wts-card-header">
         <div class="wts-card-title">Where To Start</div>
-        <a href="where-to-start.html" class="wts-retake" id="wts-action-link">Take the assessment →</a>
+        <a href="where-to-start.html" class="wts-retake" id="wts-action-link">Take the assessment</a>
       </div>
       <div id="wts-results-area">
         <div class="wts-empty">
-          <p>Answer 10 quick questions across 5 areas of your business.<br>We'll score each area and show you exactly where to focus first for the fastest results.</p>
-          <a href="where-to-start.html" class="wts-start-btn">Take the assessment →</a>
+          <p>Answer 10 quick questions across 5 areas of your business. We will score each area and show you exactly where to focus first for the fastest results.</p>
+          <a href="where-to-start.html" class="wts-start-btn">Take the assessment</a>
         </div>
       </div>
     </div>
 
-    <!-- LEAD & CLIENT MANAGEMENT -->
     <div class="category">
-      <div class="category-header">
-        <div class="cat-label">Lead & Client Management</div>
-        <div class="cat-line"></div>
-      </div>
+      <div class="category-header"><div class="cat-label">Lead &amp; Client Management</div><div class="cat-line"></div></div>
       <div class="tools-grid">
         <a href="lead-tracker.html" class="tool-card">
           <div class="tool-top-bar" style="background:linear-gradient(90deg,#FF6B1A,#FF9A5C);"></div>
@@ -232,17 +206,13 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       </div>
     </div>
 
-    <!-- INCOME & PRICING -->
     <div class="category">
-      <div class="category-header">
-        <div class="cat-label">Income & Pricing</div>
-        <div class="cat-line"></div>
-      </div>
+      <div class="category-header"><div class="cat-label">Income &amp; Pricing</div><div class="cat-line"></div></div>
       <div class="tools-grid">
         <a href="price-for-profit.html" class="tool-card">
           <div class="tool-top-bar" style="background:linear-gradient(90deg,#FFB800,#FFD35C);"></div>
           <div class="tool-icon" style="background:rgba(255,184,0,.1);">💰</div>
-          <div class="tool-name">Price for Profit & Package Builder</div>
+          <div class="tool-name">Price for Profit &amp; Package Builder</div>
           <div class="tool-desc">Calculate exactly what you need to charge per wedding — then build your packages and let AI write the descriptions for you.</div>
           <div class="tool-footer"><span class="badge badge-live">Live</span><span class="tool-arrow">→</span></div>
         </a>
@@ -263,12 +233,8 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       </div>
     </div>
 
-    <!-- MARKETING & SOCIAL MEDIA -->
     <div class="category">
-      <div class="category-header">
-        <div class="cat-label">Marketing & Social Media</div>
-        <div class="cat-line"></div>
-      </div>
+      <div class="category-header"><div class="cat-label">Marketing &amp; Social Media</div><div class="cat-line"></div></div>
       <div class="tools-grid">
         <div class="tool-card locked">
           <div class="tool-top-bar" style="background:linear-gradient(90deg,#8B5CF6,#B794F4);"></div>
@@ -284,7 +250,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 
   <footer class="dash-footer">
     <div class="footer-logo">Wedding Business <span>Workspace</span></div>
-    <div class="footer-copy">Hello Wedding Pro © 2025</div>
+    <div class="footer-copy">Hello Wedding Pro 2025</div>
   </footer>
 </div>
 
@@ -298,8 +264,8 @@ if (!window._wbwSb) {
 }
 const sb = window._wbwSb;
 
-document.getElementById("tab-in").onclick  = () => switchTab("in");
-document.getElementById("tab-up").onclick  = () => switchTab("up");
+document.getElementById("tab-in").onclick = function() { switchTab("in"); };
+document.getElementById("tab-up").onclick = function() { switchTab("up"); };
 document.getElementById("signin-btn").onclick = signIn;
 document.getElementById("signup-btn").onclick = signUp;
 document.getElementById("signout-btn").onclick = signOut;
@@ -312,9 +278,218 @@ function switchTab(t) {
 }
 
 async function signIn() {
-  const email = document.getElementById("in-email").value.trim();
-  const pass  = document.getElementById("in-pass").value;
-  const msg   = document.getElementById("in-msg");
-  const btn   = document.getElementById("signin-btn");
+  var email = document.getElementById("in-email").value.trim();
+  var pass = document.getElementById("in-pass").value;
+  var msg = document.getElementById("in-msg");
+  var btn = document.getElementById("signin-btn");
   if (!email || !pass) { showMsg(msg, "Please enter email and password.", "error"); return; }
-  btn.disabled = true; btn.textContent = "Signing in
+  btn.disabled = true;
+  btn.textContent = "Signing in...";
+  var result = await sb.auth.signInWithPassword({ email: email, password: pass });
+  btn.disabled = false;
+  btn.textContent = "Sign In";
+  if (result.error) { showMsg(msg, result.error.message, "error"); }
+}
+
+async function signUp() {
+  var email = document.getElementById("up-email").value.trim();
+  var pass = document.getElementById("up-pass").value;
+  var msg = document.getElementById("up-msg");
+  var btn = document.getElementById("signup-btn");
+  if (!email || !pass) { showMsg(msg, "Please enter email and password.", "error"); return; }
+  if (pass.length < 6) { showMsg(msg, "Password must be at least 6 characters.", "error"); return; }
+  btn.disabled = true;
+  btn.textContent = "Creating account...";
+  var result = await sb.auth.signUp({ email: email, password: pass });
+  btn.disabled = false;
+  btn.textContent = "Create Account";
+  if (result.error) { showMsg(msg, result.error.message, "error"); }
+  else { showMsg(msg, "Account created! Please sign in.", "success"); switchTab("in"); }
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  document.getElementById("app-screen").style.display = "none";
+  document.getElementById("auth-screen").style.display = "flex";
+}
+
+function showMsg(el, text, type) {
+  el.textContent = text;
+  el.className = "auth-msg " + type;
+}
+
+var _appInitialised = false;
+
+async function initApp(user) {
+  if (_appInitialised) return;
+  _appInitialised = true;
+  document.getElementById("auth-screen").style.display = "none";
+  document.getElementById("app-screen").style.display = "block";
+  document.getElementById("nav-user").textContent = user.email;
+  var h = new Date().getHours();
+  var greeting = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+  document.getElementById("hero-greeting").textContent = greeting + " ✨";
+  document.getElementById("wts-results-area").innerHTML = '<div style="padding:16px 0; font-size:13px; font-weight:700; color:var(--muted);">Loading your results...</div>';
+  await Promise.all([loadWTSResults(user.id), loadLeadData(user.id)]);
+}
+
+sb.auth.getSession().then(function(result) {
+  if (result.data && result.data.session && result.data.session.user) {
+    initApp(result.data.session.user);
+  }
+});
+
+sb.auth.onAuthStateChange(function(event, session) {
+  if (event === "SIGNED_IN" && session && session.user) {
+    _appInitialised = false;
+    initApp(session.user);
+  } else if (event === "SIGNED_OUT") {
+    _appInitialised = false;
+    document.getElementById("app-screen").style.display = "none";
+    document.getElementById("auth-screen").style.display = "flex";
+  }
+});
+
+var snapData = {
+  incomeGoal: null, projectedIncome: null, weddingsNeeded: null,
+  bookedCount: 0, totalLeads: 0, followupsDue: 0
+};
+
+function renderSnapshot() {
+  var d = snapData;
+  var grid = document.getElementById("snapshot-grid");
+  var booked = d.bookedCount;
+  var needed = d.weddingsNeeded;
+  var bookedPct = needed ? Math.min(100, Math.round((booked / needed) * 100)) : 0;
+  var projected = d.projectedIncome;
+  var goal = d.incomeGoal;
+  var incomePct = goal ? Math.min(100, Math.round((projected / goal) * 100)) : 0;
+  var gap = (goal && projected !== null) ? Math.max(0, goal - projected) : null;
+
+  function fmtEuro(n) {
+    if (n === null || n === undefined) return null;
+    return "E" + Number(n).toLocaleString("en-IE");
+  }
+
+  var stats = [
+    { label:"Income Goal", value:fmtEuro(goal)||"--", valueClass:"amber", meta:goal ? "Set in Income Planner" : "Unlock with Income Planner", progress:null, unlock:!goal ? "Income Planner" : null, highlight:false },
+    { label:"Projected Income", value:fmtEuro(projected)||"--", valueClass:"green", meta:gap !== null ? "Gap: " + fmtEuro(gap) : "From booked weddings", progress:goal ? { pct:incomePct, color:"#52d68a" } : null, unlock:projected === null ? "Income Planner" : null, highlight:false },
+    { label:"Weddings Booked", value:booked, valueClass:"pink", meta:needed ? "of " + needed + " needed (" + bookedPct + "%)" : "Track in Lead Tracker", progress:needed ? { pct:bookedPct, color:"#FB478E" } : null, unlock:null, highlight:true },
+    { label:"Total Enquiries", value:d.totalLeads||0, valueClass:"", meta:d.followupsDue > 0 ? d.followupsDue + " follow-up" + (d.followupsDue > 1 ? "s" : "") + " due today" : "All follow-ups up to date", progress:null, unlock:null, highlight:false }
+  ];
+
+  var html = "";
+  for (var i = 0; i < stats.length; i++) {
+    var s = stats[i];
+    html += '<div class="snap-stat ' + (s.highlight ? "highlight" : "") + '">';
+    html += '<div class="snap-label">' + s.label + '</div>';
+    html += '<div class="snap-value ' + s.valueClass + '">' + s.value + '</div>';
+    html += '<div class="snap-meta">' + s.meta + '</div>';
+    if (s.progress) {
+      html += '<div class="snap-progress"><div class="snap-progress-fill" data-pct="' + s.progress.pct + '" style="background:' + s.progress.color + ';"></div></div>';
+    }
+    if (s.unlock) {
+      html += '<div class="snap-unlock">Unlock with ' + s.unlock + '</div>';
+    }
+    html += '</div>';
+  }
+  grid.innerHTML = html;
+
+  requestAnimationFrame(function() {
+    var fills = grid.querySelectorAll(".snap-progress-fill");
+    fills.forEach(function(el) {
+      var pct = el.getAttribute("data-pct");
+      setTimeout(function() { el.style.width = pct + "%"; }, 150);
+    });
+  });
+}
+
+async function loadLeadData(userId) {
+  try {
+    var result = await sb.from("leads").select("data").eq("user_id", userId);
+    if (result.data && result.data.length > 0) {
+      var leads = result.data.map(function(r) { return r.data; }).filter(Boolean);
+      var today = new Date().toISOString().slice(0, 10);
+      var booked = leads.filter(function(l) { return l.status === "Booked" || l.status === "Deposit Paid"; });
+      var followupsDue = leads.filter(function(l) {
+        return l.nextFollowUp && l.nextFollowUp <= today && l.status !== "Booked" && l.status !== "Lost";
+      }).length;
+      snapData.bookedCount = booked.length;
+      snapData.totalLeads = leads.length;
+      snapData.followupsDue = followupsDue;
+      snapData.projectedIncome = booked.reduce(function(s, l) { return s + Number(l.priceQuoted || 0); }, 0);
+    }
+  } catch(e) { console.log("Lead data error:", e.message); }
+  renderSnapshot();
+}
+
+var SCORE_META = {
+  pricing: { label:"Pricing Confidence",     color:"#FB478E", tool:"Income & Pricing Planner", url:"#" },
+  leads:   { label:"Lead Tracking",           color:"#FF6B1A", tool:"Lead Tracker",             url:"lead-tracker.html" },
+  ica:     { label:"Most Profitable Couples", color:"#8B5CF6", tool:"Ideal Client Clarity",     url:"ideal-client.html" },
+  social:  { label:"Social Media",            color:"#5B8DEF", tool:"Social Media Planner",     url:"social-planner.html" },
+  income:  { label:"Income Goals",            color:"#F5A800", tool:"Income & Pricing Planner", url:"income-planner.html" }
+};
+
+async function loadWTSResults(userId) {
+  try {
+    var result = await sb.from("where_to_start").select("*").eq("user_id", userId).order("updated_at", { ascending: false }).limit(1);
+    if (result.data && result.data.length > 0) {
+      var scores = result.data[0].data && result.data[0].data.scores;
+      if (scores) {
+        renderWTSResults(scores);
+        document.getElementById("wts-action-link").textContent = "Retake assessment";
+      } else { showWTSEmpty(); }
+    } else { showWTSEmpty(); }
+  } catch(e) { showWTSEmpty(); }
+}
+
+function showWTSEmpty() {
+  document.getElementById("wts-results-area").innerHTML = '<div class="wts-empty"><p>Answer 10 quick questions across 5 areas of your business. We will score each area and show you exactly where to focus first for the fastest results.</p><a href="where-to-start.html" class="wts-start-btn">Take the assessment</a></div>';
+}
+
+function renderWTSResults(scores) {
+  var area = document.getElementById("wts-results-area");
+  var items = [];
+  var keys = Object.keys(scores);
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    var val = scores[key];
+    var pct = Number.isFinite(val.pct) ? val.pct : (val.max ? Math.round((val.raw / val.max) * 100) : 0);
+    var meta = SCORE_META[key] || { label:key, color:"#3B3C6D", tool:"", url:"#" };
+    items.push({ key:key, pct:pct, label:meta.label, color:meta.color, tool:meta.tool, url:meta.url });
+  }
+  items.sort(function(a, b) { return a.pct - b.pct; });
+  var weakest = items[0];
+
+  var barsHtml = "";
+  for (var j = 0; j < items.length; j++) {
+    var s = items[j];
+    barsHtml += '<div class="score-row">';
+    barsHtml += '<div class="score-label">' + s.label + '</div>';
+    barsHtml += '<div class="score-track"><div class="score-fill" data-pct="' + s.pct + '" style="background:' + s.color + ';"></div></div>';
+    barsHtml += '<div class="score-pct" style="color:' + s.color + ';">' + s.pct + '%</div>';
+    barsHtml += '</div>';
+  }
+
+  var recHtml = "";
+  if (weakest) {
+    var btnHtml = weakest.url !== "#"
+      ? '<a href="' + weakest.url + '" class="rec-btn">Open tool</a>'
+      : '<a href="where-to-start.html" class="rec-btn">View full results</a>';
+    recHtml = '<div class="rec-banner" style="margin-top:20px;"><div><div class="rec-eyebrow">Start here first</div><div class="rec-tool">' + weakest.tool + '</div><div class="rec-why">Your lowest score is ' + weakest.label + ' at ' + weakest.pct + '% — this is where you will see the fastest results.</div></div>' + btnHtml + '</div>';
+  }
+
+  area.innerHTML = '<div class="score-bars">' + barsHtml + '</div>' + recHtml + '<div style="text-align:right; margin-top:14px;"><a href="where-to-start.html" style="font-size:12px; font-weight:700; color:var(--muted); text-decoration:none; border:1px solid var(--border); padding:6px 12px; border-radius:9px;">View full results &amp; retake</a></div>';
+
+  requestAnimationFrame(function() {
+    var fills = area.querySelectorAll(".score-fill");
+    fills.forEach(function(el) {
+      var pct = el.getAttribute("data-pct");
+      setTimeout(function() { el.style.width = pct + "%"; }, 100);
+    });
+  });
+}
+</script>
+</body>
+</html>
