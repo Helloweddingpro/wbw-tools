@@ -59,124 +59,26 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .hero-sub { font-size:14px; font-weight:600; color:var(--muted); max-width:520px; line-height:1.7; }
 
 /* ── BUSINESS SNAPSHOT ────────────────────────────────── */
-.snapshot-card {
-  background: var(--navy);
-  border-radius: 20px;
-  padding: 28px 32px;
-  margin-bottom: 32px;
-  position: relative;
-  overflow: hidden;
-}
-.snapshot-card::after {
-  content: '';
-  position: absolute;
-  bottom: -40px; right: -40px;
-  width: 200px; height: 200px;
-  background: rgba(251,71,142,.08);
-  border-radius: 50%;
-  pointer-events: none;
-}
-.snapshot-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.snapshot-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: #fff;
-}
-.snapshot-sub {
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(255,255,255,.5);
-  margin-top: 2px;
-}
-.snapshot-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 14px;
-}
-.snap-stat {
-  background: rgba(255,255,255,.07);
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 14px;
-  padding: 16px 18px;
-  position: relative;
-}
-.snap-stat.highlight {
-  background: rgba(251,71,142,.15);
-  border-color: rgba(251,71,142,.3);
-}
-.snap-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.5);
-  margin-bottom: 8px;
-}
-.snap-value {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 28px;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1;
-  margin-bottom: 4px;
-}
+.snapshot-card { background: var(--navy); border-radius: 20px; padding: 28px 32px; margin-bottom: 32px; position: relative; overflow: hidden; }
+.snapshot-card::after { content: ''; position: absolute; bottom: -40px; right: -40px; width: 200px; height: 200px; background: rgba(251,71,142,.08); border-radius: 50%; pointer-events: none; }
+.snapshot-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 8px; }
+.snapshot-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: #fff; }
+.snapshot-sub { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.5); margin-top: 2px; }
+.snapshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+.snap-stat { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 16px 18px; position: relative; }
+.snap-stat.highlight { background: rgba(251,71,142,.15); border-color: rgba(251,71,142,.3); }
+.snap-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: 8px; }
+.snap-value { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: #fff; line-height: 1; margin-bottom: 4px; }
 .snap-value.pink { color: var(--pink); }
 .snap-value.amber { color: #FFD35C; }
 .snap-value.green { color: #52d68a; }
-.snap-meta {
-  font-size: 11px;
-  font-weight: 700;
-  color: rgba(255,255,255,.4);
-}
-.snap-progress {
-  margin-top: 10px;
-  height: 5px;
-  background: rgba(255,255,255,.1);
-  border-radius: 999px;
-  overflow: hidden;
-}
-.snap-progress-fill {
-  height: 100%;
-  border-radius: 999px;
-  transition: width 1.2s cubic-bezier(.4,0,.2,1);
-  width: 0%;
-}
-.snap-empty {
-  font-size: 12px;
-  font-weight: 700;
-  color: rgba(255,255,255,.3);
-  font-style: italic;
-  margin-top: 4px;
-}
-.snap-unlock {
-  font-size: 11px;
-  font-weight: 700;
-  color: rgba(255,255,255,.35);
-  margin-top: 6px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
+.snap-meta { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.4); }
+.snap-progress { margin-top: 10px; height: 5px; background: rgba(255,255,255,.1); border-radius: 999px; overflow: hidden; }
+.snap-progress-fill { height: 100%; border-radius: 999px; transition: width 1.2s cubic-bezier(.4,0,.2,1); width: 0%; }
+.snap-unlock { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.35); margin-top: 6px; display: flex; align-items: center; gap: 5px; }
 
 /* ── WTS CARD ─────────────────────────────────────────── */
-.wts-card {
-  background: var(--white);
-  border-radius: 20px;
-  padding: 28px 32px;
-  margin-bottom: 32px;
-  box-shadow: 0 4px 24px rgba(59,60,109,.07);
-  border: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
+.wts-card { background: var(--white); border-radius: 20px; padding: 28px 32px; margin-bottom: 32px; box-shadow: 0 4px 24px rgba(59,60,109,.07); border: 1px solid var(--border); position: relative; overflow: hidden; }
 .wts-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,var(--navy),var(--pink)); border-radius:20px 20px 0 0; }
 .wts-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:10px; }
 .wts-card-title { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:900; color:var(--navy); letter-spacing:-.02em; }
@@ -289,12 +191,10 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
           <div class="snapshot-sub">Live data from your tools — updates automatically</div>
         </div>
       </div>
-      <div class="snapshot-grid" id="snapshot-grid">
-        <!-- Rendered by JS -->
-      </div>
+      <div class="snapshot-grid" id="snapshot-grid"></div>
     </div>
 
-    <!-- WHERE TO START — above the fold -->
+    <!-- WHERE TO START -->
     <div class="wts-card">
       <div class="wts-card-header">
         <div class="wts-card-title">Where To Start</div>
@@ -339,13 +239,13 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
         <div class="cat-line"></div>
       </div>
       <div class="tools-grid">
-        <div class="tool-card locked">
-          <div class="tool-top-bar" style="background:linear-gradient(90deg,#F5A800,#FFD35C);"></div>
-          <div class="tool-icon" style="background:rgba(245,168,0,.1);">📈</div>
-          <div class="tool-name">Income & Pricing Planner</div>
-          <div class="tool-desc">Set your income goal, work backwards to your minimum price, and know exactly how many weddings you need to book.</div>
-          <div class="tool-footer"><span class="badge badge-soon">Coming soon</span><span class="tool-arrow">→</span></div>
-        </div>
+        <a href="price-for-profit.html" class="tool-card">
+          <div class="tool-top-bar" style="background:linear-gradient(90deg,#FFB800,#FFD35C);"></div>
+          <div class="tool-icon" style="background:rgba(255,184,0,.1);">💰</div>
+          <div class="tool-name">Price for Profit & Package Builder</div>
+          <div class="tool-desc">Calculate exactly what you need to charge per wedding — then build your packages and let AI write the descriptions for you.</div>
+          <div class="tool-footer"><span class="badge badge-live">Live</span><span class="tool-arrow">→</span></div>
+        </a>
         <a href="ideal-client.html" class="tool-card">
           <div class="tool-top-bar" style="background:linear-gradient(90deg,#00A878,#00c99a);"></div>
           <div class="tool-icon" style="background:rgba(0,168,120,.1);">🎯</div>
@@ -353,6 +253,13 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
           <div class="tool-desc">A guided lesson on who your most profitable couple is, why venue targeting works — and a full avatar builder to make it yours.</div>
           <div class="tool-footer"><span class="badge badge-live">Live</span><span class="tool-arrow">→</span></div>
         </a>
+        <div class="tool-card locked">
+          <div class="tool-top-bar" style="background:linear-gradient(90deg,#F5A800,#FFD35C);"></div>
+          <div class="tool-icon" style="background:rgba(245,168,0,.1);">📈</div>
+          <div class="tool-name">Income Planner</div>
+          <div class="tool-desc">Set your income goal, work backwards to your minimum price, and know exactly how many weddings you need to book.</div>
+          <div class="tool-footer"><span class="badge badge-soon">Coming soon</span><span class="tool-arrow">→</span></div>
+        </div>
       </div>
     </div>
 
@@ -410,264 +317,4 @@ async function signIn() {
   const msg   = document.getElementById("in-msg");
   const btn   = document.getElementById("signin-btn");
   if (!email || !pass) { showMsg(msg, "Please enter email and password.", "error"); return; }
-  btn.disabled = true; btn.textContent = "Signing in…";
-  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-  btn.disabled = false; btn.textContent = "Sign In";
-  if (error) showMsg(msg, error.message, "error");
-}
-
-async function signUp() {
-  const email = document.getElementById("up-email").value.trim();
-  const pass  = document.getElementById("up-pass").value;
-  const msg   = document.getElementById("up-msg");
-  const btn   = document.getElementById("signup-btn");
-  if (!email || !pass) { showMsg(msg, "Please enter email and password.", "error"); return; }
-  if (pass.length < 6) { showMsg(msg, "Password must be at least 6 characters.", "error"); return; }
-  btn.disabled = true; btn.textContent = "Creating account…";
-  const { error } = await sb.auth.signUp({ email, password: pass });
-  btn.disabled = false; btn.textContent = "Create Account";
-  if (error) showMsg(msg, error.message, "error");
-  else { showMsg(msg, "Account created! Please sign in.", "success"); switchTab("in"); }
-}
-
-async function signOut() {
-  await sb.auth.signOut();
-  document.getElementById("app-screen").style.display = "none";
-  document.getElementById("auth-screen").style.display = "flex";
-}
-
-function showMsg(el, text, type) {
-  el.textContent = text;
-  el.className = "auth-msg " + type;
-}
-
-let _appInitialised = false;
-
-async function initApp(user) {
-  if (_appInitialised) return;
-  _appInitialised = true;
-
-  document.getElementById("auth-screen").style.display = "none";
-  document.getElementById("app-screen").style.display = "block";
-  document.getElementById("nav-user").textContent = user.email;
-  const h = new Date().getHours();
-  document.getElementById("hero-greeting").textContent =
-    (h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening") + " ✨";
-
-  // Show loading placeholder in WTS area while fetching
-  document.getElementById("wts-results-area").innerHTML =
-    '<div style="padding:16px 0; font-size:13px; font-weight:700; color:var(--muted);">Loading your results…</div>';
-
-  await Promise.all([
-    loadWTSResults(user.id),
-    loadLeadData(user.id)
-  ]);
-}
-
-// getSession fires immediately on page load — handles nav link & back button
-sb.auth.getSession().then(({ data: { session } }) => {
-  if (session?.user) initApp(session.user);
-});
-
-// onAuthStateChange handles sign-in
-sb.auth.onAuthStateChange(async (event, session) => {
-  if (event === "SIGNED_IN" && session?.user) {
-    _appInitialised = false; // allow re-init on fresh sign in
-    initApp(session.user);
-  } else if (event === "SIGNED_OUT") {
-    _appInitialised = false;
-    document.getElementById("app-screen").style.display = "none";
-    document.getElementById("auth-screen").style.display = "flex";
-  }
-});
-
-// ── SNAPSHOT ──────────────────────────────────────────────────────────
-let snapData = {
-  incomeGoal: null,
-  projectedIncome: null,
-  weddingsNeeded: null,
-  bookedCount: 0,
-  totalLeads: 0,
-  followupsDue: 0,
-};
-
-function renderSnapshot() {
-  const d = snapData;
-  const grid = document.getElementById("snapshot-grid");
-
-  const booked = d.bookedCount;
-  const needed = d.weddingsNeeded;
-  const bookedPct = needed ? Math.min(100, Math.round((booked / needed) * 100)) : 0;
-  const projected = d.projectedIncome;
-  const goal = d.incomeGoal;
-  const incomePct = goal ? Math.min(100, Math.round((projected / goal) * 100)) : 0;
-  const gap = (goal && projected !== null) ? Math.max(0, goal - projected) : null;
-
-  const fmtEuro = n => n !== null && n !== undefined ? "€" + Number(n).toLocaleString("en-IE") : null;
-
-  const stats = [
-    {
-      label: "Income Goal",
-      value: fmtEuro(goal) || "—",
-      valueClass: "amber",
-      meta: goal ? "Set in Income Planner" : "Set in Income & Pricing Planner",
-      progress: null,
-      empty: !goal,
-      unlock: !goal ? "Income & Pricing Planner" : null,
-      highlight: false,
-    },
-    {
-      label: "Projected Income",
-      value: fmtEuro(projected) || "—",
-      valueClass: "green",
-      meta: gap !== null ? "Gap: " + fmtEuro(gap) : "From booked weddings",
-      progress: goal ? { pct: incomePct, color: "#52d68a" } : null,
-      empty: projected === null,
-      unlock: projected === null ? "Income & Pricing Planner" : null,
-      highlight: false,
-    },
-    {
-      label: "Weddings Booked",
-      value: booked,
-      valueClass: "pink",
-      meta: needed ? "of " + needed + " needed (" + bookedPct + "%)" : "Track in Lead Tracker",
-      progress: needed ? { pct: bookedPct, color: "#FB478E" } : null,
-      empty: false,
-      unlock: null,
-      highlight: true,
-    },
-    {
-      label: "Total Enquiries",
-      value: d.totalLeads || 0,
-      valueClass: "",
-      meta: d.followupsDue > 0 ? d.followupsDue + " follow-up" + (d.followupsDue > 1 ? "s" : "") + " due today" : "All follow-ups up to date ✓",
-      progress: null,
-      empty: false,
-      unlock: null,
-      highlight: false,
-    },
-  ];
-
-  grid.innerHTML = stats.map(s => `
-    <div class="snap-stat ${s.highlight ? "highlight" : ""}">
-      <div class="snap-label">${s.label}</div>
-      <div class="snap-value ${s.valueClass}">${s.value}</div>
-      <div class="snap-meta">${s.meta}</div>
-      ${s.progress ? `<div class="snap-progress"><div class="snap-progress-fill" data-pct="${s.progress.pct}" style="background:${s.progress.color};"></div></div>` : ""}
-      ${s.unlock ? `<div class="snap-unlock">🔒 Unlock with ${s.unlock}</div>` : ""}
-    </div>
-  `).join("");
-
-  // Animate progress bars
-  requestAnimationFrame(() => {
-    grid.querySelectorAll(".snap-progress-fill").forEach(el => {
-      const pct = el.getAttribute("data-pct");
-      setTimeout(() => { el.style.width = pct + "%"; }, 150);
-    });
-  });
-}
-
-// ── LOAD LEAD DATA ────────────────────────────────────────────────────
-async function loadLeadData(userId) {
-  try {
-    const { data } = await sb.from("leads").select("data").eq("user_id", userId);
-    if (data && data.length > 0) {
-      const leads = data.map(r => r.data).filter(Boolean);
-      const today = new Date().toISOString().slice(0, 10);
-      const booked = leads.filter(l => l.status === "Booked" || l.status === "Deposit Paid");
-      const followupsDue = leads.filter(l =>
-        l.nextFollowUp && l.nextFollowUp <= today &&
-        l.status !== "Booked" && l.status !== "Lost"
-      ).length;
-      const projectedIncome = booked.reduce((s, l) => s + Number(l.priceQuoted || 0), 0);
-
-      snapData.bookedCount = booked.length;
-      snapData.totalLeads = leads.length;
-      snapData.followupsDue = followupsDue;
-      snapData.projectedIncome = projectedIncome;
-    }
-  } catch(e) { console.log("Lead data:", e.message); }
-  renderSnapshot();
-}
-
-// ── WTS RESULTS ───────────────────────────────────────────────────────
-const SCORE_META = {
-  pricing: { label: "Pricing Confidence",     color: "#FB478E", tool: "Income & Pricing Planner", url: "#" },
-  leads:   { label: "Lead Tracking",           color: "#FF6B1A", tool: "Lead Tracker",             url: "lead-tracker.html" },
-  ica:     { label: "Most Profitable Couples", color: "#8B5CF6", tool: "Ideal Client Clarity",     url: "ideal-client.html" },
-  social:  { label: "Social Media",            color: "#5B8DEF", tool: "Social Media Planner",     url: "social-planner.html" },
-  income:  { label: "Income Goals",            color: "#F5A800", tool: "Income & Pricing Planner", url: "income-planner.html" },
-};
-
-async function loadWTSResults(userId) {
-  try {
-    console.log("WTS: loading for", userId);
-    const { data, error } = await sb.from("where_to_start").select("*").eq("user_id", userId).order("updated_at", { ascending: false }).limit(1);
-    console.log("WTS: data=", JSON.stringify(data), "error=", error);
-    if (data && data.length > 0) {
-      const scores = data[0].data?.scores;
-      console.log("WTS: scores=", JSON.stringify(scores));
-      if (scores) {
-        renderWTSResults(scores);
-        document.getElementById("wts-action-link").textContent = "Retake assessment →";
-      } else {
-        console.log("WTS: no scores found in data");
-        showWTSEmpty();
-      }
-    } else {
-      console.log("WTS: no rows returned");
-      showWTSEmpty();
-    }
-  } catch(e) { console.log("WTS load error:", e.message); showWTSEmpty(); }
-}
-
-function showWTSEmpty() {
-  document.getElementById("wts-results-area").innerHTML = `
-    <div class="wts-empty">
-      <p>Answer 10 quick questions across 5 areas of your business.<br>We'll score each area and show you exactly where to focus first for the fastest results.</p>
-      <a href="where-to-start.html" class="wts-start-btn">Take the assessment →</a>
-    </div>`;
-}
-
-function renderWTSResults(scores) {
-  const area = document.getElementById("wts-results-area");
-  const items = Object.entries(scores)
-    .map(([key, val]) => { const pct = Number.isFinite(val.pct) ? val.pct : (val.max ? Math.round((val.raw / val.max) * 100) : 0); return { key, pct, ...(SCORE_META[key] || { label: key, color: "#3B3C6D", tool: "", url: "#" }) }; })
-    .sort((a, b) => a.pct - b.pct);
-  const weakest = items[0];
-  const strongest = items[items.length - 1];
-
-  // Hide the empty promo state, show results
-  area.innerHTML = `
-    <div class="score-bars">
-      ${items.map(s => `
-        <div class="score-row">
-          <div class="score-label">${s.label}</div>
-          <div class="score-track"><div class="score-fill" data-pct="${s.pct}" style="background:${s.color};"></div></div>
-          <div class="score-pct" style="color:${s.color};">${s.pct}%</div>
-        </div>`).join("")}
-    </div>
-    ${weakest ? `
-    <div class="rec-banner" style="margin-top:20px;">
-      <div>
-        <div class="rec-eyebrow">🚀 Start here first</div>
-        <div class="rec-tool">${weakest.tool}</div>
-        <div class="rec-why">Your lowest score is ${weakest.label} at ${weakest.pct}% — this is where you'll see the fastest results.</div>
-      </div>
-      ${weakest.url !== "#" ? `<a href="${weakest.url}" class="rec-btn">Open tool →</a>` : `<a href="where-to-start.html" class="rec-btn">View full results →</a>`}
-    </div>` : ""}
-    <div style="text-align:right; margin-top:14px;">
-      <a href="where-to-start.html" style="font-size:12px; font-weight:700; color:var(--muted); text-decoration:none; border:1px solid var(--border); padding:6px 12px; border-radius:9px;">View full results & retake →</a>
-    </div>
-  `;
-
-  requestAnimationFrame(() => {
-    area.querySelectorAll(".score-fill").forEach(el => {
-      const pct = el.getAttribute("data-pct");
-      setTimeout(() => { el.style.width = pct + "%"; }, 100);
-    });
-  });
-}
-</script>
-</body>
-</html>
+  btn.disabled = true; btn.textContent = "Signing in
