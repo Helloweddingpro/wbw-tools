@@ -658,8 +658,9 @@ document.getElementById('signout-btn').onclick = () => sb.auth.signOut();
 
 // ── STAGE SWITCHING ────────────────────────────────────────
 function switchStage(n) {
-  document.getElementById('stage1').style.display = n===1 ? '' : 'none';
-  document.getElementById('stage2').style.display = n===2 ? '' : 'none';
+ function switchStage(n) {
+  document.getElementById('stage1').style.display = n===1 ? 'block' : 'none';
+  document.getElementById('stage2').style.display = n===2 ? 'block' : 'none';
   document.getElementById('stab-1').classList.toggle('active', n===1);
   document.getElementById('stab-2').classList.toggle('active', n===2);
 }
