@@ -223,7 +223,7 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
 .regen-row { margin-top:16px; display:none; }
 
 .action-row { display:none; gap:12px; margin-bottom:20px; }
-.action-row.show { display:grid; grid-template-columns:1fr 1fr 1fr; }
+.action-row.show { display:flex; gap:12px; }
 @media(max-width:600px){ .action-row.show { grid-template-columns:1fr; } }
 #toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:12px 22px; border-radius:14px; font-size:13px; font-weight:800; opacity:0; pointer-events:none; transition:opacity .3s; z-index:9999; }
 #toast.show { opacity:1; }
