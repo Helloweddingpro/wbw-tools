@@ -38,11 +38,6 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
 .nav-signout { padding:7px 16px; border-radius:10px; border:1.5px solid var(--border); background:transparent; color:var(--navy); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer; }
 .nav-signout:hover { background:var(--cream); }
 .main { max-width:900px; margin:0 auto; padding:40px 24px 80px; }
-.stage-tabs { display:flex; gap:0; background:var(--white); border-radius:18px; padding:6px; margin-bottom:36px; box-shadow:0 2px 16px rgba(59,60,109,.08); }
-.stage-tab { flex:1; padding:14px 10px; border-radius:13px; border:none; background:transparent; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; color:var(--muted); transition:all .25s; display:flex; flex-direction:column; align-items:center; gap:3px; }
-.stage-tab .tab-num { font-size:10px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; }
-.stage-tab.active { background:var(--gold); color:var(--navy); box-shadow:0 4px 16px rgba(255,184,0,.3); }
-.stage-tab.done { color:var(--green); }
 .hero { margin-bottom:32px; }
 .hero-eyebrow { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
 .hero-title { font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:700; color:var(--navy); line-height:1.1; margin-bottom:10px; }
@@ -53,8 +48,9 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
 .currency-bar select { padding:8px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:var(--text); background:var(--white); cursor:pointer; }
 .currency-bar select:focus { outline:none; border-color:var(--gold); }
 .card { background:var(--white); border-radius:20px; padding:28px; margin-bottom:20px; box-shadow:0 2px 16px rgba(59,60,109,.06); }
-.card-title { font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:var(--navy); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.card-title { font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:var(--navy); margin-bottom:20px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .card-title .icon { font-size:18px; }
+.optional-badge { font-size:11px; font-weight:700; color:var(--muted); text-transform:none; letter-spacing:0; background:var(--gold-light); border:1px solid var(--gold-mid); border-radius:6px; padding:2px 8px; }
 .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 .form-grid.three { grid-template-columns:1fr 1fr 1fr; }
 .form-group { display:flex; flex-direction:column; gap:7px; }
@@ -109,73 +105,8 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
 .pkg-var-name { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.9); margin-bottom:4px; }
 .pkg-var-mult { font-size:10px; font-weight:700; color:rgba(255,255,255,.55); margin-bottom:8px; }
 .pkg-var-price { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:#fff; }
-.cta-btn { width:100%; padding:16px; border-radius:14px; border:none; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:all .2s; }
-.cta-gold { background:var(--gold); color:var(--navy); }
-.cta-gold:hover { opacity:.9; transform:translateY(-1px); box-shadow:0 8px 24px rgba(255,184,0,.35); }
-.cta-ghost { background:transparent; color:var(--navy); border:1.5px solid var(--border) !important; }
-.cta-ghost:hover { background:var(--gold-light); border-color:var(--gold) !important; }
-.action-row { display:none; gap:12px; margin-bottom:20px; }
-.action-row.show { display:flex; }
-#stage2 { display:none; }
-.floor-banner { background:var(--gold-light); border:1.5px solid var(--gold-mid); border-radius:14px; padding:14px 20px; margin-bottom:24px; display:flex; align-items:center; gap:12px; }
-.floor-banner .fb-label { font-size:12px; font-weight:700; color:var(--navy); }
-.floor-banner .fb-price { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--navy); }
-.floor-banner .fb-note { font-size:11px; font-weight:600; color:var(--muted); }
-.pkg-build-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:24px; }
-.pkg-build-card { background:var(--white); border-radius:18px; padding:22px; border:2px solid var(--border); }
-.pkg-tier-label { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); margin-bottom:8px; }
-.pkg-name-input { width:100%; border:none; border-bottom:2px solid var(--border); padding:6px 0; font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:var(--navy); background:transparent; margin-bottom:14px; }
-.pkg-name-input:focus { outline:none; border-bottom-color:var(--gold); }
-.pkg-price-row { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
-.pkg-price-row .sym { font-size:16px; font-weight:800; color:var(--muted); }
-.pkg-price-input { flex:1; border:1.5px solid var(--border); border-radius:10px; padding:9px 12px; font-family:'Montserrat',sans-serif; font-size:16px; font-weight:800; color:var(--navy); }
-.pkg-price-input:focus { outline:none; border-color:var(--gold); }
-.pkg-floor-note { font-size:11px; font-weight:700; margin-bottom:14px; }
-.pkg-floor-note.ok { color:var(--green); }
-.pkg-floor-note.warn { color:var(--red); }
-.pkg-includes-label { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; color:var(--navy); margin-bottom:10px; }
-.pkg-checklist { display:flex; flex-direction:column; gap:7px; }
-.check-item { display:flex; align-items:center; gap:8px; cursor:pointer; }
-.check-item input[type=checkbox] { display:none; }
-.check-box { width:17px; height:17px; border-radius:5px; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .15s; }
-.check-item input:checked ~ .check-box { background:var(--gold); border-color:var(--gold); }
-.check-box::after { content:'✓'; font-size:9px; font-weight:900; color:var(--navy); opacity:0; }
-.check-item input:checked ~ .check-box::after { opacity:1; }
-.check-label { font-size:12px; font-weight:600; color:var(--text); line-height:1.4; }
-.pkg-add-row { display:flex; gap:6px; margin-top:10px; }
-.pkg-add-row input { flex:1; padding:8px 11px; border:1.5px solid var(--border); border-radius:9px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; color:var(--text); }
-.pkg-add-row input:focus { outline:none; border-color:var(--gold); }
-.pkg-add-row button { padding:8px 12px; border-radius:9px; border:none; background:var(--gold-light); color:var(--navy); font-weight:800; font-size:12px; cursor:pointer; white-space:nowrap; }
-.pkg-add-row button:hover { background:var(--gold-mid); }
-.ai-card { background:var(--white); border-radius:20px; padding:28px; box-shadow:0 2px 16px rgba(59,60,109,.06); }
-.ai-title { font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:var(--navy); margin-bottom:6px; display:flex; align-items:center; gap:10px; }
-.ai-badge { background:var(--navy); color:var(--gold); border-radius:8px; padding:3px 10px; font-size:10px; font-weight:900; letter-spacing:.06em; }
-.ai-sub { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:20px; line-height:1.6; }
-.tone-grid { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
-.tone-chip { padding:8px 16px; border-radius:30px; border:1.5px solid var(--border); background:var(--white); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; color:var(--muted); cursor:pointer; transition:all .2s; }
-.tone-chip.active { background:var(--gold); border-color:var(--gold); color:var(--navy); }
-.ai-generate-btn { width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg, var(--navy) 0%, #5B5C9D 100%); color:#fff; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:900; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition:all .25s; margin-bottom:24px; }
-.ai-generate-btn:hover { opacity:.9; transform:translateY(-1px); }
-.ai-generate-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
-.ai-loading { text-align:center; padding:40px 20px; display:none; }
-.dots { display:flex; gap:8px; justify-content:center; margin-bottom:12px; }
-.dots span { width:10px; height:10px; border-radius:50%; background:var(--gold); animation:pulse 1.4s ease-in-out infinite; }
-.dots span:nth-child(2) { animation-delay:.2s; } .dots span:nth-child(3) { animation-delay:.4s; }
-@keyframes pulse { 0%,80%,100%{transform:scale(.6);opacity:.4} 40%{transform:scale(1);opacity:1} }
-.ai-loading p { font-size:13px; font-weight:700; color:var(--muted); }
-.output-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
-.output-card { background:var(--cream); border-radius:18px; padding:22px; border:2px solid var(--gold-mid); }
-.out-tier { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); margin-bottom:5px; }
-.out-name { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:var(--navy); margin-bottom:3px; }
-.out-price { font-size:14px; font-weight:800; color:var(--navy); margin-bottom:12px; }
-.out-desc { font-size:13px; font-weight:600; color:var(--text); line-height:1.7; margin-bottom:12px; }
-.out-includes { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
-.out-item { font-size:12px; font-weight:600; color:var(--muted); display:flex; align-items:flex-start; gap:7px; line-height:1.4; }
-.out-item::before { content:'✦'; color:var(--gold); font-size:9px; margin-top:3px; flex-shrink:0; }
-.out-why { font-size:12px; font-style:italic; font-weight:600; color:var(--muted); border-top:1px solid var(--border); padding-top:10px; line-height:1.6; margin-bottom:14px; }
-.copy-btn { width:100%; padding:10px; border-radius:10px; border:1.5px solid var(--border); background:transparent; color:var(--navy); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer; transition:all .2s; }
-.copy-btn:hover { background:var(--gold-light); border-color:var(--gold); }
-.regen-row { margin-top:16px; display:none; }
+.reset-btn { width:100%; padding:16px; border-radius:14px; border:1.5px solid var(--border); background:transparent; color:var(--navy); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; cursor:pointer; margin-bottom:20px; }
+.reset-btn:hover { background:var(--gold-light); border-color:var(--gold); }
 #toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:12px 22px; border-radius:14px; font-size:13px; font-weight:800; opacity:0; pointer-events:none; transition:opacity .3s; z-index:9999; }
 #toast.show { opacity:1; }
 @media(max-width:720px){
@@ -185,8 +116,6 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
   .result-grid { grid-template-columns:1fr 1fr; }
   .breakdown-rows { grid-template-columns:1fr; }
   .pkg-variations { grid-template-columns:1fr; }
-  .pkg-build-grid { grid-template-columns:1fr; }
-  .output-grid { grid-template-columns:1fr; }
   .hero-title { font-size:32px; }
 }
 </style>
@@ -224,241 +153,173 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
     </div>
   </nav>
   <div class="main">
-    <div class="stage-tabs">
-      <button class="stage-tab active" id="stab-1">
-        <span class="tab-num">Stage 1</span>Calculate Your Price
-      </button>
-      <button class="stage-tab" id="stab-2">
-        <span class="tab-num">Stage 2</span>Build Your Packages
-      </button>
+    <div class="hero">
+      <div class="hero-eyebrow">Know Your Numbers</div>
+      <h1 class="hero-title">What do you need<br><em>to charge?</em></h1>
+      <p class="hero-sub">Enter your costs and time. We will calculate your true minimum price — the number you should never go below.</p>
     </div>
-
-    <div id="stage1">
-      <div class="hero">
-        <div class="hero-eyebrow">Stage 1 — Know Your Numbers</div>
-        <h1 class="hero-title">What do you need<br><em>to charge?</em></h1>
-        <p class="hero-sub">Enter your costs and time. We will calculate your true minimum price — the number you should never go below.</p>
-      </div>
-      <div class="currency-bar">
-        <label>Currency</label>
-        <select id="currency">
-          <option value="EUR">Euro (E)</option>
-          <option value="USD">US Dollar ($)</option>
-          <option value="GBP">British Pound (£)</option>
-          <option value="AUD">Australian Dollar (A$)</option>
-          <option value="CAD">Canadian Dollar (C$)</option>
-        </select>
-        <span style="font-size:12px;font-weight:600;color:var(--muted);">Results update live as you type</span>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="icon">🏢</span> Business Overhead Costs <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:none;letter-spacing:0;">Annual</span></div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Equipment and purchases per year</label>
-            <div class="hint">Cameras, lenses, carry bags, raw materials, props, packaging, marketing materials etc</div>
-            <div class="input-wrap has-pre"><span class="pre" id="sym-equip">E</span><input type="number" id="equipment" placeholder="3000"></div>
-          </div>
-          <div class="form-group">
-            <label>Other yearly expenses</label>
-            <div class="hint">Subscriptions, phone bill, insurance, website</div>
-            <div class="input-wrap has-pre"><span class="pre" id="sym-other">E</span><input type="number" id="otherExpenses" placeholder="2000"></div>
-          </div>
-          <div class="form-group">
-            <label>Weddings this year</label>
-            <div class="hint">How many weddings do you plan to do?</div>
-            <input type="number" id="weddingCount" placeholder="20">
-          </div>
-          <div class="form-group">
-            <label>Holiday weeks</label>
-            <div class="hint">Weeks off per year</div>
-            <input type="number" id="holidayWeeks" placeholder="4">
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="icon">🚗</span> Per-Wedding Costs</div>
-        <div class="form-grid three">
-          <div class="form-group">
-            <label>Travel per wedding</label>
-            <div class="hint">Petrol, parking, tolls, flights</div>
-            <div class="input-wrap has-pre"><span class="pre" id="sym-travel">E</span><input type="number" id="travelCosts" placeholder="80"></div>
-          </div>
-          <div class="form-group">
-            <label>Accommodation</label>
-            <div class="hint">Hotel if needed (average)</div>
-            <div class="input-wrap has-pre"><span class="pre" id="sym-accomm">E</span><input type="number" id="accommodation" placeholder="0"></div>
-          </div>
-          <div class="form-group">
-            <label>Extra wedding costs</label>
-            <div class="hint">Assistant, equipment hire</div>
-            <div class="input-wrap has-pre"><span class="pre" id="sym-extra">E</span><input type="number" id="extraCosts" placeholder="0"></div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="icon">⏱</span> Your Time Per Wedding</div>
-        <div class="form-grid three">
-          <div class="form-group">
-            <label>Hours at wedding</label>
-            <div class="hint">Total hours at the venue</div>
-            <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="coverageHours" placeholder="8"></div>
-          </div>
-          <div class="form-group">
-            <label>Pre and post preparation</label>
-            <div class="hint">Planning, editing, delivery</div>
-            <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="editingHours" placeholder="12"></div>
-          </div>
-          <div class="form-group">
-            <label>Admin and prep time</label>
-            <div class="hint">Emails, client calls</div>
-            <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="adminHours" placeholder="4"></div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="icon">⭐</span> Your Experience Level and Hourly Rate</div>
-        <div class="exp-grid">
-          <div class="exp-card" id="exp-beginner">
-            <div class="exp-emoji">📖</div>
-            <div class="exp-title">Beginner</div>
-            <div class="exp-rate" id="exp-rate-beginner">E25/hr</div>
-            <div class="exp-years">0-2 years</div>
-            <div class="exp-range" id="exp-range-beginner">Market: E20-30/hr</div>
-          </div>
-          <div class="exp-card active" id="exp-intermediate">
-            <div class="exp-emoji">💡</div>
-            <div class="exp-title">Intermediate</div>
-            <div class="exp-rate" id="exp-rate-intermediate">E45/hr</div>
-            <div class="exp-years">2-5 years</div>
-            <div class="exp-range" id="exp-range-intermediate">Market: E35-55/hr</div>
-          </div>
-          <div class="exp-card" id="exp-pro">
-            <div class="exp-emoji">🌟</div>
-            <div class="exp-title">Professional</div>
-            <div class="exp-rate" id="exp-rate-pro">E60/hr</div>
-            <div class="exp-years">5+ years</div>
-            <div class="exp-range" id="exp-range-pro">Market: E50-80/hr</div>
-          </div>
-        </div>
-        <div class="custom-rate-box">
-          <label>Set Your Custom Hourly Rate</label>
-          <div class="custom-rate-row">
-            <div class="input-wrap has-pre has-suf" style="flex:1;min-width:160px;">
-              <span class="pre" id="sym-rate">E</span>
-              <span class="suf">/hr</span>
-              <input type="number" id="hourlyRate" value="45">
-            </div>
-            <div class="margin-suggest">
-              <div class="ms-label">Suggested Margin</div>
-              <div class="ms-value" id="ms-value">20%</div>
-              <div class="ms-note" id="ms-note">Based on your rate</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="icon">💰</span> Profit Margin and Tax</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Profit margin</label>
-            <div class="hint">Added on top of your costs. Recommended: 20%</div>
-            <div class="input-wrap has-suf"><span class="suf">%</span><input type="number" id="profitMargin" value="20" placeholder="20"></div>
-          </div>
-          <div class="form-group">
-            <label>Tax rate</label>
-            <div class="hint">Your income tax rate. Leave blank if unsure</div>
-            <div class="input-wrap has-suf"><span class="suf">%</span><input type="number" id="taxRate" placeholder="0"></div>
-          </div>
-        </div>
-        <p style="font-size:11px;font-weight:600;color:var(--muted);margin-top:14px;line-height:1.6;">This calculator is a guide only. Always consult an accountant for personalised advice.</p>
-      </div>
-      <div class="result-strip" id="result-strip">
-        <div class="result-strip-top">
-          <div class="result-main">
-            <div class="rl">Your minimum price per wedding</div>
-            <div class="rv" id="res-min">E0</div>
-            <div class="rsub" id="res-sub">Based on your inputs</div>
-          </div>
-          <div class="result-grid">
-            <div class="result-cell"><div class="rc-label">Take Home Pay</div><div class="rc-value" id="res-labour">E0</div></div>
-            <div class="result-cell"><div class="rc-label">Total costs</div><div class="rc-value" id="res-costs">E0</div></div>
-            <div class="result-cell"><div class="rc-label">True hourly rate</div><div class="rc-value" id="res-hourly">E0</div></div>
-          </div>
-        </div>
-        <div class="breakdown-rows">
-          <div class="brow"><span>Take home pay</span><strong id="bd-labour">E0</strong></div>
-          <div class="brow"><span>Overhead per wedding</span><strong id="bd-overhead">E0</strong></div>
-          <div class="brow"><span>Travel and extras</span><strong id="bd-travel">E0</strong></div>
-          <div class="brow"><span>Total hours</span><strong id="bd-hours">0</strong></div>
-          <div class="brow"><span>Profit added</span><strong id="bd-profit">E0</strong></div>
-          <div class="brow"><span>Tax added</span><strong id="bd-tax">E0</strong></div>
-        </div>
-        <div class="warning-bar" id="res-warning" style="display:none;"></div>
-        <div class="pkg-variations">
-          <div class="pkg-var basic"><div class="pkg-var-name">Basic</div><div class="pkg-var-mult">Your minimum</div><div class="pkg-var-price" id="pv-basic">E0</div></div>
-          <div class="pkg-var standard"><div class="pkg-var-name">Standard</div><div class="pkg-var-mult">x 1.25</div><div class="pkg-var-price" id="pv-standard">E0</div></div>
-          <div class="pkg-var premium"><div class="pkg-var-name">Premium</div><div class="pkg-var-mult">x 1.6</div><div class="pkg-var-price" id="pv-premium">E0</div></div>
-        </div>
-      </div>
-      <div class="action-row" id="action-row">
-        <button class="cta-btn cta-ghost" id="reset-btn">Start Over</button>
-        <button class="cta-btn cta-gold" id="goto-stage2-btn">Build My Packages</button>
-      </div>
+    <div class="currency-bar">
+      <label>Currency</label>
+      <select id="currency">
+        <option value="EUR">Euro (E)</option>
+        <option value="USD">US Dollar ($)</option>
+        <option value="GBP">British Pound (£)</option>
+        <option value="AUD">Australian Dollar (A$)</option>
+        <option value="CAD">Canadian Dollar (C$)</option>
+      </select>
+      <span style="font-size:12px;font-weight:600;color:var(--muted);">Results update live as you type</span>
     </div>
-
-    <div id="stage2">
-      <div class="hero">
-        <div class="hero-eyebrow">Stage 2 — Build Your Packages</div>
-        <h1 class="hero-title">What do you<br><em>actually offer?</em></h1>
-        <p class="hero-sub">Your minimum price from Stage 1 is your floor. Build three packages around it, then let AI write the descriptions that sell them.</p>
-      </div>
-      <div class="floor-banner">
-        <div>
-          <div class="fb-label">Your minimum price (from Stage 1)</div>
-          <div class="fb-price" id="floor-price">E0</div>
+    <div class="card">
+      <div class="card-title"><span class="icon">🏢</span> Business Overhead Costs <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:none;letter-spacing:0;">Annual</span></div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Equipment and purchases per year</label>
+          <div class="hint">Any equipment, raw materials or marketing materials that you purchased this year.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-equip">E</span><input type="number" id="equipment" placeholder="3000"></div>
         </div>
-        <div style="width:1px;height:44px;background:var(--gold-mid);margin:0 8px;"></div>
-        <div class="fb-note">No package should be priced below this number. Your suggested starting prices have been pre-filled.</div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="icon">👤</span> Your Wedding Pro Type</div>
-        <div class="form-group" style="max-width:340px;">
-          <label>What do you do?</label>
-          <select id="pro-type">
-            <option value="">Select your role...</option>
-            <option value="photographer">Photographer</option>
-            <option value="videographer">Videographer</option>
-            <option value="celebrant">Celebrant / Officiant</option>
-            <option value="florist">Florist</option>
-            <option value="coordinator">Wedding Coordinator</option>
-            <option value="musician">Musician / DJ</option>
-            <option value="makeup">Hair and Makeup Artist</option>
-            <option value="other">Other</option>
-          </select>
+        <div class="form-group">
+          <label>Other yearly expenses</label>
+          <div class="hint">Subscriptions, phone bill, insurance, website or one-off materials.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-other">E</span><input type="number" id="otherExpenses" placeholder="2000"></div>
         </div>
-      </div>
-      <div class="pkg-build-grid" id="pkg-build-grid"></div>
-      <div class="ai-card">
-        <div class="ai-title">AI Package Writer <span class="ai-badge">Powered by Claude</span></div>
-        <p class="ai-sub">Choose your tone, hit generate, and Claude will write polished emotional descriptions for all three packages — ready to copy to your website or send to enquiries.</p>
-        <div class="tone-grid">
-          <button class="tone-chip active" data-tone="luxury">Luxury and elegant</button>
-          <button class="tone-chip" data-tone="warm">Warm and personal</button>
-          <button class="tone-chip" data-tone="documentary">Documentary and real</button>
-          <button class="tone-chip" data-tone="fun">Fun and relaxed</button>
-          <button class="tone-chip" data-tone="editorial">Editorial and bold</button>
+        <div class="form-group">
+          <label>Weddings this year</label>
+          <div class="hint">How many weddings do you plan to do?</div>
+          <input type="number" id="weddingCount" placeholder="20">
         </div>
-        <button class="ai-generate-btn" id="gen-btn">Write My Package Descriptions</button>
-        <div class="ai-loading" id="ai-loading">
-          <div class="dots"><span></span><span></span><span></span></div>
-          <p>Claude is writing your package descriptions...</p>
-        </div>
-        <div class="output-grid" id="output-grid" style="display:none;"></div>
-        <div class="regen-row" id="regen-row">
-          <button class="cta-btn cta-ghost" id="regen-btn">Regenerate descriptions</button>
+        <div class="form-group">
+          <label>Holiday weeks</label>
+          <div class="hint">Weeks off per year</div>
+          <input type="number" id="holidayWeeks" placeholder="4">
         </div>
       </div>
     </div>
+    <div class="card">
+      <div class="card-title"><span class="icon">🚗</span> Per-Wedding Costs</div>
+      <div class="form-grid three">
+        <div class="form-group">
+          <label>Travel per wedding</label>
+          <div class="hint">Petrol, parking, tolls, flights</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-travel">E</span><input type="number" id="travelCosts" placeholder="80"></div>
+        </div>
+        <div class="form-group">
+          <label>Accommodation</label>
+          <div class="hint">Hotel if needed (average)</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-accomm">E</span><input type="number" id="accommodation" placeholder="0"></div>
+        </div>
+        <div class="form-group">
+          <label>Extra wedding costs</label>
+          <div class="hint">Assistant, equipment hire</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-extra">E</span><input type="number" id="extraCosts" placeholder="0"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="icon">⏱</span> Your Time Per Wedding</div>
+      <div class="form-grid three">
+        <div class="form-group">
+          <label>Hours at wedding</label>
+          <div class="hint">Total hours at the venue</div>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="coverageHours" placeholder="8"></div>
+        </div>
+        <div class="form-group">
+          <label>Pre and post preparation</label>
+          <div class="hint">Planning, editing, delivery</div>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="editingHours" placeholder="12"></div>
+        </div>
+        <div class="form-group">
+          <label>Admin and prep time</label>
+          <div class="hint">Emails, client calls</div>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="adminHours" placeholder="4"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="icon">⭐</span> Your Experience Level and Hourly Rate</div>
+      <div class="exp-grid">
+        <div class="exp-card" id="exp-beginner">
+          <div class="exp-emoji">📖</div>
+          <div class="exp-title">Beginner</div>
+          <div class="exp-rate" id="exp-rate-beginner">E25/hr</div>
+          <div class="exp-years">0-2 years</div>
+          <div class="exp-range" id="exp-range-beginner">Market: E20-30/hr</div>
+        </div>
+        <div class="exp-card active" id="exp-intermediate">
+          <div class="exp-emoji">💡</div>
+          <div class="exp-title">Intermediate</div>
+          <div class="exp-rate" id="exp-rate-intermediate">E45/hr</div>
+          <div class="exp-years">2-5 years</div>
+          <div class="exp-range" id="exp-range-intermediate">Market: E35-55/hr</div>
+        </div>
+        <div class="exp-card" id="exp-pro">
+          <div class="exp-emoji">🌟</div>
+          <div class="exp-title">Professional</div>
+          <div class="exp-rate" id="exp-rate-pro">E60/hr</div>
+          <div class="exp-years">5+ years</div>
+          <div class="exp-range" id="exp-range-pro">Market: E50-80/hr</div>
+        </div>
+      </div>
+      <div class="custom-rate-box">
+        <label>Set Your Custom Hourly Rate</label>
+        <div class="custom-rate-row">
+          <div class="input-wrap has-pre has-suf" style="flex:1;min-width:160px;">
+            <span class="pre" id="sym-rate">E</span>
+            <span class="suf">/hr</span>
+            <input type="number" id="hourlyRate" value="45">
+          </div>
+          <div class="margin-suggest">
+            <div class="ms-label">Suggested Margin</div>
+            <div class="ms-value" id="ms-value">20%</div>
+            <div class="ms-note" id="ms-note">Based on your rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="icon">💰</span> Profit Margin and Tax <span class="optional-badge">Optional</span></div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Profit margin</label>
+          <div class="hint">Added on top of your costs. Recommended: 20%</div>
+          <div class="input-wrap has-suf"><span class="suf">%</span><input type="number" id="profitMargin" value="20" placeholder="20"></div>
+        </div>
+        <div class="form-group">
+          <label>Tax rate</label>
+          <div class="hint">Your income tax rate. Leave blank if unsure.</div>
+          <div class="input-wrap has-suf"><span class="suf">%</span><input type="number" id="taxRate" placeholder="0"></div>
+        </div>
+      </div>
+      <p style="font-size:11px;font-weight:600;color:var(--muted);margin-top:14px;line-height:1.6;">This calculator is a guide only. Always consult an accountant for personalised advice.</p>
+    </div>
+    <div class="result-strip" id="result-strip">
+      <div class="result-strip-top">
+        <div class="result-main">
+          <div class="rl">Your minimum price per wedding</div>
+          <div class="rv" id="res-min">E0</div>
+          <div class="rsub" id="res-sub">Based on your inputs</div>
+        </div>
+        <div class="result-grid">
+          <div class="result-cell"><div class="rc-label">Take Home Pay</div><div class="rc-value" id="res-labour">E0</div></div>
+          <div class="result-cell"><div class="rc-label">Total Costs</div><div class="rc-value" id="res-costs">E0</div></div>
+          <div class="result-cell"><div class="rc-label">True Hourly Rate</div><div class="rc-value" id="res-hourly">E0</div></div>
+        </div>
+      </div>
+      <div class="breakdown-rows">
+        <div class="brow"><span>Take home pay</span><strong id="bd-labour">E0</strong></div>
+        <div class="brow"><span>Overhead per wedding</span><strong id="bd-overhead">E0</strong></div>
+        <div class="brow"><span>Travel and extras</span><strong id="bd-travel">E0</strong></div>
+        <div class="brow"><span>Total hours</span><strong id="bd-hours">0</strong></div>
+        <div class="brow"><span>Profit added</span><strong id="bd-profit">E0</strong></div>
+        <div class="brow"><span>Tax added</span><strong id="bd-tax">E0</strong></div>
+      </div>
+      <div class="warning-bar" id="res-warning" style="display:none;"></div>
+      <div class="pkg-variations">
+        <div class="pkg-var basic"><div class="pkg-var-name">Basic</div><div class="pkg-var-mult">Your minimum</div><div class="pkg-var-price" id="pv-basic">E0</div></div>
+        <div class="pkg-var standard"><div class="pkg-var-name">Standard</div><div class="pkg-var-mult">x 1.25</div><div class="pkg-var-price" id="pv-standard">E0</div></div>
+        <div class="pkg-var premium"><div class="pkg-var-name">Premium</div><div class="pkg-var-mult">x 1.6</div><div class="pkg-var-price" id="pv-premium">E0</div></div>
+      </div>
+    </div>
+    <button class="reset-btn" id="reset-btn" style="display:none;">Start Over</button>
   </div>
 </div>
 <div id="toast"></div>
@@ -472,7 +333,6 @@ if (!window._wbwSb) {
 var sb = window._wbwSb;
 var user = null;
 var minPrice = 0;
-var selectedTone = 'luxury';
 var currency = 'EUR';
 
 var CURRENCIES = {
@@ -484,7 +344,6 @@ var CURRENCIES = {
 };
 
 function sym() { return CURRENCIES[currency].sym; }
-
 function fmt(n) { return sym() + Math.round(n).toLocaleString(); }
 
 function switchTab(t) {
@@ -521,14 +380,13 @@ document.getElementById('signup-btn').onclick = function() {
 };
 
 document.getElementById('signout-btn').onclick = function() { sb.auth.signOut(); };
+document.getElementById('reset-btn').onclick = function() { resetCalc(); };
 
 function boot(u) {
   user = u;
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app-screen').style.display = 'block';
   document.getElementById('nav-user').textContent = u.email;
-  switchStage(1);
-  initPackageCards();
   loadSaved();
   selectExp('intermediate');
 }
@@ -546,27 +404,6 @@ sb.auth.onAuthStateChange(function(event, session) {
   if (event === 'SIGNED_IN' && session && session.user) { boot(session.user); }
   else if (event === 'SIGNED_OUT') { showAuth(); }
 });
-
-function switchStage(n) {
-  document.getElementById('stage1').style.display = n === 1 ? 'block' : 'none';
-  document.getElementById('stage2').style.display = n === 2 ? 'block' : 'none';
-  document.getElementById('stab-1').classList.toggle('active', n === 1);
-  document.getElementById('stab-2').classList.toggle('active', n === 2);
-}
-
-document.getElementById('stab-1').onclick = function() { switchStage(1); };
-document.getElementById('stab-2').onclick = function() { switchStage(2); };
-
-document.getElementById('goto-stage2-btn').onclick = function() {
-  document.getElementById('floor-price').textContent = fmt(minPrice);
-  switchStage(2);
-  document.getElementById('stab-1').classList.add('done');
-  updatePackageFloors();
-};
-
-document.getElementById('reset-btn').onclick = function() { resetCalc(); };
-document.getElementById('gen-btn').onclick = function() { generateAI(); };
-document.getElementById('regen-btn').onclick = function() { generateAI(); };
 
 function onCurrencyChange() {
   currency = document.getElementById('currency').value;
@@ -654,6 +491,7 @@ function calc() {
   minPrice               = withProfit + taxAmt;
 
   document.getElementById('result-strip').classList.add('show');
+  document.getElementById('reset-btn').style.display = 'block';
   document.getElementById('res-min').textContent     = fmt(minPrice);
   document.getElementById('res-sub').textContent     = weddingCount + ' weddings, ' + totalHours + ' hours each';
   document.getElementById('res-labour').textContent  = fmt(labour);
@@ -677,9 +515,6 @@ function calc() {
   } else {
     warn.style.display = 'none';
   }
-
-  document.getElementById('action-row').className = minPrice > 0 ? 'action-row show' : 'action-row';
-  updatePackageFloors();
   save();
 }
 
@@ -689,256 +524,6 @@ for (var ii = 0; ii < inputIds.length; ii++) {
     var el = document.getElementById(id);
     if (el) el.oninput = calc;
   })(inputIds[ii]);
-}
-
-var INCLUDES = {
-  photographer: ['Full day coverage','Engagement shoot','Second shooter','Online gallery','USB and print release','Wedding album','Rehearsal dinner coverage','Next day edits'],
-  videographer: ['Full day filming','Highlight film (3-5 min)','Full ceremony film','Drone footage','Engagement film','Raw footage','Same day edit','60-second trailer'],
-  celebrant:    ['Ceremony design and writing','Rehearsal attendance','Legal paperwork','Vow guidance session','PA system and microphone','Backup ceremony plan','Pre-ceremony consultation','Post-wedding certificate'],
-  florist:      ['Bridal bouquet','Bridesmaid bouquets','Buttonholes','Ceremony floral arch','Reception centrepieces','Cake flowers','Table garlands','Flower wall'],
-  coordinator:  ['Full day coordination','Supplier management','Timeline creation','Venue walkthrough','Rehearsal attendance','Budget management','Emergency kit','Post-wedding debrief'],
-  musician:     ['Ceremony music','Cocktail hour set','Reception performance','DJ services','MC duties','Custom playlist curation','Full sound and lighting','Learning a special song'],
-  makeup:       ['Bridal makeup','Bridal hair styling','Bridesmaid makeup','Bridesmaid hair','Full trial session','Travel to venue','Touch-up kit left with you','Engagement shoot glam'],
-  other:        ['Core service A','Core service B','Extended coverage','Add-on option 1','Add-on option 2','Premium upgrade','Extended hours','Consultation session']
-};
-var TIERS = ['Essential','Signature','Premium'];
-var MULTIPLIERS = [1, 1.25, 1.6];
-
-function initPackageCards() {
-  var grid = document.getElementById('pkg-build-grid');
-  grid.innerHTML = '';
-  for (var i = 0; i < TIERS.length; i++) {
-    (function(idx, tier) {
-      var div = document.createElement('div');
-      div.className = 'pkg-build-card';
-      div.id = 'pkgcard-' + idx;
-      div.innerHTML = '<div class="pkg-tier-label">' + tier + ' Package</div>' +
-        '<input class="pkg-name-input" type="text" placeholder="' + tier + '" value="' + tier + '" id="pkg-name-' + idx + '">' +
-        '<div class="pkg-price-row"><span class="sym" id="pkg-sym-' + idx + '">' + sym() + '</span>' +
-        '<input class="pkg-price-input" type="number" id="pkg-price-' + idx + '" placeholder="0"></div>' +
-        '<div class="pkg-floor-note" id="pkg-floor-' + idx + '">Enter your price above</div>' +
-        '<div class="pkg-includes-label">Whats included</div>' +
-        '<div class="pkg-checklist" id="pkg-list-' + idx + '"></div>' +
-        '<div class="pkg-add-row"><input type="text" placeholder="Add custom item..." id="pkg-custom-' + idx + '">' +
-        '<button id="pkg-add-' + idx + '">+ Add</button></div>';
-      grid.appendChild(div);
-      document.getElementById('pkg-price-' + idx).oninput = (function(i2) {
-        return function() { checkFloor(i2); };
-      })(idx);
-      document.getElementById('pkg-add-' + idx).onclick = (function(i2) {
-        return function() { addCustom(i2); };
-      })(idx);
-    })(i, TIERS[i]);
-  }
-}
-
-document.getElementById('pro-type').onchange = function() { updateIncludes(); };
-
-function updateIncludes() {
-  var type = document.getElementById('pro-type').value || 'other';
-  var items = INCLUDES[type] || INCLUDES.other;
-  for (var i = 0; i < TIERS.length; i++) {
-    var list = document.getElementById('pkg-list-' + i);
-    if (!list) continue;
-    var threshold = i === 0 ? 3 : i === 1 ? 5 : items.length;
-    var html = '';
-    for (var j = 0; j < items.length; j++) {
-      html += '<label class="check-item"><input type="checkbox" ' + (j < threshold ? 'checked' : '') + '>' +
-        '<div class="check-box"></div><span class="check-label">' + items[j] + '</span></label>';
-    }
-    list.innerHTML = html;
-  }
-}
-
-function addCustom(i) {
-  var input = document.getElementById('pkg-custom-' + i);
-  var text = input.value.trim();
-  if (!text) return;
-  var list = document.getElementById('pkg-list-' + i);
-  var label = document.createElement('label');
-  label.className = 'check-item';
-  label.innerHTML = '<input type="checkbox" checked><div class="check-box"></div><span class="check-label">' + text + '</span>';
-  list.appendChild(label);
-  input.value = '';
-}
-
-function updatePackageFloors() {
-  for (var i = 0; i < TIERS.length; i++) {
-    var priceEl = document.getElementById('pkg-price-' + i);
-    var symEl = document.getElementById('pkg-sym-' + i);
-    if (!priceEl) continue;
-    if (symEl) symEl.textContent = sym();
-    if (!priceEl.value && minPrice > 0) {
-      priceEl.value = Math.ceil(minPrice * MULTIPLIERS[i] / 50) * 50;
-    }
-    checkFloor(i);
-  }
-}
-
-function checkFloor(i) {
-  var price = parseFloat(document.getElementById('pkg-price-' + i) ? document.getElementById('pkg-price-' + i).value : 0) || 0;
-  var noteEl = document.getElementById('pkg-floor-' + i);
-  if (!noteEl) return;
-  if (minPrice > 0 && price < minPrice) {
-    noteEl.className = 'pkg-floor-note warn';
-    noteEl.textContent = 'Below your minimum of ' + fmt(minPrice);
-  } else if (minPrice > 0) {
-    noteEl.className = 'pkg-floor-note ok';
-    noteEl.textContent = 'Above your minimum of ' + fmt(minPrice);
-  } else {
-    noteEl.className = 'pkg-floor-note';
-    noteEl.textContent = 'Complete Stage 1 first';
-  }
-}
-
-var toneChips = document.querySelectorAll('.tone-chip');
-for (var tc = 0; tc < toneChips.length; tc++) {
-  (function(chip) {
-    chip.addEventListener('click', function() {
-      for (var c = 0; c < toneChips.length; c++) toneChips[c].classList.remove('active');
-      chip.classList.add('active');
-      selectedTone = chip.getAttribute('data-tone');
-    });
-  })(toneChips[tc]);
-}
-
-function getPackages() {
-  var pkgs = [];
-  for (var i = 0; i < TIERS.length; i++) {
-    var nameEl = document.getElementById('pkg-name-' + i);
-    var priceEl = document.getElementById('pkg-price-' + i);
-    var listEl = document.getElementById('pkg-list-' + i);
-    var checked = listEl ? listEl.querySelectorAll('input:checked') : [];
-    var includes = [];
-    for (var j = 0; j < checked.length; j++) {
-      var labelEl = checked[j].closest('.check-item');
-      if (labelEl) {
-        var spanEl = labelEl.querySelector('.check-label');
-        if (spanEl) includes.push(spanEl.textContent);
-      }
-    }
-    pkgs.push({
-      tier: TIERS[i],
-      name: nameEl ? nameEl.value : TIERS[i],
-      price: priceEl ? priceEl.value : '0',
-      includes: includes
-    });
-  }
-  return pkgs;
-}
-
-function generateAI() {
-  var proType = document.getElementById('pro-type').value || 'wedding professional';
-  var packages = getPackages();
-  var hasIncludes = false;
-  for (var i = 0; i < packages.length; i++) {
-    if (packages[i].includes.length > 0) { hasIncludes = true; break; }
-  }
-  if (!hasIncludes) { toast('Select your pro type and what is included first'); return; }
-
-  var btn = document.getElementById('gen-btn');
-  btn.disabled = true;
-  document.getElementById('ai-loading').style.display = 'block';
-  document.getElementById('output-grid').style.display = 'none';
-  document.getElementById('regen-row').style.display = 'none';
-
-  var toneMap = {
-    luxury: 'luxury, refined and aspirational — for couples who want the very best',
-    warm: 'warm, personal and emotional — for couples who value genuine connection',
-    documentary: 'honest, natural and documentary — for couples who want authentic storytelling',
-    fun: 'fun, relaxed and approachable — for couples planning a relaxed celebration',
-    editorial: 'bold, editorial and stylish — for couples with a strong aesthetic vision'
-  };
-
-  var pkgLines = '';
-  for (var j = 0; j < packages.length; j++) {
-    pkgLines += 'PACKAGE ' + (j+1) + ' — ' + packages[j].name + ' (' + sym() + packages[j].price + ')\n';
-    pkgLines += 'Includes: ' + packages[j].includes.join(', ') + '\n\n';
-  }
-
-  var prompt = 'You are writing wedding package descriptions for a ' + proType + '.\n' +
-    'Tone: ' + (toneMap[selectedTone] || 'warm and professional') + '.\n' +
-    'Currency symbol: ' + sym() + '\n\n' +
-    'Packages:\n' + pkgLines +
-    'For each package write:\n' +
-    '1. A compelling package name\n' +
-    '2. 2-3 sentences of emotional description\n' +
-    '3. Inclusions rewritten in couple-friendly language (max 6 bullet points)\n' +
-    '4. One why this package closing line\n\n' +
-    'Return ONLY valid JSON, no markdown, no preamble:\n' +
-    '{"packages":[{"name":"...","description":"...","includes":["..."],"why":"..."}]}';
-
-  fetch('/.netlify/functions/generate-packages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: [{ role: 'user', content: prompt }] })
-  }).then(function(res) {
-    return res.json();
-  }).then(function(data) {
-    var text = '';
-    if (data.content) {
-      for (var i = 0; i < data.content.length; i++) {
-        if (data.content[i].text) text += data.content[i].text;
-      }
-    }
-    var clean = text.replace(/```json|```/g, '').trim();
-    var parsed = JSON.parse(clean);
-    renderOutput(parsed.packages, packages);
-  }).catch(function(e) {
-    console.error(e);
-    toast('Something went wrong — please try again');
-  }).finally(function() {
-    btn.disabled = false;
-    document.getElementById('ai-loading').style.display = 'none';
-  });
-}
-
-function renderOutput(aiPkgs, rawPkgs) {
-  var grid = document.getElementById('output-grid');
-  grid.innerHTML = '';
-  for (var i = 0; i < aiPkgs.length; i++) {
-    (function(pkg, idx) {
-      var price = parseInt(rawPkgs[idx] ? rawPkgs[idx].price : 0).toLocaleString();
-      var div = document.createElement('div');
-      div.className = 'output-card';
-      var includesHtml = '';
-      if (pkg.includes) {
-        for (var j = 0; j < pkg.includes.length; j++) {
-          includesHtml += '<div class="out-item">' + pkg.includes[j] + '</div>';
-        }
-      }
-      div.innerHTML = '<div class="out-tier">' + (TIERS[idx] || '') + ' Package</div>' +
-        '<div class="out-name">' + pkg.name + '</div>' +
-        '<div class="out-price">From ' + sym() + price + '</div>' +
-        '<div class="out-desc">' + pkg.description + '</div>' +
-        '<div class="out-includes">' + includesHtml + '</div>' +
-        '<div class="out-why">' + pkg.why + '</div>' +
-        '<button class="copy-btn" id="copy-' + idx + '">Copy this package</button>';
-      grid.appendChild(div);
-      document.getElementById('copy-' + idx).onclick = (function(i2) {
-        return function() { copyPkg(i2); };
-      })(idx);
-    })(aiPkgs[i], i);
-  }
-  grid.style.display = 'grid';
-  document.getElementById('regen-row').style.display = 'block';
-}
-
-function copyPkg(i) {
-  var card = document.querySelectorAll('.output-card')[i];
-  if (!card) return;
-  var lines = [
-    card.querySelector('.out-name') ? card.querySelector('.out-name').textContent : '',
-    card.querySelector('.out-price') ? card.querySelector('.out-price').textContent : '',
-    '',
-    card.querySelector('.out-desc') ? card.querySelector('.out-desc').textContent : '',
-    ''
-  ];
-  var items = card.querySelectorAll('.out-item');
-  for (var j = 0; j < items.length; j++) lines.push('• ' + items[j].textContent);
-  lines.push('');
-  if (card.querySelector('.out-why')) lines.push(card.querySelector('.out-why').textContent);
-  navigator.clipboard.writeText(lines.join('\n')).then(function() { toast('Package copied!'); });
 }
 
 function save() {
@@ -991,8 +576,9 @@ function resetCalc() {
     if (el) el.value = '';
   }
   document.getElementById('profitMargin').value = 20;
+  document.getElementById('reset-btn').style.display = 'none';
+  document.getElementById('result-strip').classList.remove('show');
   selectExp('intermediate');
-  calc();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
