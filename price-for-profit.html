@@ -148,6 +148,7 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
   <nav class="topnav">
     <div class="nav-logo">Price for Profit <span>✦</span></div>
     <div class="nav-right">
+      <a href="index.html" style="font-size:12px;font-weight:800;color:var(--navy);text-decoration:none;padding:7px 16px;border-radius:10px;border:1.5px solid var(--border);">← Dashboard</a>
       <div class="nav-user" id="nav-user"></div>
       <button class="nav-signout" id="signout-btn">Sign out</button>
     </div>
@@ -175,22 +176,22 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
         <div class="form-group">
           <label>Equipment and purchases per year</label>
           <div class="hint">Any equipment, raw materials or marketing materials that you purchased this year.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-equip">E</span><input type="number" id="equipment" placeholder="3000"></div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-equip">€</span><input type="number" id="equipment" ></div>
         </div>
         <div class="form-group">
           <label>Other yearly expenses</label>
-          <div class="hint">Subscriptions, phone bill, insurance, website or one-off materials.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-other">E</span><input type="number" id="otherExpenses" placeholder="2000"></div>
+          <div class="hint">Subscriptions, phone bill, insurance, website.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-other">€</span><input type="number" id="otherExpenses" ></div>
         </div>
         <div class="form-group">
           <label>Weddings this year</label>
           <div class="hint">How many weddings do you plan to do?</div>
-          <input type="number" id="weddingCount" placeholder="20">
+          <input type="number" id="weddingCount" >
         </div>
         <div class="form-group">
           <label>Holiday weeks</label>
           <div class="hint">Weeks off per year</div>
-          <input type="number" id="holidayWeeks" placeholder="4">
+          <input type="number" id="holidayWeeks" >
         </div>
       </div>
     </div>
@@ -200,17 +201,17 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
         <div class="form-group">
           <label>Travel per wedding</label>
           <div class="hint">Petrol, parking, tolls, flights</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-travel">E</span><input type="number" id="travelCosts" placeholder="80"></div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-travel">€</span><input type="number" id="travelCosts" ></div>
         </div>
         <div class="form-group">
           <label>Accommodation</label>
           <div class="hint">Hotel if needed (average)</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-accomm">E</span><input type="number" id="accommodation" placeholder="0"></div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-accomm">€</span><input type="number" id="accommodation" ></div>
         </div>
         <div class="form-group">
           <label>Extra wedding costs</label>
-          <div class="hint">Assistant, equipment hire</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-extra">E</span><input type="number" id="extraCosts" placeholder="0"></div>
+          <div class="hint">Assistant, equipment hire or one-off materials.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-extra">€</span><input type="number" id="extraCosts" ></div>
         </div>
       </div>
     </div>
@@ -220,17 +221,17 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
         <div class="form-group">
           <label>Hours at wedding</label>
           <div class="hint">Total hours at the venue</div>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="coverageHours" placeholder="8"></div>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="coverageHours" ></div>
         </div>
         <div class="form-group">
           <label>Pre and post preparation</label>
           <div class="hint">Planning, editing, delivery</div>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="editingHours" placeholder="12"></div>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="editingHours" ></div>
         </div>
         <div class="form-group">
           <label>Admin and prep time</label>
           <div class="hint">Emails, client calls</div>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="adminHours" placeholder="4"></div>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="adminHours" ></div>
         </div>
       </div>
     </div>
@@ -240,30 +241,30 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
         <div class="exp-card" id="exp-beginner">
           <div class="exp-emoji">📖</div>
           <div class="exp-title">Beginner</div>
-          <div class="exp-rate" id="exp-rate-beginner">E25/hr</div>
+          <div class="exp-rate" id="exp-rate-beginner">€25/hr</div>
           <div class="exp-years">0-2 years</div>
-          <div class="exp-range" id="exp-range-beginner">Market: E20-30/hr</div>
+          <div class="exp-range" id="exp-range-beginner">Market: €20-30/hr</div>
         </div>
         <div class="exp-card active" id="exp-intermediate">
           <div class="exp-emoji">💡</div>
           <div class="exp-title">Intermediate</div>
-          <div class="exp-rate" id="exp-rate-intermediate">E45/hr</div>
+          <div class="exp-rate" id="exp-rate-intermediate">€45/hr</div>
           <div class="exp-years">2-5 years</div>
-          <div class="exp-range" id="exp-range-intermediate">Market: E35-55/hr</div>
+          <div class="exp-range" id="exp-range-intermediate">Market: €35-55/hr</div>
         </div>
         <div class="exp-card" id="exp-pro">
           <div class="exp-emoji">🌟</div>
           <div class="exp-title">Professional</div>
-          <div class="exp-rate" id="exp-rate-pro">E60/hr</div>
+          <div class="exp-rate" id="exp-rate-pro">€60/hr</div>
           <div class="exp-years">5+ years</div>
-          <div class="exp-range" id="exp-range-pro">Market: E50-80/hr</div>
+          <div class="exp-range" id="exp-range-pro">Market: €50-80/hr</div>
         </div>
       </div>
       <div class="custom-rate-box">
         <label>Set Your Custom Hourly Rate</label>
         <div class="custom-rate-row">
           <div class="input-wrap has-pre has-suf" style="flex:1;min-width:160px;">
-            <span class="pre" id="sym-rate">E</span>
+            <span class="pre" id="sym-rate">€</span>
             <span class="suf">/hr</span>
             <input type="number" id="hourlyRate" value="45">
           </div>
@@ -281,12 +282,12 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
         <div class="form-group">
           <label>Profit margin</label>
           <div class="hint">Added on top of your costs. Recommended: 20%</div>
-          <div class="input-wrap has-suf"><span class="suf">%</span><input type="number" id="profitMargin" value="20" placeholder="20"></div>
+          <div class="input-wrap has-suf"><span class="suf">%</span><input type="number" id="profitMargin" value="20" ></div>
         </div>
         <div class="form-group">
           <label>Tax rate</label>
           <div class="hint">Your income tax rate. Leave blank if unsure.</div>
-          <div class="input-wrap has-suf"><span class="suf">%</span><input type="number" id="taxRate" placeholder="0"></div>
+          <div class="input-wrap has-suf"><span class="suf">%</span><input type="number" id="taxRate" ></div>
         </div>
       </div>
       <p style="font-size:11px;font-weight:600;color:var(--muted);margin-top:14px;line-height:1.6;">This calculator is a guide only. Always consult an accountant for personalised advice.</p>
@@ -336,9 +337,9 @@ var minPrice = 0;
 var currency = 'EUR';
 
 var CURRENCIES = {
-  EUR: { sym: 'E', beginner: 25, intermediate: 45, pro: 60, ranges: { beginner: 'E20-30/hr', intermediate: 'E35-55/hr', pro: 'E50-80/hr' } },
+  EUR: { sym: '€', beginner: 25, intermediate: 45, pro: 60, ranges: { beginner: '€20-30/hr', intermediate: '€35-55/hr', pro: '€50-80/hr' } },
   USD: { sym: '$', beginner: 30, intermediate: 54, pro: 72, ranges: { beginner: '$25-40/hr', intermediate: '$45-70/hr', pro: '$65-100/hr' } },
-  GBP: { sym: 'P', beginner: 22, intermediate: 39, pro: 52, ranges: { beginner: 'P18-28/hr', intermediate: 'P30-48/hr', pro: 'P45-70/hr' } },
+  GBP: { sym: '£', beginner: 22, intermediate: 39, pro: 52, ranges: { beginner: '£18-28/hr', intermediate: '£30-48/hr', pro: '£45-70/hr' } },
   AUD: { sym: 'A$', beginner: 38, intermediate: 68, pro: 91, ranges: { beginner: 'A$30-50/hr', intermediate: 'A$55-85/hr', pro: 'A$75-120/hr' } },
   CAD: { sym: 'C$', beginner: 34, intermediate: 61, pro: 81, ranges: { beginner: 'C$28-45/hr', intermediate: 'C$50-75/hr', pro: 'C$70-110/hr' } }
 };
