@@ -492,8 +492,6 @@ function calc() {
   weddings_needed = Math.ceil(goal / price);
   document.getElementById('result-strip').classList.add('show');
   document.getElementById('reset-btn').style.display = 'block';
-  document.getElementById('res-weddings').textContent = weddings_needed;
-  document.getElementById('res-sub').textContent = fmt(goal) + ' goal at ' + fmt(price) + ' per wedding';
   document.getElementById('rc-goal').textContent = fmt(goal);
   document.getElementById('rc-price').textContent = fmt(price);
   document.getElementById('rc-weddings').textContent = weddings_needed;
@@ -513,7 +511,7 @@ function calc() {
     pkgSection.style.display = 'none';
   }
 
-  var booked = bookedFromLeadTracker || (parseFloat(document.getElementById('weddingsBooked').value) || 0);
+  var booked = bookedFromLeadTracker > 0 ? bookedFromLeadTracker : (parseFloat(document.getElementById('weddingsBooked').value) || 0);
   var bookedIncome = booked * price;
   var still_needed = Math.max(0, weddings_needed - booked);
 
@@ -522,8 +520,10 @@ function calc() {
     document.getElementById('booked-income').textContent = fmt(bookedIncome) + ' earned so far';
   }
 
-  // Progress stats row
-  document.getElementById('progress-stats').style.display = 'grid';
+  // Progress stats row — always show once goal and price are set
+  var progressStats = document.getElementById('progress-stats');
+  progressStats.style.display = 'grid';
+  progressStats.style.gridTemplateColumns = '1fr 1fr 1fr';
   document.getElementById('rc-booked').textContent = booked;
   document.getElementById('rc-income-received').textContent = fmt(bookedIncome);
   document.getElementById('rc-still-needed').textContent = still_needed > 0 ? still_needed : '✓ Done';
