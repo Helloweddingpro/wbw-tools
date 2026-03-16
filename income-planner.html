@@ -422,8 +422,9 @@ function loadFromLeadTracker() {
   if (!user) return;
   var currentYear = new Date().getFullYear();
   var today = new Date(); today.setHours(0,0,0,0);
+  var todayStr = today.toISOString().slice(0,10);
 
-  sb.from('leads').select('status, wedding_date, data').eq('user_id', user.id)
+  sb.from('leads').select('data').eq('user_id', user.id)
     .then(function(result) {
       if (result.error || !result.data) return;
       var booked = 0;
@@ -431,21 +432,24 @@ function loadFromLeadTracker() {
       var followUpsDue = 0;
       var followUpsOverdue = 0;
 
-      result.data.forEach(function(lead) {
+      result.data.forEach(function(row) {
+        var lead = row.data;
+        if (!lead) return;
+        var status = lead.status || '';
+
         // Count booked weddings this year
-        if (lead.status === 'booked') {
-          if (lead.wedding_date) {
-            if (new Date(lead.wedding_date).getFullYear() === currentYear) booked++;
+        if (status === 'Booked' || status === 'booked' || status === 'Deposit Paid') {
+          var wDate = lead.weddingDate || lead.wedding_date || '';
+          if (wDate) {
+            if (new Date(wDate).getFullYear() === currentYear) booked++;
           } else { booked++; }
         }
+
         // Count active leads (not lost, not booked)
-        if (lead.status !== 'lost' && lead.status !== 'booked') {
+        var isActive = status !== 'Lost' && status !== 'lost' && status !== 'Booked' && status !== 'booked' && status !== 'Deposit Paid';
+        if (isActive) {
           activeLeads++;
-          // Check follow-up dates from data JSONB
-          var followDate = null;
-          if (lead.data) {
-            followDate = lead.data.next_follow_up || lead.data.followUpDate || lead.data.follow_up_date || lead.data.nextContact || null;
-          }
+          var followDate = lead.nextFollowUp || lead.next_follow_up || lead.followUpDate || lead.follow_up_date || null;
           if (followDate) {
             var fd = new Date(followDate); fd.setHours(0,0,0,0);
             if (fd <= today) followUpsOverdue++;
@@ -468,7 +472,7 @@ function loadFromLeadTracker() {
         ? 'No bookings recorded in your Lead Tracker yet for ' + currentYear + '.'
         : booked + ' confirmed booking' + (booked===1?'':'s') + ' in your Lead Tracker for ' + currentYear + '.';
 
-      // Auto-fill weddings booked field and trigger conversion calc
+      // Auto-fill weddings booked field
       var wb = document.getElementById('weddingsBooked');
       if (!wb.value && booked > 0) wb.value = booked;
 
