@@ -281,6 +281,7 @@ input[type=number]:focus { outline:none; border-color:var(--coral); }
           <span>Target: <strong id="prog-target">0</strong> weddings</span>
         </div>
         <div id="status-badge" class="status-badge good" style="display:none;"></div>
+        <div id="progress-plain" style="font-size:13px;font-weight:700;color:rgba(255,255,255,.85);margin-top:12px;line-height:1.6;display:none;"></div>
       </div>
     </div>
 
@@ -529,6 +530,13 @@ function calc() {
   var still_needed  = Math.max(0, weddings_needed - booked);
   var badge = document.getElementById('status-badge');
   badge.style.display = 'inline-flex';
+  var plainEl = document.getElementById('progress-plain');
+  plainEl.style.display = 'block';
+  if (booked >= weddings_needed) {
+    plainEl.innerHTML = 'You have booked <strong>' + booked + ' wedding' + (booked===1?'':'s') + '</strong> — your goal is reached! 🎉';
+  } else {
+    plainEl.innerHTML = 'You have booked <strong>' + booked + ' wedding' + (booked===1?'':'s') + '</strong> so far — <strong>' + still_needed + ' more</strong> needed to hit your income goal.';
+  }
 
   var status = 'on-track';
   if (booked >= weddings_needed) {
