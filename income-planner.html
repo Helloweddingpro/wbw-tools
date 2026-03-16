@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Income Goals — Wedding Business Workspace</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --navy:#3B3C6D; --coral:#F43F5E; --coral-light:rgba(244,63,94,.08); --coral-mid:rgba(244,63,94,.22);
+  --cream:#F7F6F8; --white:#FFFFFF; --border:rgba(59,60,109,.13); --muted:rgba(59,60,109,.5);
+  --text:#2A2B4A; --green:#00A878; --surface:rgba(59,60,109,.04);
+}
+body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
+#auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+.auth-card { background:var(--white); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; box-shadow:0 8px 40px rgba(59,60,109,.1); }
+.auth-logo { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+.auth-tagline { font-size:12px; font-weight:600; color:var(--muted); margin-bottom:28px; }
+.auth-tabs { display:flex; gap:6px; background:var(--cream); border-radius:14px; padding:5px; margin-bottom:22px; }
+.auth-tab { flex:1; padding:9px; border-radius:10px; border:none; background:transparent; color:var(--muted); font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+.auth-tab.active { background:var(--white); color:var(--navy); box-shadow:0 2px 8px rgba(59,60,109,.1); }
+.auth-field { margin-bottom:14px; }
+.auth-field label { display:block; font-size:11px; font-weight:800; color:var(--navy); margin-bottom:6px; text-transform:uppercase; letter-spacing:.06em; }
+.auth-field input { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; color:var(--text); background:var(--white); transition:border-color .2s; }
+.auth-field input:focus { outline:none; border-color:var(--coral); }
+.auth-submit { width:100%; padding:14px; background:var(--navy); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; margin-top:6px; transition:opacity .2s; }
+.auth-submit:hover { opacity:.88; }
+.auth-msg { font-size:12px; font-weight:600; margin-top:10px; min-height:18px; }
+.auth-msg.error { color:var(--coral); } .auth-msg.success { color:var(--green); }
+#app-screen { display:none; }
+.topnav { background:var(--white); border-bottom:1px solid var(--border); padding:0 32px; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+.nav-logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:700; color:var(--navy); }
+.nav-logo span { color:var(--coral); }
+.nav-right { display:flex; align-items:center; gap:14px; }
+.nav-user { font-size:12px; font-weight:700; color:var(--muted); }
+.nav-link { padding:7px 16px; border-radius:10px; border:1.5px solid var(--border); background:transparent; color:var(--navy); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer; text-decoration:none; display:inline-block; transition:background .2s; }
+.nav-link:hover { background:var(--cream); }
+.nav-signout { padding:7px 16px; border-radius:10px; border:1.5px solid var(--border); background:transparent; color:var(--navy); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer; }
+.nav-signout:hover { background:var(--cream); }
+.main { max-width:860px; margin:0 auto; padding:40px 24px 80px; }
+.hero { margin-bottom:32px; }
+.hero-eyebrow { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--coral); margin-bottom:8px; }
+.hero-title { font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:700; color:var(--navy); line-height:1.1; margin-bottom:10px; }
+.hero-title em { color:var(--coral); font-style:italic; }
+.hero-sub { font-size:14px; font-weight:600; color:var(--muted); line-height:1.6; max-width:560px; }
+.currency-bar { background:var(--white); border-radius:14px; padding:14px 20px; margin-bottom:24px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 12px rgba(59,60,109,.06); flex-wrap:wrap; }
+.currency-bar label { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--navy); white-space:nowrap; }
+.currency-bar select { padding:8px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:var(--text); background:var(--white); cursor:pointer; }
+.currency-bar select:focus { outline:none; border-color:var(--coral); }
+.card { background:var(--white); border-radius:20px; padding:28px; margin-bottom:20px; box-shadow:0 2px 16px rgba(59,60,109,.06); }
+.card-title { font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:var(--navy); margin-bottom:6px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.card-title .icon { font-size:18px; }
+.card-subtitle { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:20px; line-height:1.5; }
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.form-group { display:flex; flex-direction:column; gap:7px; }
+.form-group label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--navy); }
+.form-group .hint { font-size:11px; font-weight:600; color:var(--muted); margin-top:-4px; line-height:1.5; }
+.input-wrap { position:relative; }
+.input-wrap .pre { position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:14px; font-weight:800; color:var(--muted); pointer-events:none; }
+.input-wrap.has-pre input { padding-left:26px; }
+input[type=number] { padding:11px 13px; border:1.5px solid var(--border); border-radius:12px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:700; color:var(--text); background:var(--white); width:100%; transition:border-color .2s; }
+input[type=number]:focus { outline:none; border-color:var(--coral); }
+.pfp-banner { background:var(--coral-light); border:1.5px solid var(--coral-mid); border-radius:12px; padding:12px 16px; margin-bottom:16px; display:none; align-items:center; gap:10px; font-size:12px; font-weight:700; color:var(--navy); line-height:1.5; }
+.booked-counter { display:flex; align-items:center; gap:16px; background:var(--surface); border-radius:14px; padding:16px 20px; margin-bottom:20px; flex-wrap:wrap; }
+.booked-num { font-family:'Cormorant Garamond',serif; font-size:42px; font-weight:700; color:var(--coral); line-height:1; }
+.booked-info { flex:1; }
+.booked-label { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:2px; }
+.booked-sub { font-size:13px; font-weight:600; color:var(--navy); }
+.booked-value { font-size:13px; font-weight:800; color:var(--green); }
+.result-strip { background:linear-gradient(135deg, var(--navy) 0%, #5B5C9D 100%); border-radius:20px; padding:28px; margin-bottom:20px; display:none; }
+.result-strip.show { display:block; }
+.result-top { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:20px; margin-bottom:24px; }
+.result-main .rl { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.6); margin-bottom:6px; }
+.result-main .rv { font-family:'Cormorant Garamond',serif; font-size:52px; font-weight:700; color:#FFD34E; line-height:1; }
+.result-main .rsub { font-size:12px; font-weight:700; color:rgba(255,255,255,.6); margin-top:4px; }
+.result-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+.result-cell { background:rgba(255,255,255,.1); border-radius:12px; padding:14px; text-align:center; }
+.result-cell .rc-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.6); margin-bottom:6px; }
+.result-cell .rc-value { font-size:20px; font-weight:900; color:rgba(255,255,255,.92); }
+.progress-section { margin-top:20px; border-top:1px solid rgba(255,255,255,.15); padding-top:20px; }
+.progress-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.6); margin-bottom:10px; }
+.progress-bar-bg { background:rgba(255,255,255,.15); border-radius:999px; height:10px; margin-bottom:8px; }
+.progress-bar-fill { height:10px; border-radius:999px; background:linear-gradient(90deg,var(--coral),#ff8fa3); transition:width .8s cubic-bezier(.4,0,.2,1); }
+.progress-meta { display:flex; justify-content:space-between; margin-bottom:12px; }
+.progress-meta span { font-size:12px; font-weight:700; color:rgba(255,255,255,.75); }
+.progress-meta strong { color:#FFD34E; }
+.status-badge { display:inline-flex; align-items:center; gap:6px; padding:7px 16px; border-radius:999px; font-size:12px; font-weight:800; }
+.status-badge.good { background:rgba(0,168,120,.25); color:#4DFFC4; }
+.status-badge.behind { background:rgba(244,63,94,.25); color:#ffa0b0; }
+.status-badge.ahead { background:rgba(255,211,78,.2); color:#FFD34E; }
+.advice-section { margin-top:0; }
+.advice-card { background:var(--white); border-radius:20px; padding:24px; margin-bottom:16px; box-shadow:0 2px 16px rgba(59,60,109,.06); border-left:4px solid var(--coral); }
+.advice-card.green { border-left-color:var(--green); }
+.advice-card.amber { border-left-color:#F59E0B; }
+.advice-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.advice-icon { font-size:20px; }
+.advice-title { font-size:13px; font-weight:900; color:var(--navy); }
+.advice-body { font-size:13px; font-weight:600; color:var(--muted); line-height:1.7; }
+.advice-body strong { color:var(--navy); font-weight:800; }
+.conversion-explainer { background:var(--coral-light); border:1.5px solid var(--coral-mid); border-radius:16px; padding:22px; margin-top:16px; }
+.conversion-explainer h4 { font-size:13px; font-weight:900; color:var(--navy); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.conversion-explainer p { font-size:13px; font-weight:600; color:var(--text); line-height:1.7; margin-bottom:10px; }
+.conversion-explainer p:last-child { margin-bottom:0; }
+.conversion-explainer strong { color:var(--navy); font-weight:800; }
+.conv-example { background:var(--white); border-radius:10px; padding:14px; margin:10px 0; font-size:13px; font-weight:700; color:var(--navy); line-height:1.6; }
+.enquiries-result { background:linear-gradient(135deg,var(--coral),#ff6b84); border-radius:16px; padding:24px; margin-top:16px; text-align:center; display:none; }
+.enquiries-result.show { display:block; }
+.enq-label { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.75); margin-bottom:6px; }
+.enq-number { font-family:'Cormorant Garamond',serif; font-size:56px; font-weight:700; color:#fff; line-height:1; margin-bottom:4px; }
+.enq-sub { font-size:13px; font-weight:700; color:rgba(255,255,255,.8); margin-bottom:16px; }
+.enq-breakdown { display:flex; justify-content:center; gap:24px; flex-wrap:wrap; margin-bottom:12px; }
+.enq-stat .es-val { font-size:22px; font-weight:900; color:#fff; }
+.enq-stat .es-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.7); }
+.lt-note { background:rgba(255,255,255,.15); border-radius:10px; padding:10px 14px; font-size:12px; font-weight:700; color:rgba(255,255,255,.85); display:none; align-items:center; gap:8px; }
+.reset-btn { width:100%; padding:16px; border-radius:14px; border:1.5px solid var(--border); background:transparent; color:var(--navy); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; cursor:pointer; margin-bottom:20px; display:none; }
+.reset-btn:hover { background:var(--coral-light); border-color:var(--coral); }
+#toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:12px 22px; border-radius:14px; font-size:13px; font-weight:800; opacity:0; pointer-events:none; transition:opacity .3s; z-index:9999; }
+#toast.show { opacity:1; }
+@media(max-width:680px){
+  .topnav { padding:0 16px; } .main { padding:24px 16px 60px; }
+  .form-grid { grid-template-columns:1fr; }
+  .result-stats { grid-template-columns:1fr 1fr; }
+  .hero-title { font-size:32px; }
+}
+</style>
+</head>
+<body>
+
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">Income Goals</div>
+    <div class="auth-tagline">Wedding Business Workspace</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-in">Sign In</button>
+      <button class="auth-tab" id="tab-up">Create Account</button>
+    </div>
+    <div id="form-in">
+      <div class="auth-field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="in-pass" placeholder="Your password"></div>
+      <button class="auth-submit" id="signin-btn">Sign In</button>
+      <div class="auth-msg" id="in-msg"></div>
+    </div>
+    <div id="form-up" style="display:none">
+      <div class="auth-field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="up-pass" placeholder="Min 6 characters"></div>
+      <button class="auth-submit" id="signup-btn">Create Account</button>
+      <div class="auth-msg" id="up-msg"></div>
+    </div>
+  </div>
+</div>
+
+<div id="app-screen">
+  <nav class="topnav">
+    <div class="nav-logo">Income Goals <span>✦</span></div>
+    <div class="nav-right">
+      <a href="index.html" class="nav-link">← Dashboard</a>
+      <div class="nav-user" id="nav-user"></div>
+      <button class="nav-signout" id="signout-btn">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <div class="hero">
+      <div class="hero-eyebrow">Know Your Target</div>
+      <h1 class="hero-title">What does your year<br><em>need to look like?</em></h1>
+      <p class="hero-sub">Set your income goal, enter your price per wedding, and we'll show you exactly where you stand — and what to do next to get back on track.</p>
+    </div>
+
+    <div class="currency-bar">
+      <label>Currency</label>
+      <select id="currency">
+        <option value="EUR">Euro (€)</option>
+        <option value="USD">US Dollar ($)</option>
+        <option value="GBP">British Pound (£)</option>
+        <option value="AUD">Australian Dollar (A$)</option>
+        <option value="CAD">Canadian Dollar (C$)</option>
+      </select>
+      <span style="font-size:12px;font-weight:600;color:var(--muted);">Results update live as you type</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🎯</span> Your Income Goal</div>
+      <div class="card-subtitle">What do you want to earn from weddings this year? Enter your target gross income before tax and expenses.</div>
+      <div class="form-group">
+        <label>Target annual income</label>
+        <div class="input-wrap has-pre"><span class="pre" id="sym-goal">€</span><input type="number" id="incomeGoal"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">💰</span> Your Price Per Wedding</div>
+      <div class="card-subtitle">Enter the average price you charge per wedding. If you have different packages, use your most commonly booked price.</div>
+      <div class="pfp-banner" id="pfp-banner">
+        <span style="font-size:16px;">✦</span>
+        <span id="pfp-banner-text"></span>
+      </div>
+      <div class="form-group">
+        <label>Price per wedding</label>
+        <div class="input-wrap has-pre"><span class="pre" id="sym-price">€</span><input type="number" id="pricePerWedding"></div>
+      </div>
+    </div>
+
+    <div class="card" id="bookings-card" style="display:none;">
+      <div class="card-title"><span class="icon">📅</span> Weddings Booked This Year</div>
+      <div class="card-subtitle">Pulled from your Lead Tracker. These are your confirmed bookings for <span id="current-year-label"></span>.</div>
+      <div class="booked-counter">
+        <div class="booked-num" id="booked-num">0</div>
+        <div class="booked-info">
+          <div class="booked-label">Weddings booked</div>
+          <div class="booked-sub" id="booked-sub">Loading from Lead Tracker...</div>
+          <div class="booked-value" id="booked-income"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-strip" id="result-strip">
+      <div class="result-top">
+        <div class="result-main">
+          <div class="rl">Weddings needed to hit your goal</div>
+          <div class="rv" id="res-weddings">0</div>
+          <div class="rsub" id="res-sub"></div>
+        </div>
+        <div class="result-stats">
+          <div class="result-cell"><div class="rc-label">Income Goal</div><div class="rc-value" id="rc-goal">€0</div></div>
+          <div class="result-cell"><div class="rc-label">Price per Wedding</div><div class="rc-value" id="rc-price">€0</div></div>
+          <div class="result-cell"><div class="rc-label">Weddings Needed</div><div class="rc-value" id="rc-weddings">0</div></div>
+        </div>
+      </div>
+      <div class="progress-section" id="progress-section" style="display:none;">
+        <div class="progress-label">Your progress this year</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+        <div class="progress-meta">
+          <span><strong id="prog-booked">0</strong> booked so far</span>
+          <span>Target: <strong id="prog-target">0</strong> weddings</span>
+        </div>
+        <div id="status-badge" class="status-badge good" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📊</span> Your Conversion Rate</div>
+      <div class="card-subtitle">Enter how many enquiries you have received this year and how many you have converted to bookings. We will calculate your conversion rate and tell you exactly how many enquiries you need to hit your goal.</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Enquiries received this year</label>
+          <div class="hint">Total enquiries — booked and unbooked</div>
+          <input type="number" id="enquiriesReceived">
+        </div>
+        <div class="form-group">
+          <label>Weddings booked this year</label>
+          <div class="hint">Confirmed bookings from those enquiries</div>
+          <input type="number" id="weddingsBooked">
+        </div>
+      </div>
+      <div class="conversion-explainer">
+        <h4>💡 What is a conversion rate?</h4>
+        <p>Your <strong>conversion rate</strong> is the percentage of enquiries that turn into actual bookings. If 10 couples enquire and you book 3, your conversion rate is 30%.</p>
+        <p>For most wedding suppliers a healthy rate is between <strong>25% and 40%</strong>. If yours is lower it is usually a sign that your enquiry response or follow-up process needs attention — not your prices.</p>
+        <div class="conv-example" id="conv-example">Enter your enquiries and bookings above to see your rate.</div>
+        <p>The higher your conversion rate, the fewer enquiries you need to reach your goal — which means less time chasing leads and more time doing the work you love.</p>
+      </div>
+      <div class="enquiries-result" id="enquiries-result">
+        <div class="enq-label">Enquiries still needed to hit your goal</div>
+        <div class="enq-number" id="enq-number">0</div>
+        <div class="enq-sub" id="enq-sub"></div>
+        <div class="enq-breakdown">
+          <div class="enq-stat"><div class="es-val" id="enq-rate">0%</div><div class="es-label">Conversion rate</div></div>
+          <div class="enq-stat"><div class="es-val" id="enq-still-needed">0</div><div class="es-label">Bookings still needed</div></div>
+          <div class="enq-stat"><div class="es-val" id="enq-per-month">0</div><div class="es-label">Enquiries per month</div></div>
+        </div>
+        <div class="lt-note" id="lt-note">
+          <span>📋</span><span id="lt-note-text"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="advice-section" id="advice-section" style="display:none;"></div>
+
+    <button class="reset-btn" id="reset-btn">Start Over</button>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+var SB_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
+var SB_KEY = "sb_publishable_CS3XLLfWaZNA-B2oE37N-g_z2FMWCzq";
+if (!window._wbwSb) {
+  window._wbwSb = supabase.createClient(SB_URL, SB_KEY, { auth: { storageKey: 'wbw-auth', autoRefreshToken: true, persistSession: true } });
+}
+var sb = window._wbwSb;
+var user = null;
+var currency = 'EUR';
+var bookedFromLeadTracker = 0;
+var weddings_needed = 0;
+var CURRENCIES = { EUR:'€', USD:'$', GBP:'£', AUD:'A$', CAD:'C$' };
+
+function sym() { return CURRENCIES[currency]; }
+function fmt(n) { return sym() + Math.round(n).toLocaleString(); }
+
+document.getElementById('tab-in').onclick = function() { switchTab('in'); };
+document.getElementById('tab-up').onclick = function() { switchTab('up'); };
+function switchTab(t) {
+  document.getElementById('form-in').style.display = t==='in' ? '' : 'none';
+  document.getElementById('form-up').style.display = t==='up' ? '' : 'none';
+  document.getElementById('tab-in').classList.toggle('active', t==='in');
+  document.getElementById('tab-up').classList.toggle('active', t==='up');
+}
+document.getElementById('signin-btn').onclick = function() {
+  var msg = document.getElementById('in-msg'); msg.className = 'auth-msg';
+  sb.auth.signInWithPassword({ email: document.getElementById('in-email').value.trim(), password: document.getElementById('in-pass').value })
+    .then(function(r) { if (r.error) { msg.className='auth-msg error'; msg.textContent=r.error.message; } });
+};
+document.getElementById('signup-btn').onclick = function() {
+  var msg = document.getElementById('up-msg'); msg.className = 'auth-msg';
+  sb.auth.signUp({ email: document.getElementById('up-email').value.trim(), password: document.getElementById('up-pass').value })
+    .then(function(r) {
+      if (r.error) { msg.className='auth-msg error'; msg.textContent=r.error.message; }
+      else { msg.className='auth-msg success'; msg.textContent='Account created! Please sign in.'; switchTab('in'); }
+    });
+};
+document.getElementById('signout-btn').onclick = function() { sb.auth.signOut(); };
+document.getElementById('reset-btn').onclick = function() { resetAll(); };
+document.getElementById('currency').onchange = function() { currency=this.value; updateSymbols(); calc(); };
+document.getElementById('incomeGoal').oninput = calc;
+document.getElementById('pricePerWedding').oninput = calc;
+document.getElementById('enquiriesReceived').oninput = calcConversion;
+document.getElementById('weddingsBooked').oninput = calcConversion;
+
+document.getElementById('current-year-label').textContent = new Date().getFullYear();
+
+function updateSymbols() {
+  var s = sym();
+  document.getElementById('sym-goal').textContent = s;
+  document.getElementById('sym-price').textContent = s;
+}
+
+function boot(u) {
+  user = u;
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app-screen').style.display = 'block';
+  document.getElementById('nav-user').textContent = u.email;
+  loadPFPData();
+  loadFromLeadTracker();
+  loadSaved();
+}
+function showAuth() {
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('app-screen').style.display = 'none';
+}
+sb.auth.getSession().then(function(r) { if (r.data&&r.data.session&&r.data.session.user) boot(r.data.session.user); });
+sb.auth.onAuthStateChange(function(event, session) {
+  if (event==='SIGNED_IN'&&session&&session.user) boot(session.user);
+  else if (event==='SIGNED_OUT') showAuth();
+});
+
+function loadPFPData() {
+  if (!user) return;
+  try {
+    var raw = localStorage.getItem('wbw-pfp-' + user.id);
+    if (!raw) return;
+    var pd = JSON.parse(raw);
+    if (pd.currency && !document.getElementById('incomeGoal').value) {
+      currency = pd.currency;
+      document.getElementById('currency').value = pd.currency;
+      updateSymbols();
+    }
+    var equipment     = parseFloat(pd.equipment)     || 0;
+    var otherExpenses = parseFloat(pd.otherExpenses) || 0;
+    var weddingCount  = Math.max(1, parseFloat(pd.weddingCount) || 1);
+    var travelCosts   = parseFloat(pd.travelCosts)   || 0;
+    var accommodation = parseFloat(pd.accommodation) || 0;
+    var extraCosts    = parseFloat(pd.extraCosts)    || 0;
+    var coverageHrs   = parseFloat(pd.coverageHours) || 0;
+    var editingHrs    = parseFloat(pd.editingHours)  || 0;
+    var adminHrs      = parseFloat(pd.adminHours)    || 0;
+    var profitPct     = parseFloat(pd.profitMargin)  || 0;
+    var taxPct        = parseFloat(pd.taxRate)        || 0;
+    var rate          = parseFloat(pd.hourlyRate)    || 45;
+    var overheadPerWedding = (equipment + otherExpenses) / weddingCount;
+    var travelTotal        = travelCosts + accommodation + extraCosts;
+    var totalHours         = coverageHrs + editingHrs + adminHrs;
+    var labour             = rate * totalHours;
+    var subtotal           = labour + overheadPerWedding + travelTotal;
+    var profitAmt          = subtotal * (profitPct / 100);
+    var withProfit         = subtotal + profitAmt;
+    var taxAmt             = withProfit * (taxPct / 100);
+    var minPrice           = withProfit + taxAmt;
+    if (minPrice > 0) {
+      var priceInput = document.getElementById('pricePerWedding');
+      if (!priceInput.value) priceInput.value = Math.round(minPrice);
+      var banner = document.getElementById('pfp-banner');
+      document.getElementById('pfp-banner-text').textContent = 'Minimum price of ' + fmt(minPrice) + ' pulled from your Price for Profit calculator. You can adjust this above.';
+      banner.style.display = 'flex';
+    }
+  } catch(e) {}
+}
+
+function loadFromLeadTracker() {
+  if (!user) return;
+  var currentYear = new Date().getFullYear();
+  var today = new Date(); today.setHours(0,0,0,0);
+
+  sb.from('leads').select('status, wedding_date, data').eq('user_id', user.id)
+    .then(function(result) {
+      if (result.error || !result.data) return;
+      var booked = 0;
+      var activeLeads = 0;
+      var followUpsDue = 0;
+      var followUpsOverdue = 0;
+
+      result.data.forEach(function(lead) {
+        // Count booked weddings this year
+        if (lead.status === 'booked') {
+          if (lead.wedding_date) {
+            if (new Date(lead.wedding_date).getFullYear() === currentYear) booked++;
+          } else { booked++; }
+        }
+        // Count active leads (not lost, not booked)
+        if (lead.status !== 'lost' && lead.status !== 'booked') {
+          activeLeads++;
+          // Check follow-up dates from data JSONB
+          var followDate = null;
+          if (lead.data) {
+            followDate = lead.data.next_follow_up || lead.data.followUpDate || lead.data.follow_up_date || lead.data.nextContact || null;
+          }
+          if (followDate) {
+            var fd = new Date(followDate); fd.setHours(0,0,0,0);
+            if (fd <= today) followUpsOverdue++;
+            else {
+              var diff = Math.round((fd - today) / 86400000);
+              if (diff <= 3) followUpsDue++;
+            }
+          }
+        }
+      });
+
+      bookedFromLeadTracker = booked;
+      var totalLeadTrackerLeads = result.data.length;
+
+      // Update bookings card
+      var card = document.getElementById('bookings-card');
+      card.style.display = 'block';
+      document.getElementById('booked-num').textContent = booked;
+      document.getElementById('booked-sub').textContent = booked === 0
+        ? 'No bookings recorded in your Lead Tracker yet for ' + currentYear + '.'
+        : booked + ' confirmed booking' + (booked===1?'':'s') + ' in your Lead Tracker for ' + currentYear + '.';
+
+      // Auto-fill weddings booked field and trigger conversion calc
+      var wb = document.getElementById('weddingsBooked');
+      if (!wb.value && booked > 0) wb.value = booked;
+
+      // Store for use in advice
+      window._ltData = { activeLeads: activeLeads, followUpsOverdue: followUpsOverdue, followUpsDue: followUpsDue, total: totalLeadTrackerLeads };
+
+      calc();
+      calcConversion();
+    }).catch(function() {});
+}
+
+function calc() {
+  var goal  = parseFloat(document.getElementById('incomeGoal').value)      || 0;
+  var price = parseFloat(document.getElementById('pricePerWedding').value) || 0;
+  if (goal <= 0 || price <= 0) return;
+
+  weddings_needed = Math.ceil(goal / price);
+  document.getElementById('result-strip').classList.add('show');
+  document.getElementById('reset-btn').style.display = 'block';
+  document.getElementById('res-weddings').textContent = weddings_needed;
+  document.getElementById('res-sub').textContent = fmt(goal) + ' goal at ' + fmt(price) + ' per wedding';
+  document.getElementById('rc-goal').textContent = fmt(goal);
+  document.getElementById('rc-price').textContent = fmt(price);
+  document.getElementById('rc-weddings').textContent = weddings_needed;
+
+  var booked = bookedFromLeadTracker;
+  var bookedIncome = booked * price;
+
+  // Update booked income line
+  if (booked > 0) {
+    document.getElementById('booked-income').textContent = fmt(bookedIncome) + ' earned so far';
+  }
+
+  // Progress bar
+  document.getElementById('progress-section').style.display = 'block';
+  var pct = Math.min(100, Math.round((booked / weddings_needed) * 100));
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('prog-booked').textContent = booked;
+  document.getElementById('prog-target').textContent = weddings_needed;
+
+  var monthsElapsed = new Date().getMonth() + 1;
+  var monthsLeft    = 12 - new Date().getMonth();
+  var expectedByNow = Math.round((monthsElapsed / 12) * weddings_needed);
+  var still_needed  = Math.max(0, weddings_needed - booked);
+  var badge = document.getElementById('status-badge');
+  badge.style.display = 'inline-flex';
+
+  var status = 'on-track';
+  if (booked >= weddings_needed) {
+    status = 'goal-reached';
+    badge.className = 'status-badge ahead';
+    badge.textContent = '🎉 Goal reached!';
+  } else if (booked >= expectedByNow) {
+    status = 'on-track';
+    badge.className = 'status-badge good';
+    badge.textContent = '✅ On track';
+  } else {
+    var gap = expectedByNow - booked;
+    status = gap >= 3 ? 'well-behind' : 'slightly-behind';
+    badge.className = 'status-badge behind';
+    badge.textContent = '⚠️ Behind pace — ' + still_needed + ' wedding' + (still_needed===1?'':'s') + ' still needed';
+  }
+
+  renderAdvice(status, still_needed, monthsLeft, price, goal, booked, weddings_needed);
+  calcConversion();
+  save();
+}
+
+function renderAdvice(status, still_needed, monthsLeft, price, goal, booked, weddings_needed) {
+  var section = document.getElementById('advice-section');
+  section.style.display = 'block';
+  var html = '';
+
+  var ltData = window._ltData || { activeLeads: 0, followUpsOverdue: 0, followUpsDue: 0, total: 0 };
+
+  function followUpAdvice() {
+    var msg = '';
+    if (ltData.followUpsOverdue > 0) {
+      msg = 'You have <strong>' + ltData.followUpsOverdue + ' overdue follow-up' + (ltData.followUpsOverdue===1?'':'s') + '</strong> in your Lead Tracker right now — those couples are still deciding, go follow up today. ';
+    } else if (ltData.followUpsDue > 0) {
+      msg = 'You have <strong>' + ltData.followUpsDue + ' follow-up' + (ltData.followUpsDue===1?'':'s') + '</strong> due in the next 3 days in your Lead Tracker — stay on top of them. ';
+    } else if (ltData.activeLeads > 0) {
+      msg = 'You currently have <strong>' + ltData.activeLeads + ' active lead' + (ltData.activeLeads===1?'':'s') + '</strong> in your Lead Tracker — do not miss any follow-up dates. ';
+    }
+    msg += 'Most bookings happen after the <strong>second or third contact</strong>, not the first. Use your Enquiry Response tool to make sure every lead gets a proper follow-up sequence — do not let a great couple go cold.';
+    return msg;
+  }
+
+  if (status === 'goal-reached') {
+    html += advice('green', '🎉', 'You have hit your goal', 'You have reached your income target for the year. Every additional booking from here takes you beyond <strong>' + fmt(goal) + '</strong>. Consider whether you want to take on more weddings or enjoy a lighter end to the year.');
+  } else if (status === 'on-track') {
+    html += advice('green', '✅', 'You are on track', 'You are booking at the right pace to hit your income goal of <strong>' + fmt(goal) + '</strong>. Keep doing what is working — stay consistent with your follow-ups and keep showing up on social media. Your next booking could come from the couple who has been watching your content for weeks.');
+    html += advice('amber', '📋', 'Stay on top of your follow-ups', followUpAdvice());
+    html += advice('amber', '💡', 'Think ahead', 'Even when you are on track, it is worth asking: could you earn more per wedding instead of booking more? Adding a small upgrade — an extra hour of coverage, a highlight reel, an engagement session — could increase each booking by <strong>' + fmt(Math.round(price * 0.15)) + '</strong> or more without any extra enquiries needed.');
+  } else if (status === 'slightly-behind') {
+    html += advice('coral', '📱', 'Get more enquiries — post more consistently', 'You need <strong>' + still_needed + ' more booking' + (still_needed===1?'':'s') + '</strong> to hit your goal. The fastest way to get more enquiries is to be more visible. Aim to post on social media at least <strong>4 to 5 times a week</strong> — a mix of your work, behind the scenes content, and content that speaks directly to couples at the venues you want to work at.');
+    html += advice('amber', '📋', 'Convert more enquiries into bookings', followUpAdvice());
+    html += advice('amber', '💡', 'Increase your package price', 'Another option is to increase what each booking is worth. Adding an upgrade — an extra hour, a second shooter, a premium album — could add <strong>' + fmt(Math.round(price * 0.2)) + '</strong> per booking. That means you might need fewer weddings to reach the same goal.');
+  } else {
+    var perMonthWB = monthsLeft > 0 ? Math.ceil(still_needed / monthsLeft) : still_needed;
+    html += advice('coral', '📱', 'Increase your social media output now', 'You are behind pace and need to act quickly. You still need <strong>' + still_needed + ' more booking' + (still_needed===1?'':'s') + '</strong> — roughly <strong>' + perMonthWB + ' per month</strong> for the rest of the year. Post at least <strong>5 to 7 times per week</strong>. Focus your content on the venues where your ideal couples book — tag them, show real moments, make it feel like you belong there. Couples hire suppliers they feel like they already know.');
+    html += advice('coral', '📋', 'Follow up on every single lead', followUpAdvice());
+    html += advice('amber', '💡', 'Review your pricing strategy', 'If getting to <strong>' + weddings_needed + ' weddings</strong> feels out of reach this year, look at your price instead. Increasing each booking by <strong>' + fmt(Math.round(price * 0.15)) + '</strong> through a small price increase or a well-priced add-on means you need fewer bookings to hit your goal.');
+    html += advice('amber', '🤝', 'Build relationships with other suppliers', 'One of the easiest ways to get more bookings is referrals from other suppliers. Spend just <strong>5 minutes a day</strong> liking and commenting on posts from the top suppliers in your area — photographers, florists, venues, coordinators. Be genuine and consistent. When suppliers know who you are, they think of you first when a couple asks for a recommendation. These small daily actions build the referral network that keeps your enquiries coming in all year round.');
+  }
+
+  section.innerHTML = html;
+}
+
+function advice(color, icon, title, body) {
+  var cls = color === 'green' ? 'advice-card green' : color === 'amber' ? 'advice-card amber' : 'advice-card';
+  return '<div class="' + cls + '"><div class="advice-header"><span class="advice-icon">' + icon + '</span><div class="advice-title">' + title + '</div></div><div class="advice-body">' + body + '</div></div>';
+}
+
+function calcConversion() {
+  var enquiries = parseFloat(document.getElementById('enquiriesReceived').value) || 0;
+  // Use lead tracker booked count if available, otherwise use manual entry
+  var booked = bookedFromLeadTracker > 0 ? bookedFromLeadTracker : (parseFloat(document.getElementById('weddingsBooked').value) || 0);
+  // Also update the weddingsBooked field visually if lead tracker has data and field is empty
+  var wbField = document.getElementById('weddingsBooked');
+  if (bookedFromLeadTracker > 0 && !wbField.value) wbField.value = bookedFromLeadTracker;
+
+  if (enquiries <= 0) return;
+
+  var rate    = booked > 0 ? booked / enquiries : 0;
+  var ratePct = Math.round(rate * 100);
+
+  var exampleEl = document.getElementById('conv-example');
+  if (booked > 0 && enquiries > 0) {
+    exampleEl.innerHTML = 'You have booked <strong>' + booked + ' out of ' + enquiries + ' enquiries</strong> — a conversion rate of <strong>' + ratePct + '%</strong>. ' +
+      (ratePct >= 40 ? 'That is excellent. Your enquiry response and follow-up is clearly working well.' :
+       ratePct >= 25 ? 'That is a healthy rate. There may still be room to improve your follow-up process and win a few more.' :
+       'That is below the typical range of 25–40%. Focus on your follow-up sequence — most bookings are lost simply because suppliers stop following up too soon.');
+  } else {
+    exampleEl.textContent = 'Enter your booked weddings above to calculate your conversion rate.';
+  }
+
+  if (weddings_needed <= 0 || rate <= 0) return;
+
+  var still_needed     = Math.max(0, weddings_needed - booked);
+  var enquiries_needed = still_needed > 0 ? Math.ceil(still_needed / rate) : 0;
+  var months_left      = 12 - new Date().getMonth();
+  var per_month        = months_left > 0 ? Math.ceil(enquiries_needed / months_left) : enquiries_needed;
+
+  document.getElementById('enquiries-result').classList.add('show');
+  document.getElementById('enq-number').textContent = enquiries_needed;
+  document.getElementById('enq-sub').textContent = 'at your ' + ratePct + '% conversion rate to get ' + still_needed + ' more booking' + (still_needed===1?'':'s');
+  document.getElementById('enq-rate').textContent = ratePct + '%';
+  document.getElementById('enq-still-needed').textContent = still_needed;
+  document.getElementById('enq-per-month').textContent = per_month;
+
+  if (bookedFromLeadTracker > 0) {
+    var ltNote = document.getElementById('lt-note');
+    document.getElementById('lt-note-text').textContent = bookedFromLeadTracker + ' booked wedding' + (bookedFromLeadTracker===1?'':'s') + ' pulled automatically from your Lead Tracker.';
+    ltNote.style.display = 'flex';
+  }
+}
+
+function save() {
+  if (!user) return;
+  try {
+    localStorage.setItem('wbw-ig-' + user.id, JSON.stringify({
+      incomeGoal: document.getElementById('incomeGoal').value,
+      pricePerWedding: document.getElementById('pricePerWedding').value,
+      enquiriesReceived: document.getElementById('enquiriesReceived').value,
+      weddingsBooked: document.getElementById('weddingsBooked').value,
+      currency: currency
+    }));
+  } catch(e) {}
+}
+
+function loadSaved() {
+  if (!user) return;
+  try {
+    var raw = localStorage.getItem('wbw-ig-' + user.id);
+    if (!raw) return;
+    var d = JSON.parse(raw);
+    if (d.currency) { currency=d.currency; document.getElementById('currency').value=d.currency; updateSymbols(); }
+    if (d.incomeGoal) document.getElementById('incomeGoal').value = d.incomeGoal;
+    if (d.pricePerWedding) document.getElementById('pricePerWedding').value = d.pricePerWedding;
+    if (d.enquiriesReceived) document.getElementById('enquiriesReceived').value = d.enquiriesReceived;
+    if (d.weddingsBooked) document.getElementById('weddingsBooked').value = d.weddingsBooked;
+    calc();
+  } catch(e) {}
+}
+
+function resetAll() {
+  ['incomeGoal','pricePerWedding','enquiriesReceived','weddingsBooked'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('result-strip').classList.remove('show');
+  document.getElementById('enquiries-result').classList.remove('show');
+  document.getElementById('progress-section').style.display = 'none';
+  document.getElementById('advice-section').style.display = 'none';
+  document.getElementById('advice-section').innerHTML = '';
+  document.getElementById('reset-btn').style.display = 'none';
+  document.getElementById('pfp-banner').style.display = 'none';
+  document.getElementById('conv-example').textContent = 'Enter your enquiries and bookings above to see your rate.';
+  weddings_needed = 0;
+  if (user) { try { localStorage.removeItem('wbw-ig-' + user.id); } catch(e) {} }
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function toast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(function() { el.classList.remove('show'); }, 3000);
+}
+</script>
+</body>
+</html>
