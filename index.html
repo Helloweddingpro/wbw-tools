@@ -429,23 +429,33 @@ async function loadLeadData(userId) {
   try {
     var result = await sb.from("leads").select("data").eq("user_id", userId);
     if (result.data && result.data.length > 0) {
-      var leads = result.data.map(function(r) { return r.data; }).filter(Boolean);
+      var currentYear = new Date().getFullYear();
       var today = new Date().toISOString().slice(0, 10);
-      var booked = leads.filter(function(l) { return l.status === "Booked" || l.status === "Deposit Paid" || l.status === "booked"; });
+      var leads = result.data.map(function(r) { return r.data; }).filter(Boolean);
+      var booked = leads.filter(function(l) {
+        return l.status === "Booked" || l.status === "booked" || l.status === "Deposit Paid";
+      });
+      // Only count booked weddings for this year
+      var bookedThisYear = booked.filter(function(l) {
+        var wDate = l.weddingDate || l.wedding_date || '';
+        if (!wDate) return true; // include if no date set
+        return new Date(wDate).getFullYear() === currentYear;
+      });
       var followupsDue = leads.filter(function(l) {
-        return l.nextFollowUp && l.nextFollowUp <= today && l.status !== "Booked" && l.status !== "booked" && l.status !== "Lost" && l.status !== "lost";
+        var fu = l.nextFollowUp || l.next_follow_up || l.followUpDate || '';
+        var st = l.status || '';
+        return fu && fu <= today && st !== "Booked" && st !== "booked" && st !== "Lost" && st !== "lost";
       }).length;
-      snapData.bookedCount = booked.length;
+      snapData.bookedCount = bookedThisYear.length;
       snapData.totalLeads = leads.length;
       snapData.followupsDue = followupsDue;
-      // Calculate income received using avg price from Income Goals, or priceQuoted from lead
+      // Calculate income received using priceQuoted or avg price from Income Goals
       var avgPrice = snapData.avgPrice || 0;
-      snapData.incomeReceived = booked.reduce(function(s, l) {
-        return s + Number(l.priceQuoted || avgPrice || 0);
+      snapData.incomeReceived = bookedThisYear.reduce(function(s, l) {
+        return s + Number(l.priceQuoted || l.price || avgPrice || 0);
       }, 0);
-      // Calculate still needed
       if (snapData.weddingsNeeded) {
-        snapData.stillNeeded = Math.max(0, snapData.weddingsNeeded - booked.length);
+        snapData.stillNeeded = Math.max(0, snapData.weddingsNeeded - bookedThisYear.length);
       }
     }
   } catch(e) { console.log("Lead data error:", e.message); }
