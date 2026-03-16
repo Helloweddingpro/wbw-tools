@@ -432,27 +432,28 @@ async function loadLeadData(userId) {
       var currentYear = new Date().getFullYear();
       var today = new Date().toISOString().slice(0, 10);
       var leads = result.data.map(function(r) { return r.data; }).filter(Boolean);
-      var booked = leads.filter(function(l) {
-        return l.status === "Booked" || l.status === "booked" || l.status === "Deposit Paid";
-      });
-      // Only count booked weddings for this year
-      var bookedThisYear = booked.filter(function(l) {
-        var wDate = l.weddingDate || l.wedding_date || '';
-        if (!wDate) return true; // include if no date set
+
+      // 'wedding' is the date field, 'Booked' and 'Deposit Paid' are the booked statuses
+      var bookedThisYear = leads.filter(function(l) {
+        if (l.status !== "Booked" && l.status !== "Deposit Paid") return false;
+        var wDate = l.wedding || '';
+        if (!wDate) return true;
         return new Date(wDate).getFullYear() === currentYear;
       });
+
       var followupsDue = leads.filter(function(l) {
-        var fu = l.nextFollowUp || l.next_follow_up || l.followUpDate || '';
         var st = l.status || '';
-        return fu && fu <= today && st !== "Booked" && st !== "booked" && st !== "Lost" && st !== "lost";
+        if (st === "Booked" || st === "Deposit Paid" || st === "Lost") return false;
+        return l.nextFollowUp && l.nextFollowUp <= today;
       }).length;
+
       snapData.bookedCount = bookedThisYear.length;
       snapData.totalLeads = leads.length;
       snapData.followupsDue = followupsDue;
-      // Calculate income received using priceQuoted or avg price from Income Goals
+
       var avgPrice = snapData.avgPrice || 0;
       snapData.incomeReceived = bookedThisYear.reduce(function(s, l) {
-        return s + Number(l.priceQuoted || l.price || avgPrice || 0);
+        return s + Number(l.priceQuoted || avgPrice || 0);
       }, 0);
       if (snapData.weddingsNeeded) {
         snapData.stillNeeded = Math.max(0, snapData.weddingsNeeded - bookedThisYear.length);
