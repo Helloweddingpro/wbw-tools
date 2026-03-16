@@ -253,34 +253,33 @@ input[type=number]:focus { outline:none; border-color:var(--coral); }
     </div>
 
     <div class="result-strip" id="result-strip">
-      <div class="result-top">
-        <div class="result-main">
-          <div class="rl">Weddings needed to hit your goal</div>
-          <div class="rv" id="res-weddings">0</div>
-          <div class="rsub" id="res-sub"></div>
-        </div>
-        <div class="result-stats">
-          <div class="result-cell"><div class="rc-label">Income Goal</div><div class="rc-value" id="rc-goal">€0</div></div>
-          <div class="result-cell"><div class="rc-label">Price per Wedding</div><div class="rc-value" id="rc-price">€0</div></div>
-          <div class="result-cell"><div class="rc-label">Weddings Needed</div><div class="rc-value" id="rc-weddings">0</div></div>
-        </div>
+      <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);margin-bottom:12px;">Your income plan</div>
+      <div class="result-stats" style="margin-bottom:20px;">
+        <div class="result-cell"><div class="rc-label">Income Goal</div><div class="rc-value" id="rc-goal">€0</div></div>
+        <div class="result-cell"><div class="rc-label">Average Package Price</div><div class="rc-value" id="rc-price">€0</div></div>
+        <div class="result-cell"><div class="rc-label">Weddings Needed per Year</div><div class="rc-value" id="rc-weddings">0</div></div>
       </div>
       <div class="pkg-scenarios" id="pkg-scenarios" style="display:none;">
         <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.6);margin-bottom:12px;">To reach your goal at each package price</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;">
           <div class="result-cell"><div class="rc-label">Basic Package</div><div class="rc-value" id="pkg-basic-price">€0</div><div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-top:4px;" id="pkg-basic-count"></div></div>
           <div class="result-cell"><div class="rc-label">Standard Package</div><div class="rc-value" id="pkg-standard-price">€0</div><div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-top:4px;" id="pkg-standard-count"></div></div>
           <div class="result-cell" style="background:rgba(255,184,0,.2);border:1px solid rgba(255,184,0,.3);"><div class="rc-label">Premium Package</div><div class="rc-value" id="pkg-premium-price">€0</div><div style="font-size:11px;font-weight:700;color:#FFD34E;margin-top:4px;" id="pkg-premium-count"></div></div>
         </div>
       </div>
+      <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);margin-bottom:12px;">Your progress this year</div>
+      <div class="result-stats" id="progress-stats" style="display:none;margin-bottom:16px;">
+        <div class="result-cell"><div class="rc-label">Booked So Far</div><div class="rc-value" id="rc-booked">0</div></div>
+        <div class="result-cell"><div class="rc-label">Income Received</div><div class="rc-value" id="rc-income-received">€0</div></div>
+        <div class="result-cell" id="rc-still-cell"><div class="rc-label">Bookings Still Needed</div><div class="rc-value" id="rc-still-needed">0</div></div>
+      </div>
       <div class="progress-section" id="progress-section" style="display:none;">
-        <div class="progress-label">Your progress this year</div>
         <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
-        <div class="progress-meta">
+        <div class="progress-meta" style="margin-top:8px;">
           <span><strong id="prog-booked">0</strong> booked so far</span>
           <span>Target: <strong id="prog-target">0</strong> weddings</span>
         </div>
-        <div id="status-badge" class="status-badge good" style="display:none;"></div>
+        <div id="status-badge" class="status-badge good" style="display:none;margin-top:10px;"></div>
         <div id="progress-plain" style="font-size:13px;font-weight:700;color:rgba(255,255,255,.85);margin-top:12px;line-height:1.6;display:none;"></div>
       </div>
     </div>
@@ -512,10 +511,20 @@ function calc() {
 
   var booked = bookedFromLeadTracker || (parseFloat(document.getElementById('weddingsBooked').value) || 0);
   var bookedIncome = booked * price;
+  var still_needed = Math.max(0, weddings_needed - booked);
 
+  // Update booked card income line
   if (booked > 0) {
     document.getElementById('booked-income').textContent = fmt(bookedIncome) + ' earned so far';
   }
+
+  // Progress stats row
+  document.getElementById('progress-stats').style.display = 'grid';
+  document.getElementById('rc-booked').textContent = booked;
+  document.getElementById('rc-income-received').textContent = fmt(bookedIncome);
+  document.getElementById('rc-still-needed').textContent = still_needed > 0 ? still_needed : '✓ Done';
+  var stillCell = document.getElementById('rc-still-cell');
+  stillCell.style.background = still_needed === 0 ? 'rgba(0,168,120,.2)' : '';
 
   // Progress bar
   document.getElementById('progress-section').style.display = 'block';
@@ -527,7 +536,6 @@ function calc() {
   var monthsElapsed = new Date().getMonth() + 1;
   var monthsLeft    = 12 - new Date().getMonth();
   var expectedByNow = Math.round((monthsElapsed / 12) * weddings_needed);
-  var still_needed  = Math.max(0, weddings_needed - booked);
   var badge = document.getElementById('status-badge');
   badge.style.display = 'inline-flex';
   var plainEl = document.getElementById('progress-plain');
