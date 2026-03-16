@@ -437,19 +437,20 @@ function loadFromLeadTracker() {
         if (!lead) return;
         var status = lead.status || '';
 
-        // Count booked weddings this year
-        if (status === 'Booked' || status === 'booked' || status === 'Deposit Paid') {
-          var wDate = lead.weddingDate || lead.wedding_date || '';
+        // Count booked weddings this year — field is 'wedding' not 'weddingDate'
+        if (status === 'Booked' || status === 'Deposit Paid') {
+          var wDate = lead.wedding || '';
           if (wDate) {
             if (new Date(wDate).getFullYear() === currentYear) booked++;
           } else { booked++; }
         }
 
         // Count active leads (not lost, not booked)
-        var isActive = status !== 'Lost' && status !== 'lost' && status !== 'Booked' && status !== 'booked' && status !== 'Deposit Paid';
+        var isActive = status !== 'Lost' && status !== 'Booked' && status !== 'Deposit Paid';
         if (isActive) {
           activeLeads++;
-          var followDate = lead.nextFollowUp || lead.next_follow_up || lead.followUpDate || lead.follow_up_date || null;
+          // Field is 'nextFollowUp'
+          var followDate = lead.nextFollowUp || null;
           if (followDate) {
             var fd = new Date(followDate); fd.setHours(0,0,0,0);
             if (fd <= today) followUpsOverdue++;
@@ -619,11 +620,14 @@ function advice(color, icon, title, body) {
 
 function calcConversion() {
   var enquiries = parseFloat(document.getElementById('enquiriesReceived').value) || 0;
-  // Use lead tracker booked count if available, otherwise use manual entry
-  var booked = bookedFromLeadTracker > 0 ? bookedFromLeadTracker : (parseFloat(document.getElementById('weddingsBooked').value) || 0);
-  // Also update the weddingsBooked field visually if lead tracker has data and field is empty
   var wbField = document.getElementById('weddingsBooked');
-  if (bookedFromLeadTracker > 0 && !wbField.value) wbField.value = bookedFromLeadTracker;
+  // Always read from the field — pre-filled by lead tracker but user can edit
+  var booked = parseFloat(wbField.value) || 0;
+  // Pre-fill field from lead tracker only if empty
+  if (bookedFromLeadTracker > 0 && !wbField.value) {
+    wbField.value = bookedFromLeadTracker;
+    booked = bookedFromLeadTracker;
+  }
 
   if (enquiries <= 0) return;
 
