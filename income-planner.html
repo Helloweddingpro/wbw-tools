@@ -202,43 +202,6 @@ input[type=number]:focus { outline:none; border-color:var(--coral); }
       </div>
     </div>
 
-    <div class="card" id="bookings-card" style="display:none;">
-      <div class="card-title"><span class="icon">📅</span> Weddings Booked This Year</div>
-      <div class="card-subtitle">Pulled from your Lead Tracker. These are your confirmed bookings for <span id="current-year-label"></span>.</div>
-      <div class="booked-counter">
-        <div class="booked-num" id="booked-num">0</div>
-        <div class="booked-info">
-          <div class="booked-label">Weddings booked</div>
-          <div class="booked-sub" id="booked-sub">Loading from Lead Tracker...</div>
-          <div class="booked-value" id="booked-income"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="result-strip" id="result-strip">
-      <div class="result-top">
-        <div class="result-main">
-          <div class="rl">Weddings needed to hit your goal</div>
-          <div class="rv" id="res-weddings">0</div>
-          <div class="rsub" id="res-sub"></div>
-        </div>
-        <div class="result-stats">
-          <div class="result-cell"><div class="rc-label">Income Goal</div><div class="rc-value" id="rc-goal">€0</div></div>
-          <div class="result-cell"><div class="rc-label">Price per Wedding</div><div class="rc-value" id="rc-price">€0</div></div>
-          <div class="result-cell"><div class="rc-label">Weddings Needed</div><div class="rc-value" id="rc-weddings">0</div></div>
-        </div>
-      </div>
-      <div class="progress-section" id="progress-section" style="display:none;">
-        <div class="progress-label">Your progress this year</div>
-        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
-        <div class="progress-meta">
-          <span><strong id="prog-booked">0</strong> booked so far</span>
-          <span>Target: <strong id="prog-target">0</strong> weddings</span>
-        </div>
-        <div id="status-badge" class="status-badge good" style="display:none;"></div>
-      </div>
-    </div>
-
     <div class="card">
       <div class="card-title"><span class="icon">📊</span> Your Conversion Rate</div>
       <div class="card-subtitle">Enter how many enquiries you have received this year and how many you have converted to bookings. We will calculate your conversion rate and tell you exactly how many enquiries you need to hit your goal.</div>
@@ -273,6 +236,51 @@ input[type=number]:focus { outline:none; border-color:var(--coral); }
         <div class="lt-note" id="lt-note">
           <span>📋</span><span id="lt-note-text"></span>
         </div>
+      </div>
+    </div>
+
+    <div class="card" id="bookings-card" style="display:none;">
+      <div class="card-title"><span class="icon">📅</span> Weddings Booked This Year</div>
+      <div class="card-subtitle">Pulled from your Lead Tracker. These are your confirmed bookings for <span id="current-year-label"></span>.</div>
+      <div class="booked-counter">
+        <div class="booked-num" id="booked-num">0</div>
+        <div class="booked-info">
+          <div class="booked-label">Weddings booked</div>
+          <div class="booked-sub" id="booked-sub">Loading from Lead Tracker...</div>
+          <div class="booked-value" id="booked-income"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-strip" id="result-strip">
+      <div class="result-top">
+        <div class="result-main">
+          <div class="rl">Weddings needed to hit your goal</div>
+          <div class="rv" id="res-weddings">0</div>
+          <div class="rsub" id="res-sub"></div>
+        </div>
+        <div class="result-stats">
+          <div class="result-cell"><div class="rc-label">Income Goal</div><div class="rc-value" id="rc-goal">€0</div></div>
+          <div class="result-cell"><div class="rc-label">Price per Wedding</div><div class="rc-value" id="rc-price">€0</div></div>
+          <div class="result-cell"><div class="rc-label">Weddings Needed</div><div class="rc-value" id="rc-weddings">0</div></div>
+        </div>
+      </div>
+      <div class="pkg-scenarios" id="pkg-scenarios" style="display:none;">
+        <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.6);margin-bottom:12px;">To reach your goal at each package price</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+          <div class="result-cell"><div class="rc-label">Basic Package</div><div class="rc-value" id="pkg-basic-price">€0</div><div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-top:4px;" id="pkg-basic-count"></div></div>
+          <div class="result-cell"><div class="rc-label">Standard Package</div><div class="rc-value" id="pkg-standard-price">€0</div><div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-top:4px;" id="pkg-standard-count"></div></div>
+          <div class="result-cell" style="background:rgba(255,184,0,.2);border:1px solid rgba(255,184,0,.3);"><div class="rc-label">Premium Package</div><div class="rc-value" id="pkg-premium-price">€0</div><div style="font-size:11px;font-weight:700;color:#FFD34E;margin-top:4px;" id="pkg-premium-count"></div></div>
+        </div>
+      </div>
+      <div class="progress-section" id="progress-section" style="display:none;">
+        <div class="progress-label">Your progress this year</div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+        <div class="progress-meta">
+          <span><strong id="prog-booked">0</strong> booked so far</span>
+          <span>Target: <strong id="prog-target">0</strong> weddings</span>
+        </div>
+        <div id="status-badge" class="status-badge good" style="display:none;"></div>
       </div>
     </div>
 
@@ -326,7 +334,7 @@ document.getElementById('currency').onchange = function() { currency=this.value;
 document.getElementById('incomeGoal').oninput = calc;
 document.getElementById('pricePerWedding').oninput = calc;
 document.getElementById('enquiriesReceived').oninput = calcConversion;
-document.getElementById('weddingsBooked').oninput = calcConversion;
+document.getElementById('weddingsBooked').oninput = function() { calc(); calcConversion(); };
 
 document.getElementById('current-year-label').textContent = new Date().getFullYear();
 
@@ -361,7 +369,7 @@ function loadPFPData() {
     var raw = localStorage.getItem('wbw-pfp-' + user.id);
     if (!raw) return;
     var pd = JSON.parse(raw);
-    if (pd.currency && !document.getElementById('incomeGoal').value) {
+    if (pd.currency) {
       currency = pd.currency;
       document.getElementById('currency').value = pd.currency;
       updateSymbols();
@@ -376,7 +384,7 @@ function loadPFPData() {
     var editingHrs    = parseFloat(pd.editingHours)  || 0;
     var adminHrs      = parseFloat(pd.adminHours)    || 0;
     var profitPct     = parseFloat(pd.profitMargin)  || 0;
-    var taxPct        = parseFloat(pd.taxRate)        || 0;
+    var taxPct        = parseFloat(pd.taxRate)       || 0;
     var rate          = parseFloat(pd.hourlyRate)    || 45;
     var overheadPerWedding = (equipment + otherExpenses) / weddingCount;
     var travelTotal        = travelCosts + accommodation + extraCosts;
@@ -386,13 +394,26 @@ function loadPFPData() {
     var profitAmt          = subtotal * (profitPct / 100);
     var withProfit         = subtotal + profitAmt;
     var taxAmt             = withProfit * (taxPct / 100);
-    var minPrice           = withProfit + taxAmt;
+    var minPrice           = Math.round(withProfit + taxAmt);
+
     if (minPrice > 0) {
+      // Store all 3 package prices globally
+      window._pfpPrices = {
+        basic:    minPrice,
+        standard: Math.ceil(minPrice * 1.25 / 50) * 50,
+        premium:  Math.ceil(minPrice * 1.6  / 50) * 50
+      };
+      // Pre-fill price field with minimum (basic) if not already set
       var priceInput = document.getElementById('pricePerWedding');
-      if (!priceInput.value) priceInput.value = Math.round(minPrice);
+      if (!priceInput.value) priceInput.value = minPrice;
+      // Show banner
       var banner = document.getElementById('pfp-banner');
-      document.getElementById('pfp-banner-text').textContent = 'Minimum price of ' + fmt(minPrice) + ' pulled from your Price for Profit calculator. You can adjust this above.';
+      document.getElementById('pfp-banner-text').textContent =
+        'Prices pulled from Price for Profit — Basic ' + fmt(minPrice) +
+        ', Standard ' + fmt(window._pfpPrices.standard) +
+        ', Premium ' + fmt(window._pfpPrices.premium) + '. Using Basic as default. You can adjust above.';
       banner.style.display = 'flex';
+      calc();
     }
   } catch(e) {}
 }
@@ -473,10 +494,24 @@ function calc() {
   document.getElementById('rc-price').textContent = fmt(price);
   document.getElementById('rc-weddings').textContent = weddings_needed;
 
-  var booked = bookedFromLeadTracker;
+  // Show 3-package scenarios if PFP data available
+  var pkgSection = document.getElementById('pkg-scenarios');
+  if (window._pfpPrices) {
+    var p = window._pfpPrices;
+    pkgSection.style.display = 'block';
+    document.getElementById('pkg-basic-price').textContent    = fmt(p.basic);
+    document.getElementById('pkg-standard-price').textContent = fmt(p.standard);
+    document.getElementById('pkg-premium-price').textContent  = fmt(p.premium);
+    document.getElementById('pkg-basic-count').textContent    = Math.ceil(goal / p.basic)    + ' weddings needed';
+    document.getElementById('pkg-standard-count').textContent = Math.ceil(goal / p.standard) + ' weddings needed';
+    document.getElementById('pkg-premium-count').textContent  = Math.ceil(goal / p.premium)  + ' weddings needed ✦';
+  } else {
+    pkgSection.style.display = 'none';
+  }
+
+  var booked = bookedFromLeadTracker || (parseFloat(document.getElementById('weddingsBooked').value) || 0);
   var bookedIncome = booked * price;
 
-  // Update booked income line
   if (booked > 0) {
     document.getElementById('booked-income').textContent = fmt(bookedIncome) + ' earned so far';
   }
@@ -627,10 +662,12 @@ function loadSaved() {
     var d = JSON.parse(raw);
     if (d.currency) { currency=d.currency; document.getElementById('currency').value=d.currency; updateSymbols(); }
     if (d.incomeGoal) document.getElementById('incomeGoal').value = d.incomeGoal;
-    if (d.pricePerWedding) document.getElementById('pricePerWedding').value = d.pricePerWedding;
+    // Only restore saved price if PFP didn't already set it
+    if (d.pricePerWedding && !window._pfpPrices) document.getElementById('pricePerWedding').value = d.pricePerWedding;
     if (d.enquiriesReceived) document.getElementById('enquiriesReceived').value = d.enquiriesReceived;
-    if (d.weddingsBooked) document.getElementById('weddingsBooked').value = d.weddingsBooked;
+    if (d.weddingsBooked && !bookedFromLeadTracker) document.getElementById('weddingsBooked').value = d.weddingsBooked;
     calc();
+    calcConversion();
   } catch(e) {}
 }
 
@@ -641,12 +678,14 @@ function resetAll() {
   document.getElementById('result-strip').classList.remove('show');
   document.getElementById('enquiries-result').classList.remove('show');
   document.getElementById('progress-section').style.display = 'none';
+  document.getElementById('pkg-scenarios').style.display = 'none';
   document.getElementById('advice-section').style.display = 'none';
   document.getElementById('advice-section').innerHTML = '';
   document.getElementById('reset-btn').style.display = 'none';
   document.getElementById('pfp-banner').style.display = 'none';
   document.getElementById('conv-example').textContent = 'Enter your enquiries and bookings above to see your rate.';
   weddings_needed = 0;
+  window._pfpPrices = null;
   if (user) { try { localStorage.removeItem('wbw-ig-' + user.id); } catch(e) {} }
   window.scrollTo({ top:0, behavior:'smooth' });
 }
