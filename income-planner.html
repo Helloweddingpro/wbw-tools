@@ -192,6 +192,9 @@ input[type=number]:focus { outline:none; border-color:var(--coral); }
     <div class="card">
       <div class="card-title"><span class="icon">💰</span> Your Price Per Wedding</div>
       <div class="card-subtitle">Enter the average price you charge per wedding. If you have different packages, use your most commonly booked price.</div>
+      <div id="no-pfp-banner" style="display:none;background:rgba(255,184,0,.1);border:1.5px solid rgba(255,184,0,.3);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:13px;font-weight:700;color:var(--navy);line-height:1.6;">
+        💡 <strong>Start with Price for Profit first.</strong> It calculates your true minimum price based on your costs and time — and passes it straight to this tool automatically. <a href="price-for-profit.html" style="color:var(--coral);text-decoration:underline;">Go to Price for Profit →</a>
+      </div>
       <div class="pfp-banner" id="pfp-banner">
         <span style="font-size:16px;">✦</span>
         <span id="pfp-banner-text"></span>
@@ -367,7 +370,10 @@ function loadPFPData() {
   if (!user) return;
   try {
     var raw = localStorage.getItem('wbw-pfp-' + user.id);
-    if (!raw) return;
+    if (!raw) {
+      document.getElementById('no-pfp-banner').style.display = 'block';
+      return;
+    }
     var pd = JSON.parse(raw);
     if (pd.currency) {
       currency = pd.currency;
@@ -413,7 +419,10 @@ function loadPFPData() {
         ', Standard ' + fmt(window._pfpPrices.standard) +
         ', Premium ' + fmt(window._pfpPrices.premium) + '. Using Basic as default. You can adjust above.';
       banner.style.display = 'flex';
+      document.getElementById('no-pfp-banner').style.display = 'none';
       calc();
+    } else {
+      document.getElementById('no-pfp-banner').style.display = 'block';
     }
   } catch(e) {}
 }
@@ -513,6 +522,9 @@ function calc() {
   }
 
   var booked = bookedFromLeadTracker > 0 ? bookedFromLeadTracker : (parseFloat(document.getElementById('weddingsBooked').value) || 0);
+  // Keep the weddingsBooked field in sync so calcConversion uses the same number
+  var wbField = document.getElementById('weddingsBooked');
+  if (bookedFromLeadTracker > 0) wbField.value = bookedFromLeadTracker;
   var bookedIncome = booked * price;
   var still_needed = Math.max(0, weddings_needed - booked);
 
@@ -621,13 +633,10 @@ function advice(color, icon, title, body) {
 function calcConversion() {
   var enquiries = parseFloat(document.getElementById('enquiriesReceived').value) || 0;
   var wbField = document.getElementById('weddingsBooked');
-  // Always read from the field — pre-filled by lead tracker but user can edit
+  // Pre-fill from lead tracker if field is empty
+  if (bookedFromLeadTracker > 0 && !wbField.value) wbField.value = bookedFromLeadTracker;
+  // Always read from field — kept in sync with calc()
   var booked = parseFloat(wbField.value) || 0;
-  // Pre-fill field from lead tracker only if empty
-  if (bookedFromLeadTracker > 0 && !wbField.value) {
-    wbField.value = bookedFromLeadTracker;
-    booked = bookedFromLeadTracker;
-  }
 
   if (enquiries <= 0) return;
 
