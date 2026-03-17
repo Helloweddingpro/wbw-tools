@@ -102,6 +102,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .tool-desc { font-size:13px; font-weight:600; color:var(--muted); line-height:1.65; margin-bottom:18px; }
 .tool-footer { display:flex; align-items:center; justify-content:space-between; }
 .badge { font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; padding:4px 10px; border-radius:999px; }
+.step-badge { font-size:10px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; padding:3px 10px; border-radius:999px; background:var(--navy); color:rgba(255,255,255,.7); display:inline-block; margin-bottom:10px; }
 .badge-live { background:rgba(39,174,96,.12); color:#27ae60; }
 .badge-soon { background:rgba(59,60,109,.08); color:var(--muted); }
 .tool-arrow { font-size:16px; color:var(--muted); transition:transform .2s,color .2s; }
@@ -192,6 +193,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
         <a href="price-for-profit.html" class="tool-card">
           <div class="tool-top-bar" style="background:linear-gradient(90deg,#FFB800,#FFD35C);"></div>
           <div class="tool-icon" style="background:rgba(255,184,0,.1);">💰</div>
+          <div class="step-badge">Step 1</div>
           <div class="tool-name">Price for Profit</div>
           <div class="tool-desc">Find out exactly what you need to charge per wedding. Calculate the minimum price you should be charging, based on your real costs, time and experience.</div>
           <div class="tool-footer"><span class="badge badge-live">Live</span><span class="tool-arrow">→</span></div>
@@ -199,6 +201,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
         <a href="income-planner.html" class="tool-card">
           <div class="tool-top-bar" style="background:linear-gradient(90deg,#F43F5E,#fb7185);"></div>
           <div class="tool-icon" style="background:rgba(244,63,94,.1);">📈</div>
+          <div class="step-badge">Step 2</div>
           <div class="tool-name">Income Goals</div>
           <div class="tool-desc">Set your income goal, work backwards to your minimum price, and know exactly how many weddings you need to book.</div>
           <div class="tool-footer"><span class="badge badge-live">Live</span><span class="tool-arrow">→</span></div>
@@ -206,6 +209,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
         <a href="ideal-client.html" class="tool-card">
           <div class="tool-top-bar" style="background:linear-gradient(90deg,#00A878,#00c99a);"></div>
           <div class="tool-icon" style="background:rgba(0,168,120,.1);">🎯</div>
+          <div class="step-badge">Step 3</div>
           <div class="tool-name">Find Higher Paying Clients</div>
           <div class="tool-desc">A guided lesson on who your most profitable couple is, why venue targeting works — and a full avatar builder to make it yours.</div>
           <div class="tool-footer"><span class="badge badge-live">Live</span><span class="tool-arrow">→</span></div>
@@ -451,9 +455,13 @@ async function loadLeadData(userId) {
       snapData.totalLeads = leads.length;
       snapData.followupsDue = followupsDue;
 
-      var avgPrice = snapData.avgPrice || 0;
+      // Sum actual payments received = depositPaid + instalments paid (not priceQuoted)
       snapData.incomeReceived = bookedThisYear.reduce(function(s, l) {
-        return s + Number(l.priceQuoted || avgPrice || 0);
+        var deposit = Number(l.depositPaid || 0);
+        var instalments = (l.instalments || []).reduce(function(t, inst) {
+          return t + Number(inst.amount || 0);
+        }, 0);
+        return s + deposit + instalments;
       }, 0);
       if (snapData.weddingsNeeded) {
         snapData.stillNeeded = Math.max(0, snapData.weddingsNeeded - bookedThisYear.length);
