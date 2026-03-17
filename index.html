@@ -371,7 +371,7 @@ sb.auth.onAuthStateChange(function(event, session) {
 
 var snapData = {
   incomeGoal: null, avgPrice: null, weddingsNeeded: null,
-  bookedCount: 0, incomeReceived: 0, stillNeeded: null,
+  bookedCount: 0, incomeReceived: 0, projectedIncome: 0, stillNeeded: null,
   totalLeads: 0, followupsDue: 0, currency: "EUR"
 };
 
@@ -384,7 +384,9 @@ function renderSnapshot() {
   var goal   = d.incomeGoal;
   var price  = d.avgPrice;
   var incomeReceived = d.incomeReceived || 0;
+  var projectedIncome = d.projectedIncome || 0;
   var bookedPct = needed ? Math.min(100, Math.round((booked / needed) * 100)) : 0;
+  var projectedPct = goal ? Math.min(100, Math.round((projectedIncome / goal) * 100)) : 0;
   var incomePct = goal ? Math.min(100, Math.round((incomeReceived / goal) * 100)) : 0;
 
   var CURR = { EUR:"€", USD:"$", GBP:"£", AUD:"A$", CAD:"C$" };
@@ -395,12 +397,12 @@ function renderSnapshot() {
   }
 
   var stats = [
-    { label:"Income Goal",          value:fmt(goal)||"--",           valueClass:"amber", meta:goal ? "Your target for this year" : "Set in Income Goals", progress:null, unlock:!goal?"income-planner.html":null },
-    { label:"Average Package Price", value:fmt(price)||"--",          valueClass:"",      meta:price ? "Per wedding booked" : "Set in Income Goals",       progress:null, unlock:!price?"income-planner.html":null },
-    { label:"Weddings Needed",       value:needed||"--",              valueClass:"",      meta:needed ? "To hit your income goal" : "Set in Income Goals",  progress:null, unlock:!needed?"income-planner.html":null },
-    { label:"Booked So Far",         value:booked,                    valueClass:"pink",  meta:needed ? bookedPct + "% of goal" : "From Lead Tracker",      progress:needed?{pct:bookedPct,color:"#FB478E"}:null, unlock:null },
-    { label:"Income Received",       value:fmt(incomeReceived)||"--", valueClass:"green", meta:goal ? "of " + fmt(goal) + " goal" : "From booked weddings", progress:goal?{pct:incomePct,color:"#52d68a"}:null, unlock:null },
-    { label:"Bookings Still Needed", value:still !== null ? still : "--", valueClass: still===0?"green":"", meta: still===0 ? "🎉 Goal reached!" : (still!==null ? "to hit your income goal" : "Set up Income Goals"), progress:null, unlock:null }
+    { label:"Income Goal",          value:fmt(goal)||"--",              valueClass:"amber", meta:goal ? "Your target for this year" : "Set in Income Goals",       progress:null, unlock:!goal?"income-planner.html":null },
+    { label:"Weddings Needed",       value:needed||"--",                 valueClass:"",      meta:needed ? "To hit your income goal" : "Set in Income Goals",        progress:null, unlock:!needed?"income-planner.html":null },
+    { label:"Booked So Far",         value:booked,                       valueClass:"pink",  meta:needed ? bookedPct + "% of goal" : "From Lead Tracker",            progress:needed?{pct:bookedPct,color:"#FB478E"}:null, unlock:null },
+    { label:"Projected Income",      value:fmt(projectedIncome)||"--",   valueClass:"amber", meta:"Total quoted from booked weddings",                               progress:goal?{pct:projectedPct,color:"#FFB800"}:null, unlock:null },
+    { label:"Income Received",       value:fmt(incomeReceived)||"--",    valueClass:"green", meta:"Actual payments received so far",                                progress:goal?{pct:incomePct,color:"#52d68a"}:null, unlock:null },
+    { label:"Bookings Still Needed", value:still !== null ? still : "--", valueClass:still===0?"green":"", meta:still===0 ? "🎉 Goal reached!" : (still!==null ? "to hit your income goal" : "Set up Income Goals"), progress:null, unlock:null }
   ];
 
   var html = "";
@@ -456,8 +458,12 @@ async function loadLeadData(userId) {
       snapData.totalLeads = leads.length;
       snapData.followupsDue = followupsDue;
 
-      // Sum actual payments received from ALL leads (matches Lead Tracker Total Received)
-      // instalments are stored as plain numbers, not objects
+      // Projected income = total quoted from booked leads (matches Lead Tracker Total Revenue)
+      snapData.projectedIncome = bookedThisYear.reduce(function(s, l) {
+        return s + Number(l.priceQuoted || 0);
+      }, 0);
+
+      // Income received = actual payments (deposit + instalments) across all leads
       snapData.incomeReceived = leads.reduce(function(s, l) {
         var deposit = Number(l.depositPaid || 0);
         var instalments = (l.instalments || []).reduce(function(t, inst) {
