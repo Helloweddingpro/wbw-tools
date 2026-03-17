@@ -456,10 +456,11 @@ async function loadLeadData(userId) {
       snapData.followupsDue = followupsDue;
 
       // Sum actual payments received from ALL leads (matches Lead Tracker Total Received)
+      // instalments are stored as plain numbers, not objects
       snapData.incomeReceived = leads.reduce(function(s, l) {
         var deposit = Number(l.depositPaid || 0);
         var instalments = (l.instalments || []).reduce(function(t, inst) {
-          return t + Number(inst.amount || 0);
+          return t + Number(inst || 0);
         }, 0);
         return s + deposit + instalments;
       }, 0);
