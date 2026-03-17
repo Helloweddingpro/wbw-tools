@@ -447,7 +447,8 @@ async function loadLeadData(userId) {
 
       var followupsDue = leads.filter(function(l) {
         var st = l.status || '';
-        if (st === "Booked" || st === "Deposit Paid" || st === "Lost") return false;
+        // Match Lead Tracker — count follow-ups for everything except Lost and Booked
+        if (st === "Booked" || st === "Lost") return false;
         return l.nextFollowUp && l.nextFollowUp <= today;
       }).length;
 
