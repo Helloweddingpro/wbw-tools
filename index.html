@@ -455,8 +455,8 @@ async function loadLeadData(userId) {
       snapData.totalLeads = leads.length;
       snapData.followupsDue = followupsDue;
 
-      // Sum actual payments received = depositPaid + instalments paid (not priceQuoted)
-      snapData.incomeReceived = bookedThisYear.reduce(function(s, l) {
+      // Sum actual payments received from ALL leads (matches Lead Tracker Total Received)
+      snapData.incomeReceived = leads.reduce(function(s, l) {
         var deposit = Number(l.depositPaid || 0);
         var instalments = (l.instalments || []).reduce(function(t, inst) {
           return t + Number(inst.amount || 0);
