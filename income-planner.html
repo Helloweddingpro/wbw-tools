@@ -463,11 +463,11 @@ function loadFromLeadTracker() {
         }, 0);
         bookedIncomeFromLeads += deposit + instalments;
 
-        // Count active leads (not lost, not booked)
-        var isActive = status !== 'Lost' && status !== 'Booked' && status !== 'Deposit Paid';
+        // Count active leads and follow-ups — match Lead Tracker logic exactly
+        // Lead tracker counts follow-ups for everything except Lost and Booked
+        var isActive = status !== 'Lost' && status !== 'Booked';
         if (isActive) {
           activeLeads++;
-          // Field is 'nextFollowUp'
           var followDate = lead.nextFollowUp || null;
           if (followDate) {
             var fd = new Date(followDate); fd.setHours(0,0,0,0);
@@ -603,11 +603,10 @@ function renderAdvice(status, still_needed, monthsLeft, price, goal, booked, wed
   var ltData = window._ltData || { activeLeads: 0, followUpsOverdue: 0, followUpsDue: 0, total: 0 };
 
   function followUpAdvice() {
+    var total = ltData.followUpsOverdue + ltData.followUpsDue;
     var msg = '';
-    if (ltData.followUpsOverdue > 0) {
-      msg = 'You have <strong>' + ltData.followUpsOverdue + ' overdue follow-up' + (ltData.followUpsOverdue===1?'':'s') + '</strong> in your Lead Tracker right now — those couples are still deciding, go follow up today. ';
-    } else if (ltData.followUpsDue > 0) {
-      msg = 'You have <strong>' + ltData.followUpsDue + ' follow-up' + (ltData.followUpsDue===1?'':'s') + '</strong> due in the next 3 days in your Lead Tracker — stay on top of them. ';
+    if (total > 0) {
+      msg = 'You have <strong>' + total + ' follow-up' + (total===1?'':'s') + ' due</strong> in your Lead Tracker right now — those couples are still deciding, go follow up today. ';
     } else if (ltData.activeLeads > 0) {
       msg = 'You currently have <strong>' + ltData.activeLeads + ' active lead' + (ltData.activeLeads===1?'':'s') + '</strong> in your Lead Tracker — do not miss any follow-up dates. ';
     }
