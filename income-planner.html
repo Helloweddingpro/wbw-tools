@@ -437,6 +437,7 @@ function loadFromLeadTracker() {
     .then(function(result) {
       if (result.error || !result.data) return;
       var booked = 0;
+      var bookedIncomeFromLeads = 0;
       var activeLeads = 0;
       var followUpsDue = 0;
       var followUpsOverdue = 0;
@@ -449,9 +450,20 @@ function loadFromLeadTracker() {
         // Count booked weddings this year — field is 'wedding' not 'weddingDate'
         if (status === 'Booked' || status === 'Deposit Paid') {
           var wDate = lead.wedding || '';
+          var deposit = Number(lead.depositPaid || 0);
+          var instalments = (lead.instalments || []).reduce(function(t, inst) {
+            return t + Number(inst.amount || 0);
+          }, 0);
+          var paymentsReceived = deposit + instalments;
           if (wDate) {
-            if (new Date(wDate).getFullYear() === currentYear) booked++;
-          } else { booked++; }
+            if (new Date(wDate).getFullYear() === currentYear) {
+              booked++;
+              bookedIncomeFromLeads += paymentsReceived;
+            }
+          } else {
+            booked++;
+            bookedIncomeFromLeads += paymentsReceived;
+          }
         }
 
         // Count active leads (not lost, not booked)
@@ -472,6 +484,7 @@ function loadFromLeadTracker() {
       });
 
       bookedFromLeadTracker = booked;
+      window._bookedIncomeFromLeads = bookedIncomeFromLeads;
       var totalLeadTrackerLeads = result.data.length;
 
       // Update bookings card
@@ -525,7 +538,8 @@ function calc() {
   // Keep the weddingsBooked field in sync so calcConversion uses the same number
   var wbField = document.getElementById('weddingsBooked');
   if (bookedFromLeadTracker > 0) wbField.value = bookedFromLeadTracker;
-  var bookedIncome = booked * price;
+  // Use actual priceQuoted from leads if available, otherwise estimate from price × booked
+  var bookedIncome = window._bookedIncomeFromLeads > 0 ? window._bookedIncomeFromLeads : (booked * price);
   var still_needed = Math.max(0, weddings_needed - booked);
 
   // Update booked card income line
