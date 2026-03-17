@@ -447,24 +447,20 @@ function loadFromLeadTracker() {
         if (!lead) return;
         var status = lead.status || '';
 
-        // Count booked weddings this year — field is 'wedding' not 'weddingDate'
+        // Count booked weddings this year
         if (status === 'Booked' || status === 'Deposit Paid') {
           var wDate = lead.wedding || '';
-          var deposit = Number(lead.depositPaid || 0);
-          var instalments = (lead.instalments || []).reduce(function(t, inst) {
-            return t + Number(inst.amount || 0);
-          }, 0);
-          var paymentsReceived = deposit + instalments;
           if (wDate) {
-            if (new Date(wDate).getFullYear() === currentYear) {
-              booked++;
-              bookedIncomeFromLeads += paymentsReceived;
-            }
-          } else {
-            booked++;
-            bookedIncomeFromLeads += paymentsReceived;
-          }
+            if (new Date(wDate).getFullYear() === currentYear) booked++;
+          } else { booked++; }
         }
+
+        // Sum payments received from ALL leads (matches Lead Tracker Total Received)
+        var deposit = Number(lead.depositPaid || 0);
+        var instalments = (lead.instalments || []).reduce(function(t, inst) {
+          return t + Number(inst.amount || 0);
+        }, 0);
+        bookedIncomeFromLeads += deposit + instalments;
 
         // Count active leads (not lost, not booked)
         var isActive = status !== 'Lost' && status !== 'Booked' && status !== 'Deposit Paid';
