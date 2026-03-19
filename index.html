@@ -240,13 +240,13 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
     <div class="category">
       <div class="category-header"><div class="cat-label">Marketing &amp; Social Media</div><div class="cat-line"></div></div>
       <div class="tools-grid">
-        <div class="tool-card locked">
+        <a href="social-planner.html" class="tool-card">
           <div class="tool-top-bar" style="background:linear-gradient(90deg,#8B5CF6,#B794F4);"></div>
           <div class="tool-icon" style="background:rgba(139,92,246,.1);">📱</div>
           <div class="tool-name">Social Media Planner</div>
           <div class="tool-desc">Stop guessing what to post. Build a content strategy that speaks directly to your most profitable couples.</div>
-          <div class="tool-footer"><span class="badge badge-soon">Coming soon</span><span class="tool-arrow">→</span></div>
-        </div>
+          <div class="tool-footer"><span class="badge badge-live">Live</span><span class="tool-arrow">→</span></div>
+        </a>
       </div>
     </div>
 
@@ -335,7 +335,6 @@ async function initApp(user) {
   document.getElementById("hero-greeting").textContent = greeting + " ✨";
   document.getElementById("wts-results-area").innerHTML = '<div style="padding:16px 0; font-size:13px; font-weight:700; color:var(--muted);">Loading your results...</div>';
 
-  // Load Income Goals data from localStorage
   try {
     var igRaw = localStorage.getItem("wbw-ig-" + user.id);
     if (igRaw) {
@@ -439,7 +438,6 @@ async function loadLeadData(userId) {
       var today = new Date().toISOString().slice(0, 10);
       var leads = result.data.map(function(r) { return r.data; }).filter(Boolean);
 
-      // 'wedding' is the date field, 'Booked' and 'Deposit Paid' are the booked statuses
       var bookedThisYear = leads.filter(function(l) {
         if (l.status !== "Booked" && l.status !== "Deposit Paid") return false;
         var wDate = l.wedding || '';
@@ -449,7 +447,6 @@ async function loadLeadData(userId) {
 
       var followupsDue = leads.filter(function(l) {
         var st = l.status || '';
-        // Match Lead Tracker — count follow-ups for everything except Lost and Booked
         if (st === "Booked" || st === "Lost") return false;
         return l.nextFollowUp && l.nextFollowUp <= today;
       }).length;
@@ -458,12 +455,10 @@ async function loadLeadData(userId) {
       snapData.totalLeads = leads.length;
       snapData.followupsDue = followupsDue;
 
-      // Projected income = total quoted from booked leads (matches Lead Tracker Total Revenue)
       snapData.projectedIncome = bookedThisYear.reduce(function(s, l) {
         return s + Number(l.priceQuoted || 0);
       }, 0);
 
-      // Income received = actual payments (deposit + instalments) across all leads
       snapData.incomeReceived = leads.reduce(function(s, l) {
         var deposit = Number(l.depositPaid || 0);
         var instalments = (l.instalments || []).reduce(function(t, inst) {
