@@ -11,7 +11,8 @@
 :root {
   --navy:#3B3C6D; --gold:#FFB800; --gold-light:rgba(255,184,0,.1); --gold-mid:rgba(255,184,0,.25);
   --cream:#FFFDF0; --white:#FFFFFF; --border:rgba(59,60,109,.13); --muted:rgba(59,60,109,.5);
-  --text:#2A2B4A; --green:#00A878; --red:#e63946; --surface:rgba(59,60,109,.04);
+  --text:#2A2B4A; --green:#00A878; --green-light:rgba(0,168,120,.1); --red:#e63946;
+  --red-light:rgba(230,57,70,.1); --surface:rgba(59,60,109,.04);
 }
 body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
 #auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
@@ -48,9 +49,8 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
 .currency-bar select { padding:8px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:var(--text); background:var(--white); cursor:pointer; }
 .currency-bar select:focus { outline:none; border-color:var(--gold); }
 .card { background:var(--white); border-radius:20px; padding:28px; margin-bottom:20px; box-shadow:0 2px 16px rgba(59,60,109,.06); }
-.card-title { font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:var(--navy); margin-bottom:20px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.card-title { font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:var(--navy); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
 .card-title .icon { font-size:18px; }
-.optional-badge { font-size:11px; font-weight:700; color:var(--muted); text-transform:none; letter-spacing:0; background:var(--gold-light); border:1px solid var(--gold-mid); border-radius:6px; padding:2px 8px; }
 .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 .form-grid.three { grid-template-columns:1fr 1fr 1fr; }
 .form-group { display:flex; flex-direction:column; gap:7px; }
@@ -64,40 +64,52 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
 .input-wrap.has-suf input { padding-right:52px; }
 input[type=number], select { padding:11px 13px; border:1.5px solid var(--border); border-radius:12px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:700; color:var(--text); background:var(--white); width:100%; transition:border-color .2s; }
 input[type=number]:focus, select:focus { outline:none; border-color:var(--gold); }
-.exp-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:20px; }
-.exp-card { border:2px solid var(--border); border-radius:16px; padding:18px 14px; cursor:pointer; transition:all .2s; text-align:center; }
-.exp-card:hover { border-color:var(--gold-mid); }
-.exp-card.active { border-color:var(--gold); background:var(--gold-light); }
-.exp-emoji { font-size:28px; margin-bottom:8px; }
-.exp-title { font-size:13px; font-weight:800; color:var(--navy); margin-bottom:4px; }
-.exp-rate { font-size:18px; font-weight:900; color:var(--gold); margin-bottom:4px; }
-.exp-years { font-size:11px; font-weight:600; color:var(--muted); margin-bottom:4px; }
-.exp-range { font-size:10px; font-weight:700; color:var(--muted); }
-.custom-rate-box { background:var(--surface); border-radius:14px; padding:18px; border:1.5px dashed var(--gold-mid); }
-.custom-rate-box label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--navy); display:block; margin-bottom:10px; }
-.custom-rate-row { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
-.custom-rate-row .input-wrap { flex:1; min-width:160px; }
-.margin-suggest { text-align:center; }
-.margin-suggest .ms-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:4px; }
-.margin-suggest .ms-value { font-size:22px; font-weight:900; color:var(--gold); }
-.margin-suggest .ms-note { font-size:10px; font-weight:600; color:var(--muted); }
-.result-strip { background:linear-gradient(135deg, var(--navy) 0%, #5B5C9D 100%); border-radius:20px; padding:24px 28px; margin-bottom:20px; display:none; }
+.section-divider { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; color:var(--navy); padding-bottom:10px; border-bottom:1px solid var(--border); margin-bottom:16px; margin-top:24px; }
+.section-divider:first-child { margin-top:0; }
+.hours-total-pill { background:var(--gold-light); border:1px solid var(--gold-mid); border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; margin-top:16px; }
+.hours-total-pill span:first-child { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+.hours-total-val { font-size:22px; font-weight:900; color:var(--navy); }
+
+/* ── RESULTS ── */
+.result-strip { background:linear-gradient(135deg, var(--navy) 0%, #5B5C9D 100%); border-radius:20px; padding:28px; margin-bottom:20px; display:none; }
 .result-strip.show { display:block; }
-.result-strip-top { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:20px; }
-.result-main { color:#fff; }
-.result-main .rl { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.6); margin-bottom:6px; }
-.result-main .rv { font-family:'Cormorant Garamond',serif; font-size:52px; font-weight:700; color:#FFD34E; line-height:1; }
-.result-main .rsub { font-size:12px; font-weight:700; color:rgba(255,255,255,.6); margin-top:4px; }
-.result-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
-.result-cell { background:rgba(255,255,255,.1); border-radius:12px; padding:14px; text-align:center; }
-.result-cell .rc-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.6); margin-bottom:6px; }
-.result-cell .rc-value { font-size:20px; font-weight:900; color:rgba(255,255,255,.92); }
-.breakdown-rows { margin-top:16px; border-top:1px solid rgba(255,255,255,.15); padding-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.result-main-price { text-align:center; margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid rgba(255,255,255,.15); }
+.result-main-price .rl { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.6); margin-bottom:8px; }
+.result-main-price .rv { font-family:'Cormorant Garamond',serif; font-size:72px; font-weight:700; color:#FFD34E; line-height:1; }
+.result-main-price .rsub { font-size:13px; font-weight:700; color:rgba(255,255,255,.6); margin-top:6px; }
+
+/* Current situation box */
+.situation-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+.sit-card { border-radius:14px; padding:16px; }
+.sit-card.now { background:rgba(230,57,70,.2); border:1px solid rgba(230,57,70,.3); }
+.sit-card.needed { background:rgba(255,184,0,.15); border:1px solid rgba(255,184,0,.3); }
+.sit-label { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px; }
+.sit-card.now .sit-label { color:rgba(255,150,150,.9); }
+.sit-card.needed .sit-label { color:rgba(255,200,80,.9); }
+.sit-value { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:700; color:#fff; line-height:1; margin-bottom:4px; }
+.sit-note { font-size:11px; font-weight:700; color:rgba(255,255,255,.55); }
+
+/* Stats row */
+.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+.stat-cell { background:rgba(255,255,255,.1); border-radius:12px; padding:14px; text-align:center; }
+.stat-cell .sc-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.6); margin-bottom:6px; }
+.stat-cell .sc-value { font-size:18px; font-weight:900; color:#fff; }
+
+/* Insight banner */
+.insight-banner { border-radius:14px; padding:16px 18px; margin-bottom:20px; }
+.insight-banner.gap { background:rgba(230,57,70,.2); border:1px solid rgba(230,57,70,.3); }
+.insight-banner.ok { background:rgba(0,168,120,.2); border:1px solid rgba(0,168,120,.3); }
+.insight-banner p { font-size:13px; font-weight:700; color:#fff; line-height:1.6; }
+.insight-banner strong { color:#FFD34E; }
+
+/* Breakdown */
+.breakdown-rows { border-top:1px solid rgba(255,255,255,.15); padding-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px; }
 .brow { display:flex; justify-content:space-between; align-items:center; }
 .brow span { font-size:12px; font-weight:600; color:rgba(255,255,255,.7); }
 .brow strong { font-size:12px; font-weight:800; color:rgba(255,255,255,.88); }
-.warning-bar { background:rgba(230,57,70,.2); border:1px solid rgba(230,57,70,.4); border-radius:10px; padding:10px 14px; margin-top:14px; font-size:12px; font-weight:700; color:#ff8a93; }
-.pkg-variations { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:16px; }
+
+/* Package variations */
+.pkg-variations { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
 .pkg-var { border-radius:14px; padding:16px; text-align:center; }
 .pkg-var.basic { background:rgba(255,255,255,.12); border:1.5px solid rgba(255,255,255,.25); }
 .pkg-var.standard { background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.15); }
@@ -105,15 +117,16 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
 .pkg-var-name { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.9); margin-bottom:4px; }
 .pkg-var-mult { font-size:10px; font-weight:700; color:rgba(255,255,255,.55); margin-bottom:8px; }
 .pkg-var-price { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:#fff; }
+
 .reset-btn { width:100%; padding:16px; border-radius:14px; border:1.5px solid var(--border); background:transparent; color:var(--navy); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; cursor:pointer; margin-bottom:20px; }
 .reset-btn:hover { background:var(--gold-light); border-color:var(--gold); }
-#toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:12px 22px; border-radius:14px; font-size:13px; font-weight:800; opacity:0; pointer-events:none; transition:opacity .3s; z-index:9999; }
-#toast.show { opacity:1; }
+.guidance-note { background:var(--surface); border:1px dashed var(--border); border-radius:14px; padding:16px 18px; margin-bottom:20px; font-size:13px; font-weight:600; color:var(--muted); line-height:1.7; }
+
 @media(max-width:720px){
   .topnav { padding:0 16px; } .main { padding:24px 16px 60px; }
   .form-grid, .form-grid.three { grid-template-columns:1fr; }
-  .exp-grid { grid-template-columns:1fr; }
-  .result-grid { grid-template-columns:1fr 1fr; }
+  .situation-grid { grid-template-columns:1fr; }
+  .stats-row { grid-template-columns:1fr 1fr; }
   .breakdown-rows { grid-template-columns:1fr; }
   .pkg-variations { grid-template-columns:1fr; }
   .hero-title { font-size:32px; }
@@ -121,6 +134,7 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
 </style>
 </head>
 <body>
+
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">Price for Profit</div>
@@ -153,177 +167,203 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
       <button class="nav-signout" id="signout-btn">Sign out</button>
     </div>
   </nav>
+
   <div class="main">
     <div class="hero">
       <div class="hero-eyebrow">Know Your Numbers</div>
-      <h1 class="hero-title">What do you need<br><em>to charge?</em></h1>
-      <p class="hero-sub">Enter your costs and time. We will calculate your true minimum price — the number you should never go below.</p>
+      <h1 class="hero-title">Are you charging<br><em>enough?</em></h1>
+      <p class="hero-sub">Enter your income goal and current price. We will show you exactly what you are earning per hour right now — and what you actually need to charge.</p>
     </div>
+
     <div class="currency-bar">
       <label>Currency</label>
       <select id="currency">
-        <option value="EUR">Euro (E)</option>
-        <option value="USD">US Dollar ($)</option>
+        <option value="EUR">Euro (€)</option>
         <option value="GBP">British Pound (£)</option>
+        <option value="USD">US Dollar ($)</option>
         <option value="AUD">Australian Dollar (A$)</option>
         <option value="CAD">Canadian Dollar (C$)</option>
       </select>
       <span style="font-size:12px;font-weight:600;color:var(--muted);">Results update live as you type</span>
     </div>
+
+    <!-- 1: INCOME GOAL -->
     <div class="card">
-      <div class="card-title"><span class="icon">🏢</span> Business Overhead Costs <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:none;letter-spacing:0;">Annual</span></div>
+      <div class="card-title"><span class="icon">🎯</span> Your Income Goal</div>
+      <div class="form-group">
+        <label>What do you want to earn from weddings this year?</label>
+        <div class="hint">Your target gross income — before tax and expenses.</div>
+        <div class="input-wrap has-pre"><span class="pre" id="sym-goal">€</span><input type="number" id="incomeGoal" placeholder="e.g. 40000"></div>
+      </div>
+    </div>
+
+    <!-- 2: CURRENT PRICING -->
+    <div class="card">
+      <div class="card-title"><span class="icon">💰</span> Your Current Pricing</div>
       <div class="form-grid">
         <div class="form-group">
-          <label>Equipment and purchases per year</label>
-          <div class="hint">Any equipment, raw materials or marketing materials that you purchased this year.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-equip">€</span><input type="number" id="equipment" ></div>
+          <label>What do you currently charge per wedding?</label>
+          <div class="hint">Your standard package price right now.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-price">€</span><input type="number" id="currentPrice" placeholder="e.g. 1200"></div>
         </div>
         <div class="form-group">
-          <label>Other yearly expenses</label>
-          <div class="hint">Subscriptions, phone bill, insurance, website.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-other">€</span><input type="number" id="otherExpenses" ></div>
-        </div>
-        <div class="form-group">
-          <label>Weddings this year</label>
-          <div class="hint">How many weddings do you plan to do?</div>
-          <input type="number" id="weddingCount" >
-        </div>
-        <div class="form-group">
-          <label>Holiday weeks</label>
-          <div class="hint">Weeks off per year</div>
-          <input type="number" id="holidayWeeks" >
+          <label>How many weddings do you want to do per year?</label>
+          <div class="hint">Your current or planned number of weddings.</div>
+          <input type="number" id="weddingCount" placeholder="e.g. 25">
         </div>
       </div>
     </div>
+
+    <!-- 3: BUSINESS COSTS -->
     <div class="card">
-      <div class="card-title"><span class="icon">🚗</span> Per-Wedding Costs</div>
-      <div class="form-grid three">
+      <div class="card-title"><span class="icon">🏢</span> Your Business Costs</div>
+
+      <div class="section-divider">Annual Costs</div>
+      <div class="form-grid" style="margin-bottom:0;">
+        <div class="form-group">
+          <label>Equipment &amp; purchases per year</label>
+          <div class="hint">Gear, raw materials, marketing materials.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-equip">€</span><input type="number" id="equipment"></div>
+        </div>
+        <div class="form-group">
+          <label>Other yearly expenses</label>
+          <div class="hint">Insurance, accounting, website, domain.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-other">€</span><input type="number" id="otherExpenses"></div>
+        </div>
+      </div>
+
+      <div class="section-divider">Monthly Costs <span style="font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted);">(× 12 automatically)</span></div>
+      <div class="form-grid" style="margin-bottom:0;">
+        <div class="form-group">
+          <label>Subscriptions &amp; software</label>
+          <div class="hint">Adobe, editing tools, cloud storage, CRM.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-subs">€</span><input type="number" id="monthlySubscriptions"></div>
+        </div>
+        <div class="form-group">
+          <label>Phone &amp; other monthly</label>
+          <div class="hint">Phone bill, ads, any other regular costs.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-monthly">€</span><input type="number" id="monthlyOther"></div>
+        </div>
+      </div>
+
+      <div class="section-divider">Per-Wedding Costs</div>
+      <div class="form-grid three" style="margin-bottom:0;">
         <div class="form-group">
           <label>Travel per wedding</label>
           <div class="hint">Petrol, parking, tolls, flights</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-travel">€</span><input type="number" id="travelCosts" ></div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-travel">€</span><input type="number" id="travelCosts"></div>
         </div>
         <div class="form-group">
           <label>Accommodation</label>
           <div class="hint">Hotel if needed (average)</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-accomm">€</span><input type="number" id="accommodation" ></div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-accomm">€</span><input type="number" id="accommodation"></div>
         </div>
         <div class="form-group">
-          <label>Extra wedding costs</label>
-          <div class="hint">Assistant, equipment hire or one-off materials.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-extra">€</span><input type="number" id="extraCosts" ></div>
+          <label>Extra costs per wedding</label>
+          <div class="hint">Assistant, equipment hire, materials</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-extra">€</span><input type="number" id="extraCosts"></div>
         </div>
       </div>
     </div>
+
+    <!-- 4: TIME PER WEDDING -->
     <div class="card">
       <div class="card-title"><span class="icon">⏱</span> Your Time Per Wedding</div>
-      <div class="form-grid three">
+      <p style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:18px;line-height:1.6;">Include all the time you spend — not just the wedding day itself. Most suppliers underestimate this significantly.</p>
+      <div class="form-grid three" style="margin-bottom:0;">
         <div class="form-group">
-          <label>Hours at wedding</label>
-          <div class="hint">Total hours at the venue</div>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="coverageHours" ></div>
+          <label>Hours on the day</label>
+          <div class="hint">Travel, setup, the wedding itself</div>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="coverageHours"></div>
         </div>
         <div class="form-group">
-          <label>Pre and post preparation</label>
-          <div class="hint">Planning, editing, delivery</div>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="editingHours" ></div>
+          <label>Preparation hours</label>
+          <div class="hint">Consultations, planning, prep work</div>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="editingHours"></div>
         </div>
         <div class="form-group">
-          <label>Admin and prep time</label>
-          <div class="hint">Emails, client calls</div>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="adminHours" ></div>
+          <label>Admin &amp; follow-up</label>
+          <div class="hint">Emails, invoices, delivery</div>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="adminHours"></div>
         </div>
+      </div>
+      <div class="hours-total-pill">
+        <span>Total hours per wedding</span>
+        <span class="hours-total-val" id="total-hours-display">0 hrs</span>
       </div>
     </div>
-    <div class="card">
-      <div class="card-title"><span class="icon">⭐</span> Your Experience Level and Hourly Rate</div>
-      <div class="exp-grid">
-        <div class="exp-card" id="exp-beginner">
-          <div class="exp-emoji">📖</div>
-          <div class="exp-title">Beginner</div>
-          <div class="exp-rate" id="exp-rate-beginner">€25/hr</div>
-          <div class="exp-years">0-2 years</div>
-          <div class="exp-range" id="exp-range-beginner">Market: €20-30/hr</div>
-        </div>
-        <div class="exp-card active" id="exp-intermediate">
-          <div class="exp-emoji">💡</div>
-          <div class="exp-title">Intermediate</div>
-          <div class="exp-rate" id="exp-rate-intermediate">€45/hr</div>
-          <div class="exp-years">2-5 years</div>
-          <div class="exp-range" id="exp-range-intermediate">Market: €35-55/hr</div>
-        </div>
-        <div class="exp-card" id="exp-pro">
-          <div class="exp-emoji">🌟</div>
-          <div class="exp-title">Professional</div>
-          <div class="exp-rate" id="exp-rate-pro">€60/hr</div>
-          <div class="exp-years">5+ years</div>
-          <div class="exp-range" id="exp-range-pro">Market: €50-80/hr</div>
-        </div>
-      </div>
-      <div class="custom-rate-box">
-        <label>Set Your Custom Hourly Rate</label>
-        <div class="custom-rate-row">
-          <div class="input-wrap has-pre has-suf" style="flex:1;min-width:160px;">
-            <span class="pre" id="sym-rate">€</span>
-            <span class="suf">/hr</span>
-            <input type="number" id="hourlyRate" value="45">
-          </div>
-          <div class="margin-suggest">
-            <div class="ms-label">Suggested Margin</div>
-            <div class="ms-value" id="ms-value">20%</div>
-            <div class="ms-note" id="ms-note">Based on your rate</div>
-          </div>
-        </div>
-      </div>
+
+    <!-- GUIDANCE NOTE -->
+    <div class="guidance-note">
+      📊 <strong style="color:var(--navy);">These calculations are for guidance only.</strong> They do not account for tax, VAT, or personal financial circumstances. Always speak to an accountant for advice specific to your business.
     </div>
-    <div class="card">
-      <div class="card-title"><span class="icon">💰</span> Profit Margin and Tax <span class="optional-badge">Optional</span></div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Profit margin</label>
-          <div class="hint">Added on top of your costs. Recommended: 20%</div>
-          <div class="input-wrap has-suf"><span class="suf">%</span><input type="number" id="profitMargin" value="20" ></div>
-        </div>
-        <div class="form-group">
-          <label>Tax rate</label>
-          <div class="hint">Your income tax rate. Leave blank if unsure.</div>
-          <div class="input-wrap has-suf"><span class="suf">%</span><input type="number" id="taxRate" ></div>
-        </div>
-      </div>
-      <p style="font-size:11px;font-weight:600;color:var(--muted);margin-top:14px;line-height:1.6;">This calculator is a guide only. Always consult an accountant for personalised advice.</p>
-    </div>
+
+    <!-- RESULTS -->
     <div class="result-strip" id="result-strip">
-      <div class="result-strip-top">
-        <div class="result-main">
-          <div class="rl">Your minimum price per wedding</div>
-          <div class="rv" id="res-min">E0</div>
-          <div class="rsub" id="res-sub">Based on your inputs</div>
+
+      <!-- What you need to charge -->
+      <div class="result-main-price">
+        <div class="rl">What you need to charge per wedding</div>
+        <div class="rv" id="res-needed-price">€0</div>
+        <div class="rsub" id="res-needed-sub">To hit your income goal after costs</div>
+      </div>
+
+      <!-- Current vs needed -->
+      <div class="situation-grid">
+        <div class="sit-card now">
+          <div class="sit-label">Your Current Hourly Rate</div>
+          <div class="sit-value" id="res-current-hourly">€0/hr</div>
+          <div class="sit-note" id="res-current-note">At your current price</div>
         </div>
-        <div class="result-grid">
-          <div class="result-cell"><div class="rc-label">Take Home Pay</div><div class="rc-value" id="res-labour">E0</div></div>
-          <div class="result-cell"><div class="rc-label">Total Costs</div><div class="rc-value" id="res-costs">E0</div></div>
-          <div class="result-cell"><div class="rc-label">True Hourly Rate</div><div class="rc-value" id="res-hourly">E0</div></div>
+        <div class="sit-card needed">
+          <div class="sit-label">Needed Hourly Rate</div>
+          <div class="sit-value" id="res-needed-hourly">€0/hr</div>
+          <div class="sit-note" id="res-needed-note">At your goal price</div>
         </div>
       </div>
+
+      <!-- Key stats -->
+      <div class="stats-row">
+        <div class="stat-cell">
+          <div class="sc-label">At current price you need</div>
+          <div class="sc-value" id="res-weddings-needed">0 weddings</div>
+        </div>
+        <div class="stat-cell">
+          <div class="sc-label">At goal price you need</div>
+          <div class="sc-value" id="res-weddings-goal">0 weddings</div>
+        </div>
+        <div class="stat-cell">
+          <div class="sc-label">Price gap</div>
+          <div class="sc-value" id="res-price-gap">€0</div>
+        </div>
+      </div>
+
+      <!-- Insight -->
+      <div class="insight-banner" id="insight-banner">
+        <p id="insight-text"></p>
+      </div>
+
+      <!-- Breakdown -->
       <div class="breakdown-rows">
-        <div class="brow"><span>Take home pay</span><strong id="bd-labour">E0</strong></div>
-        <div class="brow"><span>Overhead per wedding</span><strong id="bd-overhead">E0</strong></div>
-        <div class="brow"><span>Travel and extras</span><strong id="bd-travel">E0</strong></div>
-        <div class="brow"><span>Total hours</span><strong id="bd-hours">0</strong></div>
-        <div class="brow"><span>Profit added</span><strong id="bd-profit">E0</strong></div>
-        <div class="brow"><span>Tax added</span><strong id="bd-tax">E0</strong></div>
+        <div class="brow"><span>Total cost per wedding</span><strong id="bd-cost-per-wedding">€0</strong></div>
+        <div class="brow"><span>Pre-Tax Profit per wedding</span><strong id="bd-take-home">€0</strong></div>
+        <div class="brow"><span>Total hours per wedding</span><strong id="bd-hours">0 hrs</strong></div>
+        <div class="brow"><span>Your hourly rate</span><strong id="bd-hourly">€0/hr</strong></div>
+        <div class="brow"><span>Income goal</span><strong id="bd-income">€0</strong></div>
+        <div class="brow"><span>Weddings per year</span><strong id="bd-weddings">0</strong></div>
       </div>
-      <div class="warning-bar" id="res-warning" style="display:none;"></div>
+
+      <!-- Package suggestions -->
       <div class="pkg-variations">
-        <div class="pkg-var basic"><div class="pkg-var-name">Basic</div><div class="pkg-var-mult">Your minimum</div><div class="pkg-var-price" id="pv-basic">E0</div></div>
-        <div class="pkg-var standard"><div class="pkg-var-name">Standard</div><div class="pkg-var-mult">x 1.25</div><div class="pkg-var-price" id="pv-standard">E0</div></div>
-        <div class="pkg-var premium"><div class="pkg-var-name">Premium</div><div class="pkg-var-mult">x 1.6</div><div class="pkg-var-price" id="pv-premium">E0</div></div>
+        <div class="pkg-var basic"><div class="pkg-var-name">Base Package</div><div class="pkg-var-mult">Reach income goal</div><div class="pkg-var-price" id="pv-basic">€0</div></div>
+        <div class="pkg-var standard"><div class="pkg-var-name">Standard Package</div><div class="pkg-var-mult">× 1.25</div><div class="pkg-var-price" id="pv-standard">€0</div></div>
+        <div class="pkg-var premium"><div class="pkg-var-name">Premium Package</div><div class="pkg-var-mult">× 1.6</div><div class="pkg-var-price" id="pv-premium">€0</div></div>
       </div>
     </div>
+
     <button class="reset-btn" id="reset-btn" style="display:none;">Start Over</button>
   </div>
 </div>
-<div id="toast"></div>
 
 <script>
 var SB_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
@@ -333,55 +373,36 @@ if (!window._wbwSb) {
 }
 var sb = window._wbwSb;
 var user = null;
-var minPrice = 0;
 var currency = 'EUR';
+var SYMS = { EUR:'€', GBP:'£', USD:'$', AUD:'A$', CAD:'C$' };
 
-var CURRENCIES = {
-  EUR: { sym: '€', beginner: 25, intermediate: 45, pro: 60, ranges: { beginner: '€20-30/hr', intermediate: '€35-55/hr', pro: '€50-80/hr' } },
-  USD: { sym: '$', beginner: 30, intermediate: 54, pro: 72, ranges: { beginner: '$25-40/hr', intermediate: '$45-70/hr', pro: '$65-100/hr' } },
-  GBP: { sym: '£', beginner: 22, intermediate: 39, pro: 52, ranges: { beginner: '£18-28/hr', intermediate: '£30-48/hr', pro: '£45-70/hr' } },
-  AUD: { sym: 'A$', beginner: 38, intermediate: 68, pro: 91, ranges: { beginner: 'A$30-50/hr', intermediate: 'A$55-85/hr', pro: 'A$75-120/hr' } },
-  CAD: { sym: 'C$', beginner: 34, intermediate: 61, pro: 81, ranges: { beginner: 'C$28-45/hr', intermediate: 'C$50-75/hr', pro: 'C$70-110/hr' } }
-};
+function sym() { return SYMS[currency] || '€'; }
+function fmt(n) { if (!n && n !== 0) return sym()+'0'; return sym() + Math.round(n).toLocaleString('en-IE'); }
 
-function sym() { return CURRENCIES[currency].sym; }
-function fmt(n) { return sym() + Math.round(n).toLocaleString(); }
-
+// ── AUTH ──
 function switchTab(t) {
-  document.getElementById('form-in').style.display = t === 'in' ? '' : 'none';
-  document.getElementById('form-up').style.display = t === 'up' ? '' : 'none';
-  document.getElementById('tab-in').classList.toggle('active', t === 'in');
-  document.getElementById('tab-up').classList.toggle('active', t === 'up');
+  document.getElementById('form-in').style.display = t==='in'?'':'none';
+  document.getElementById('form-up').style.display = t==='up'?'':'none';
+  document.getElementById('tab-in').classList.toggle('active', t==='in');
+  document.getElementById('tab-up').classList.toggle('active', t==='up');
 }
-
 document.getElementById('tab-in').onclick = function() { switchTab('in'); };
 document.getElementById('tab-up').onclick = function() { switchTab('up'); };
-
 document.getElementById('signin-btn').onclick = function() {
-  var msg = document.getElementById('in-msg');
-  msg.className = 'auth-msg';
-  sb.auth.signInWithPassword({
-    email: document.getElementById('in-email').value.trim(),
-    password: document.getElementById('in-pass').value
-  }).then(function(result) {
-    if (result.error) { msg.className = 'auth-msg error'; msg.textContent = result.error.message; }
-  });
+  var msg = document.getElementById('in-msg'); msg.className='auth-msg';
+  sb.auth.signInWithPassword({ email: document.getElementById('in-email').value.trim(), password: document.getElementById('in-pass').value })
+    .then(function(r) { if (r.error) { msg.className='auth-msg error'; msg.textContent=r.error.message; } });
 };
-
 document.getElementById('signup-btn').onclick = function() {
-  var msg = document.getElementById('up-msg');
-  msg.className = 'auth-msg';
-  sb.auth.signUp({
-    email: document.getElementById('up-email').value.trim(),
-    password: document.getElementById('up-pass').value
-  }).then(function(result) {
-    if (result.error) { msg.className = 'auth-msg error'; msg.textContent = result.error.message; }
-    else { msg.className = 'auth-msg success'; msg.textContent = 'Account created! Please sign in.'; switchTab('in'); }
-  });
+  var msg = document.getElementById('up-msg'); msg.className='auth-msg';
+  sb.auth.signUp({ email: document.getElementById('up-email').value.trim(), password: document.getElementById('up-pass').value })
+    .then(function(r) {
+      if (r.error) { msg.className='auth-msg error'; msg.textContent=r.error.message; }
+      else { msg.className='auth-msg success'; msg.textContent='Account created! Please sign in.'; switchTab('in'); }
+    });
 };
-
 document.getElementById('signout-btn').onclick = function() { sb.auth.signOut(); };
-document.getElementById('reset-btn').onclick = function() { resetCalc(); };
+document.getElementById('reset-btn').onclick = resetCalc;
 
 function boot(u) {
   user = u;
@@ -389,205 +410,160 @@ function boot(u) {
   document.getElementById('app-screen').style.display = 'block';
   document.getElementById('nav-user').textContent = u.email;
   loadSaved();
-  selectExp('intermediate');
 }
-
-function showAuth() {
-  document.getElementById('auth-screen').style.display = 'flex';
-  document.getElementById('app-screen').style.display = 'none';
-}
-
-sb.auth.getSession().then(function(result) {
-  if (result.data && result.data.session && result.data.session.user) { boot(result.data.session.user); }
-});
-
+sb.auth.getSession().then(function(r) { if (r.data&&r.data.session&&r.data.session.user) boot(r.data.session.user); });
 sb.auth.onAuthStateChange(function(event, session) {
-  if (event === 'SIGNED_IN' && session && session.user) { boot(session.user); }
-  else if (event === 'SIGNED_OUT') { showAuth(); }
+  if (event==='SIGNED_IN'&&session&&session.user) boot(session.user);
+  else if (event==='SIGNED_OUT') {
+    document.getElementById('auth-screen').style.display='flex';
+    document.getElementById('app-screen').style.display='none';
+  }
 });
 
+// ── CURRENCY ──
 function onCurrencyChange() {
   currency = document.getElementById('currency').value;
-  var c = CURRENCIES[currency];
-  var syms = ['sym-equip','sym-other','sym-travel','sym-accomm','sym-extra','sym-rate'];
-  for (var i = 0; i < syms.length; i++) {
-    var el = document.getElementById(syms[i]);
-    if (el) el.textContent = c.sym;
-  }
-  var levels = ['beginner','intermediate','pro'];
-  for (var j = 0; j < levels.length; j++) {
-    var k = levels[j];
-    document.getElementById('exp-rate-' + k).textContent = c.sym + c[k] + '/hr';
-    document.getElementById('exp-range-' + k).textContent = 'Market: ' + c.ranges[k];
-  }
-  var activeCard = document.querySelector('.exp-card.active');
-  if (activeCard) {
-    var lvl = activeCard.id.replace('exp-', '');
-    document.getElementById('hourlyRate').value = c[lvl];
-  }
+  var s = sym();
+  ['sym-goal','sym-price','sym-equip','sym-other','sym-subs','sym-monthly','sym-travel','sym-accomm','sym-extra'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) el.textContent = s;
+  });
   calc();
 }
-
 document.getElementById('currency').onchange = onCurrencyChange;
 
-function selectExp(lvl) {
-  var levels = ['beginner','intermediate','pro'];
-  for (var i = 0; i < levels.length; i++) {
-    document.getElementById('exp-' + levels[i]).classList.toggle('active', levels[i] === lvl);
-  }
-  document.getElementById('hourlyRate').value = CURRENCIES[currency][lvl];
-  updateMarginSuggest();
-  calc();
-}
-
-document.getElementById('exp-beginner').onclick = function() { selectExp('beginner'); };
-document.getElementById('exp-intermediate').onclick = function() { selectExp('intermediate'); };
-document.getElementById('exp-pro').onclick = function() { selectExp('pro'); };
-
-function updateMarginSuggest() {
-  var rate = parseFloat(document.getElementById('hourlyRate').value) || 0;
-  var m = 20;
-  var note = 'Standard rate';
-  if (rate <= 25) { m = 15; note = 'Entry level rate'; }
-  else if (rate >= 55) { m = 25; note = 'Premium rate'; }
-  document.getElementById('ms-value').textContent = m + '%';
-  document.getElementById('ms-note').textContent = note;
-  var cur = parseFloat(document.getElementById('profitMargin').value);
-  if (!cur || cur === 15 || cur === 20 || cur === 25) {
-    document.getElementById('profitMargin').value = m;
-  }
-}
-
-document.getElementById('hourlyRate').oninput = function() {
-  var levels = ['beginner','intermediate','pro'];
-  for (var i = 0; i < levels.length; i++) {
-    document.getElementById('exp-' + levels[i]).classList.remove('active');
-  }
-  updateMarginSuggest();
-  calc();
-};
+// ── CALC ──
+function g(id) { return parseFloat(document.getElementById(id).value) || 0; }
 
 function calc() {
-  var equipment     = parseFloat(document.getElementById('equipment').value)     || 0;
-  var otherExpenses = parseFloat(document.getElementById('otherExpenses').value) || 0;
-  var weddingCount  = Math.max(1, parseFloat(document.getElementById('weddingCount').value) || 1);
-  var travelCosts   = parseFloat(document.getElementById('travelCosts').value)   || 0;
-  var accommodation = parseFloat(document.getElementById('accommodation').value) || 0;
-  var extraCosts    = parseFloat(document.getElementById('extraCosts').value)    || 0;
-  var coverageHrs   = parseFloat(document.getElementById('coverageHours').value) || 0;
-  var editingHrs    = parseFloat(document.getElementById('editingHours').value)  || 0;
-  var adminHrs      = parseFloat(document.getElementById('adminHours').value)    || 0;
-  var profitPct     = parseFloat(document.getElementById('profitMargin').value)  || 0;
-  var taxPct        = parseFloat(document.getElementById('taxRate').value)       || 0;
-  var rate          = parseFloat(document.getElementById('hourlyRate').value)    || 45;
+  var incomeGoal    = g('incomeGoal');
+  var currentPrice  = g('currentPrice');
+  var weddingCount  = Math.max(1, g('weddingCount') || 1);
+  var equipment     = g('equipment');
+  var otherExpenses = g('otherExpenses');
+  var monthlySubs   = g('monthlySubscriptions');
+  var monthlyOther  = g('monthlyOther');
+  var travelCosts   = g('travelCosts');
+  var accommodation = g('accommodation');
+  var extraCosts    = g('extraCosts');
+  var coverageHrs   = g('coverageHours');
+  var editingHrs    = g('editingHours');
+  var adminHrs      = g('adminHours');
 
-  var overheadPerWedding = (equipment + otherExpenses) / weddingCount;
-  var travelTotal        = travelCosts + accommodation + extraCosts;
-  var totalHours         = coverageHrs + editingHrs + adminHrs;
-  var labour             = rate * totalHours;
-  var subtotal           = labour + overheadPerWedding + travelTotal;
-  var profitAmt          = subtotal * (profitPct / 100);
-  var withProfit         = subtotal + profitAmt;
-  var taxAmt             = withProfit * (taxPct / 100);
-  minPrice               = withProfit + taxAmt;
+  var totalHours    = coverageHrs + editingHrs + adminHrs;
+  var annualFixed   = equipment + otherExpenses;
+  var annualMonthly = (monthlySubs + monthlyOther) * 12;
+  var totalAnnual   = annualFixed + annualMonthly;
+  var perWedding    = travelCosts + accommodation + extraCosts;
+  var overheadPerWedding = totalAnnual / weddingCount;
 
-  document.getElementById('result-strip').classList.add('show');
-  document.getElementById('reset-btn').style.display = 'block';
-  document.getElementById('res-min').textContent     = fmt(minPrice);
-  document.getElementById('res-sub').textContent     = weddingCount + ' weddings, ' + totalHours + ' hours each';
-  document.getElementById('res-labour').textContent  = fmt(labour);
-  document.getElementById('res-costs').textContent   = fmt(overheadPerWedding + travelTotal);
-  document.getElementById('res-hourly').textContent  = fmt(rate);
-  document.getElementById('bd-labour').textContent   = fmt(labour);
-  document.getElementById('bd-overhead').textContent = fmt(overheadPerWedding);
-  document.getElementById('bd-travel').textContent   = fmt(travelTotal);
-  document.getElementById('bd-hours').textContent    = totalHours + ' hrs';
-  document.getElementById('bd-profit').textContent   = fmt(profitAmt);
-  document.getElementById('bd-tax').textContent      = fmt(taxAmt);
-  document.getElementById('pv-basic').textContent    = fmt(minPrice);
-  document.getElementById('pv-standard').textContent = fmt(minPrice * 1.25);
-  document.getElementById('pv-premium').textContent  = fmt(minPrice * 1.6);
+  // What they need to charge: (totalAnnualCosts + incomeGoal) / weddings + perWeddingCosts
+  var neededPrice = (totalAnnual + incomeGoal) / weddingCount + perWedding;
 
-  var trueHourly = totalHours > 0 ? minPrice / totalHours : 0;
-  var warn = document.getElementById('res-warning');
-  if (totalHours > 0 && trueHourly < rate * 0.6) {
-    warn.style.display = 'block';
-    warn.textContent = 'Your true hourly rate at this price would be ' + fmt(trueHourly) + '/hr — below your target. Consider raising your price.';
-  } else {
-    warn.style.display = 'none';
+  // Hourly rates
+  var currentHourly = totalHours > 0 ? currentPrice / totalHours : 0;
+  var neededHourly  = totalHours > 0 ? neededPrice  / totalHours : 0;
+
+  // Weddings needed at each price point (to cover costs + income goal)
+  var totalRequired = totalAnnual + incomeGoal;
+  var weddingsAtCurrent = currentPrice > perWedding ? Math.ceil(totalRequired / (currentPrice - perWedding)) : 999;
+  var weddingsAtGoal    = neededPrice  > perWedding ? Math.ceil(totalRequired / (neededPrice  - perWedding)) : weddingCount;
+
+  var priceGap = neededPrice - currentPrice;
+
+  // Update hours pill
+  document.getElementById('total-hours-display').textContent = totalHours + ' hrs';
+
+  // Show results if we have enough to calculate
+  if (incomeGoal > 0 || currentPrice > 0) {
+    document.getElementById('result-strip').classList.add('show');
+    document.getElementById('reset-btn').style.display = 'block';
   }
-  save();
+
+  document.getElementById('res-needed-price').textContent  = fmt(neededPrice);
+  document.getElementById('res-needed-sub').textContent    = 'Based on ' + weddingCount + ' weddings · ' + totalHours + ' hrs each';
+  document.getElementById('res-current-hourly').textContent = totalHours > 0 ? fmt(currentHourly)+'/hr' : '—';
+  document.getElementById('res-current-note').textContent  = 'At '+fmt(currentPrice)+' per wedding';
+  document.getElementById('res-needed-hourly').textContent  = totalHours > 0 ? fmt(neededHourly)+'/hr' : '—';
+  document.getElementById('res-needed-note').textContent   = 'At '+fmt(neededPrice)+' per wedding';
+  document.getElementById('res-weddings-needed').textContent = weddingsAtCurrent < 500 ? weddingsAtCurrent + ' weddings' : '500+ weddings';
+  document.getElementById('res-weddings-goal').textContent   = weddingCount + ' weddings';
+  document.getElementById('res-price-gap').textContent      = priceGap >= 0 ? '+'+fmt(priceGap) : fmt(priceGap);
+
+  // Insight message
+  var banner = document.getElementById('insight-banner');
+  var text   = document.getElementById('insight-text');
+  if (currentPrice > 0 && incomeGoal > 0) {
+    if (priceGap > 0) {
+      banner.className = 'insight-banner gap';
+      text.innerHTML = 'At <strong>'+fmt(currentPrice)+'</strong> you would need to do <strong>'+weddingsAtCurrent+' weddings</strong> to hit your goal — raising your price to <strong>'+fmt(neededPrice)+'</strong> means you only need <strong>'+weddingCount+'</strong>.';
+    } else if (priceGap < 0) {
+      banner.className = 'insight-banner ok';
+      text.innerHTML = 'Your current price of <strong>'+fmt(currentPrice)+'</strong> already covers your goal at <strong>'+weddingCount+' weddings</strong>. You are charging above your minimum — keep it there.';
+    } else {
+      banner.className = 'insight-banner ok';
+      text.innerHTML = 'Your current price is exactly at your minimum. You are covering your costs and hitting your goal at <strong>'+weddingCount+' weddings</strong>.';
+    }
+  } else {
+    banner.className = 'insight-banner gap';
+    text.innerHTML = 'Enter your income goal and current price above to see your full picture.';
+  }
+
+  var takeHomePerWedding = incomeGoal / weddingCount;
+  var totalCostPerWedding = overheadPerWedding + perWedding;
+  document.getElementById('bd-cost-per-wedding').textContent = fmt(totalCostPerWedding);
+  document.getElementById('bd-take-home').textContent        = fmt(takeHomePerWedding);
+  document.getElementById('bd-hours').textContent            = totalHours + ' hrs';
+  document.getElementById('bd-hourly').textContent           = totalHours > 0 ? fmt(neededHourly) + '/hr' : '—';
+  document.getElementById('bd-income').textContent           = fmt(incomeGoal);
+  document.getElementById('bd-weddings').textContent         = weddingCount;
+  document.getElementById('pv-basic').textContent      = fmt(neededPrice);
+  document.getElementById('pv-standard').textContent   = fmt(neededPrice * 1.25);
+  document.getElementById('pv-premium').textContent    = fmt(neededPrice * 1.6);
+
+  // Save for Income Goals
+  if (user) {
+    try {
+      localStorage.setItem('wbw-pfp-' + user.id, JSON.stringify({
+        incomeGoal: incomeGoal, currentPrice: currentPrice, weddingCount: weddingCount,
+        totalHours: totalHours, totalAnnual: totalAnnual, perWedding: perWedding,
+        neededPrice: neededPrice, currentHourly: currentHourly, neededHourly: neededHourly,
+        minPrice: neededPrice, basic: neededPrice, standard: neededPrice*1.25, premium: neededPrice*1.6
+      }));
+    } catch(e) {}
+  }
 }
 
-var inputIds = ['equipment','otherExpenses','weddingCount','holidayWeeks','travelCosts','accommodation','extraCosts','coverageHours','editingHours','adminHours','profitMargin','taxRate'];
-for (var ii = 0; ii < inputIds.length; ii++) {
-  (function(id) {
-    var el = document.getElementById(id);
-    if (el) el.oninput = calc;
-  })(inputIds[ii]);
-}
+// ── INPUT LISTENERS ──
+['incomeGoal','currentPrice','weddingCount','equipment','otherExpenses','monthlySubscriptions','monthlyOther',
+ 'travelCosts','accommodation','extraCosts','coverageHours','editingHours','adminHours'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) el.oninput = calc;
+});
 
-function save() {
-  if (!user) return;
-  try {
-    var data = {
-      equipment: document.getElementById('equipment').value,
-      otherExpenses: document.getElementById('otherExpenses').value,
-      weddingCount: document.getElementById('weddingCount').value,
-      holidayWeeks: document.getElementById('holidayWeeks').value,
-      travelCosts: document.getElementById('travelCosts').value,
-      accommodation: document.getElementById('accommodation').value,
-      extraCosts: document.getElementById('extraCosts').value,
-      coverageHours: document.getElementById('coverageHours').value,
-      editingHours: document.getElementById('editingHours').value,
-      adminHours: document.getElementById('adminHours').value,
-      profitMargin: document.getElementById('profitMargin').value,
-      taxRate: document.getElementById('taxRate').value,
-      hourlyRate: document.getElementById('hourlyRate').value,
-      currency: currency
-    };
-    localStorage.setItem('wbw-pfp-' + user.id, JSON.stringify(data));
-  } catch(e) {}
-}
-
+// ── SAVE / LOAD ──
 function loadSaved() {
   if (!user) return;
   try {
     var raw = localStorage.getItem('wbw-pfp-' + user.id);
     if (!raw) return;
     var d = JSON.parse(raw);
-    var fields = ['equipment','otherExpenses','weddingCount','holidayWeeks','travelCosts','accommodation','extraCosts','coverageHours','editingHours','adminHours','profitMargin','taxRate','hourlyRate'];
-    for (var i = 0; i < fields.length; i++) {
-      var el = document.getElementById(fields[i]);
-      if (el && d[fields[i]]) el.value = d[fields[i]];
-    }
-    if (d.currency) {
-      currency = d.currency;
-      document.getElementById('currency').value = d.currency;
-      onCurrencyChange();
-    }
+    var fields = ['incomeGoal','currentPrice','weddingCount','equipment','otherExpenses','monthlySubscriptions','monthlyOther',
+                  'travelCosts','accommodation','extraCosts','coverageHours','editingHours','adminHours'];
+    fields.forEach(function(f) { var el=document.getElementById(f); if (el&&d[f]!==undefined) el.value=d[f]; });
+    if (d.currency) { currency=d.currency; document.getElementById('currency').value=d.currency; onCurrencyChange(); }
     calc();
   } catch(e) {}
 }
 
 function resetCalc() {
-  var fields = ['equipment','otherExpenses','weddingCount','holidayWeeks','travelCosts','accommodation','extraCosts','coverageHours','editingHours','adminHours','taxRate'];
-  for (var i = 0; i < fields.length; i++) {
-    var el = document.getElementById(fields[i]);
-    if (el) el.value = '';
-  }
-  document.getElementById('profitMargin').value = 20;
-  document.getElementById('reset-btn').style.display = 'none';
+  ['incomeGoal','currentPrice','weddingCount','equipment','otherExpenses','monthlySubscriptions','monthlyOther',
+   'travelCosts','accommodation','extraCosts','coverageHours','editingHours','adminHours'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) el.value = '';
+  });
   document.getElementById('result-strip').classList.remove('show');
-  selectExp('intermediate');
+  document.getElementById('reset-btn').style.display = 'none';
+  document.getElementById('total-hours-display').textContent = '0 hrs';
   window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function toast(msg) {
-  var el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(function() { el.classList.remove('show'); }, 3000);
 }
 </script>
 </body>
