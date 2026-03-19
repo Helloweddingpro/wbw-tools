@@ -375,32 +375,37 @@ function loadPFPData() {
       return;
     }
     var pd = JSON.parse(raw);
-    if (pd.currency) {
-      currency = pd.currency;
-      document.getElementById('currency').value = pd.currency;
-      updateSymbols();
+    var minPrice = 0;
+    if (pd.neededPrice && pd.neededPrice > 0) {
+      // New reverse-engineered PFP format
+      minPrice = Math.round(pd.neededPrice);
+    } else if (pd.minPrice && pd.minPrice > 0) {
+      // Fallback for formats that saved minPrice directly
+      minPrice = Math.round(pd.minPrice);
+    } else {
+      // Legacy format — recalculate from raw fields
+      var equipment     = parseFloat(pd.equipment)     || 0;
+      var otherExpenses = parseFloat(pd.otherExpenses) || 0;
+      var weddingCount  = Math.max(1, parseFloat(pd.weddingCount) || 1);
+      var travelCosts   = parseFloat(pd.travelCosts)   || 0;
+      var accommodation = parseFloat(pd.accommodation) || 0;
+      var extraCosts    = parseFloat(pd.extraCosts)    || 0;
+      var coverageHrs   = parseFloat(pd.coverageHours) || 0;
+      var editingHrs    = parseFloat(pd.editingHours)  || 0;
+      var adminHrs      = parseFloat(pd.adminHours)    || 0;
+      var profitPct     = parseFloat(pd.profitMargin)  || 0;
+      var taxPct        = parseFloat(pd.taxRate)       || 0;
+      var rate          = parseFloat(pd.hourlyRate)    || 45;
+      var overheadPerWedding = (equipment + otherExpenses) / weddingCount;
+      var travelTotal        = travelCosts + accommodation + extraCosts;
+      var totalHours         = coverageHrs + editingHrs + adminHrs;
+      var labour             = rate * totalHours;
+      var subtotal           = labour + overheadPerWedding + travelTotal;
+      var profitAmt          = subtotal * (profitPct / 100);
+      var withProfit         = subtotal + profitAmt;
+      var taxAmt             = withProfit * (taxPct / 100);
+      minPrice               = Math.round(withProfit + taxAmt);
     }
-    var equipment     = parseFloat(pd.equipment)     || 0;
-    var otherExpenses = parseFloat(pd.otherExpenses) || 0;
-    var weddingCount  = Math.max(1, parseFloat(pd.weddingCount) || 1);
-    var travelCosts   = parseFloat(pd.travelCosts)   || 0;
-    var accommodation = parseFloat(pd.accommodation) || 0;
-    var extraCosts    = parseFloat(pd.extraCosts)    || 0;
-    var coverageHrs   = parseFloat(pd.coverageHours) || 0;
-    var editingHrs    = parseFloat(pd.editingHours)  || 0;
-    var adminHrs      = parseFloat(pd.adminHours)    || 0;
-    var profitPct     = parseFloat(pd.profitMargin)  || 0;
-    var taxPct        = parseFloat(pd.taxRate)       || 0;
-    var rate          = parseFloat(pd.hourlyRate)    || 45;
-    var overheadPerWedding = (equipment + otherExpenses) / weddingCount;
-    var travelTotal        = travelCosts + accommodation + extraCosts;
-    var totalHours         = coverageHrs + editingHrs + adminHrs;
-    var labour             = rate * totalHours;
-    var subtotal           = labour + overheadPerWedding + travelTotal;
-    var profitAmt          = subtotal * (profitPct / 100);
-    var withProfit         = subtotal + profitAmt;
-    var taxAmt             = withProfit * (taxPct / 100);
-    var minPrice           = Math.round(withProfit + taxAmt);
 
     if (minPrice > 0) {
       // Store all 3 package prices globally
@@ -415,9 +420,7 @@ function loadPFPData() {
       // Show banner
       var banner = document.getElementById('pfp-banner');
       document.getElementById('pfp-banner-text').textContent =
-        'Prices pulled from Price for Profit — Basic ' + fmt(minPrice) +
-        ', Standard ' + fmt(window._pfpPrices.standard) +
-        ', Premium ' + fmt(window._pfpPrices.premium) + '. Using Basic as default. You can adjust above.';
+        'Minimum price pulled from Price for Profit — ' + fmt(minPrice) + '. You can adjust above.';
       banner.style.display = 'flex';
       document.getElementById('no-pfp-banner').style.display = 'none';
       calc();
