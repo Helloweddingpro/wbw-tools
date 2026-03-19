@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Media Planner — Wedding Business Workspace</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:    #3B3C6D;
+  --pink:    #FB478E;
+  --purple:  #7C3AED;
+  --pu-light: rgba(124,58,237,.1);
+  --pu-mid:   rgba(124,58,237,.18);
+  --cream:   #FAF8F6;
+  --white:   #FFFFFF;
+  --border:  rgba(59,60,109,.12);
+  --muted:   rgba(59,60,109,.5);
+  --text:    #2A2B4A;
+  --green:   #27ae60;
+  --red:     #c0392b;
+}
+body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
+
+/* ── AUTH ─────────────────────────────────────────────── */
+#auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+.auth-card { background:var(--white); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; box-shadow:0 8px 40px rgba(59,60,109,.1); }
+.auth-logo { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+.auth-tagline { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:32px; }
+.auth-tabs { display:flex; gap:6px; background:var(--cream); border-radius:14px; padding:5px; margin-bottom:24px; }
+.auth-tab { flex:1; padding:9px; border-radius:10px; border:none; background:transparent; color:var(--muted); font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+.auth-tab.active { background:var(--white); color:var(--navy); box-shadow:0 2px 8px rgba(59,60,109,.1); }
+.auth-field { margin-bottom:14px; }
+.auth-field label { display:block; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.auth-field input { width:100%; padding:12px 16px; background:var(--cream); border:1.5px solid var(--border); border-radius:12px; color:var(--text); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; transition:border-color .2s; }
+.auth-field input:focus { outline:none; border-color:var(--purple); }
+.auth-submit { width:100%; padding:14px; background:var(--purple); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; margin-top:6px; transition:opacity .2s; }
+.auth-submit:hover { opacity:.88; }
+.auth-submit:disabled { opacity:.5; cursor:not-allowed; }
+.auth-msg { margin-top:12px; font-size:13px; font-weight:700; text-align:center; min-height:18px; }
+.auth-msg.error { color:var(--red); } .auth-msg.success { color:var(--green); }
+
+/* ── NAV ──────────────────────────────────────────────── */
+#app-screen { display:none; }
+.topnav { background:var(--navy); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:64px; position:sticky; top:0; z-index:100; }
+.nav-left { display:flex; align-items:center; gap:16px; }
+.nav-back { font-size:13px; font-weight:700; color:rgba(255,255,255,.6); text-decoration:none; transition:color .2s; }
+.nav-back:hover { color:#fff; }
+.nav-logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:700; color:#fff; }
+.nav-logo span { color:var(--pink); }
+.nav-right { display:flex; align-items:center; gap:14px; }
+.nav-user { font-size:12px; font-weight:600; color:rgba(255,255,255,.5); }
+.nav-signout { padding:8px 16px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:10px; color:rgba(255,255,255,.7); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all .2s; }
+.nav-signout:hover { background:rgba(255,255,255,.2); color:#fff; }
+
+/* ── PAGE HERO ────────────────────────────────────────── */
+.page-hero { background:var(--navy); padding:40px 48px 44px; border-bottom:3px solid var(--purple); }
+.hero-eyebrow { font-size:11px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--purple); margin-bottom:10px; }
+.page-hero h1 { font-family:'Cormorant Garamond',serif; font-size:38px; font-weight:700; color:#fff; line-height:1.15; margin-bottom:10px; }
+.page-hero h1 em { color:var(--purple); font-style:italic; }
+.page-hero p { font-size:14px; font-weight:600; color:rgba(255,255,255,.6); max-width:520px; line-height:1.65; }
+
+/* ── MAIN ─────────────────────────────────────────────── */
+.main { max-width:960px; margin:0 auto; padding:40px 32px 80px; }
+
+/* ── SECTION BLOCKS ───────────────────────────────────── */
+.section { background:var(--white); border-radius:20px; padding:36px 40px; margin-bottom:28px; box-shadow:0 2px 16px rgba(59,60,109,.06); }
+.section-label { font-size:10px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; color:var(--purple); margin-bottom:8px; }
+.section-title { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+.section-sub { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:24px; line-height:1.5; }
+.divider { height:1px; background:var(--border); margin:24px 0; }
+
+/* ── ICA PROFILE ──────────────────────────────────────── */
+.ica-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px; }
+.ica-chip { background:var(--pu-light); border-radius:14px; padding:14px 16px; }
+.ica-chip-label { font-size:10px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:var(--purple); margin-bottom:5px; }
+.ica-chip-value { font-size:13px; font-weight:700; color:var(--navy); line-height:1.4; }
+.ica-empty { background:var(--pu-light); border-radius:14px; padding:20px 24px; text-align:center; }
+.ica-empty p { font-size:13px; font-weight:600; color:var(--muted); }
+.ica-empty a { color:var(--purple); text-decoration:none; font-weight:800; }
+
+/* ── VENUE SUGGESTIONS ────────────────────────────────── */
+.venue-filter { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.vf-btn { padding:7px 16px; border-radius:20px; border:1.5px solid var(--border); background:transparent; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; color:var(--muted); cursor:pointer; transition:all .2s; }
+.vf-btn.active { background:var(--purple); border-color:var(--purple); color:#fff; }
+.vf-btn:hover:not(.active) { border-color:var(--purple); color:var(--purple); }
+
+.suggestion-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
+.sug-card { border:1.5px solid var(--border); border-radius:16px; padding:18px 20px; cursor:pointer; transition:all .2s; position:relative; overflow:hidden; }
+.sug-card::before { content:''; position:absolute; inset:0; background:var(--pu-light); opacity:0; transition:opacity .2s; }
+.sug-card:hover { border-color:var(--purple); transform:translateY(-2px); box-shadow:0 6px 20px rgba(124,58,237,.12); }
+.sug-card:hover::before { opacity:1; }
+.sug-type { font-size:10px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:var(--purple); margin-bottom:6px; position:relative; }
+.sug-text { font-size:13px; font-weight:700; color:var(--navy); line-height:1.5; margin-bottom:6px; position:relative; }
+.sug-hint { font-size:11px; font-weight:600; color:var(--muted); line-height:1.45; position:relative; }
+.sug-use { position:absolute; top:14px; right:16px; font-size:10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--purple); opacity:0; transition:opacity .2s; }
+.sug-card:hover .sug-use { opacity:1; }
+
+.no-venues { text-align:center; padding:32px; color:var(--muted); font-size:13px; font-weight:600; grid-column:1/-1; }
+.no-venues a { color:var(--purple); font-weight:800; text-decoration:none; }
+
+/* ── PLATFORM FOCUS ───────────────────────────────────── */
+.platform-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
+.plat-card { border:2px solid var(--border); border-radius:16px; padding:18px 14px; text-align:center; cursor:pointer; transition:all .2s; }
+.plat-card:hover { border-color:var(--purple); }
+.plat-card.active { border-color:var(--purple); background:var(--pu-light); }
+.plat-icon { font-size:24px; margin-bottom:6px; }
+.plat-name { font-size:12px; font-weight:800; color:var(--navy); margin-bottom:3px; }
+.plat-card.active .plat-name { color:var(--purple); }
+.plat-desc { font-size:11px; font-weight:600; color:var(--muted); }
+
+.plat-tip-box { border-left:3px solid var(--purple); background:var(--pu-light); border-radius:0 14px 14px 0; padding:16px 20px; display:none; }
+.plat-tip-box.visible { display:block; }
+.plat-tip-box p { font-size:13px; font-weight:600; color:var(--navy); line-height:1.65; margin-bottom:10px; }
+.plat-tip-box p:last-child { margin-bottom:0; }
+.plat-tip-box strong { color:var(--purple); }
+
+/* ── WEEK PLANNER ─────────────────────────────────────── */
+.week-nav { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.wn-btn { width:36px; height:36px; border-radius:10px; border:1.5px solid var(--border); background:var(--cream); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--navy); transition:all .2s; }
+.wn-btn:hover { border-color:var(--purple); color:var(--purple); }
+.wn-label { font-size:14px; font-weight:800; color:var(--navy); min-width:200px; text-align:center; }
+
+.week-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:10px; }
+.day-col { display:flex; flex-direction:column; gap:6px; }
+.day-head { font-size:10px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; text-align:center; color:var(--muted); padding-bottom:6px; border-bottom:2px solid var(--border); }
+.day-head.today { color:var(--purple); border-color:var(--purple); }
+.day-date { font-size:12px; font-weight:700; color:var(--muted); text-align:center; }
+.day-date.today { background:var(--purple); color:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:11px; }
+
+.slot-wrap { position:relative; }
+.post-slot { width:100%; min-height:88px; background:var(--cream); border:1.5px dashed var(--border); border-radius:12px; padding:10px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; color:var(--text); resize:none; outline:none; transition:all .2s; line-height:1.5; }
+.post-slot::placeholder { color:rgba(59,60,109,.3); font-weight:600; }
+.post-slot:focus { border-color:var(--purple); border-style:solid; background:var(--white); }
+.post-slot.filled { background:var(--white); border-color:var(--pu-mid); border-style:solid; }
+
+.slot-plats { display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
+.sp-btn { font-size:10px; font-weight:800; padding:3px 8px; border-radius:8px; border:1.5px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; transition:all .15s; font-family:'Montserrat',sans-serif; }
+.sp-btn.on { background:var(--purple); border-color:var(--purple); color:#fff; }
+
+/* ── SAVE BAR ─────────────────────────────────────────── */
+.save-bar { display:flex; align-items:center; justify-content:space-between; padding-top:24px; margin-top:20px; border-top:1px solid var(--border); }
+.save-status { font-size:12px; font-weight:700; color:var(--muted); }
+.save-status.saving { color:var(--purple); }
+.save-status.saved { color:var(--green); }
+.btn-save { padding:12px 28px; background:var(--purple); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:opacity .2s; }
+.btn-save:hover { opacity:.88; }
+.btn-save:disabled { opacity:.5; cursor:not-allowed; }
+
+/* ── LOADING SHIMMER ──────────────────────────────────── */
+.shimmer { background:linear-gradient(90deg,var(--cream) 25%,var(--border) 50%,var(--cream) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:10px; height:16px; margin-bottom:10px; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+.shimmer-block { padding:8px 0; }
+
+/* ── RESPONSIVE ───────────────────────────────────────── */
+@media (max-width:768px) {
+  .topnav { padding:0 20px; }
+  .page-hero { padding:28px 24px 32px; }
+  .page-hero h1 { font-size:28px; }
+  .main { padding:24px 20px 60px; }
+  .section { padding:24px 20px; }
+  .week-grid { grid-template-columns:repeat(4,1fr); }
+  .platform-grid { grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:500px) {
+  .week-grid { grid-template-columns:repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ── AUTH ────────────────────────────────────────────────── -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">Social Media Planner</div>
+    <div class="auth-tagline">Wedding Business Workspace</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-in" onclick="switchTab('in')">Sign In</button>
+      <button class="auth-tab" id="tab-up" onclick="switchTab('up')">Create Account</button>
+    </div>
+    <div id="form-in">
+      <div class="auth-field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="in-pass" placeholder="Your password"></div>
+      <button class="auth-submit" id="signin-btn" onclick="signIn()">Sign In</button>
+      <div class="auth-msg" id="in-msg"></div>
+    </div>
+    <div id="form-up" style="display:none">
+      <div class="auth-field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="up-pass" placeholder="Min 6 characters"></div>
+      <button class="auth-submit" id="signup-btn" onclick="signUp()">Create Account</button>
+      <div class="auth-msg" id="up-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ─────────────────────────────────────────────────── -->
+<div id="app-screen">
+
+  <nav class="topnav">
+    <div class="nav-left">
+      <a class="nav-back" href="index.html">← Dashboard</a>
+      <div class="nav-logo">Social Media <span>Planner</span></div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-user" id="nav-user"></div>
+      <button class="nav-signout" onclick="signOut()">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="hero-eyebrow">Wedding Business Workspace</div>
+    <h1>Plan content that attracts<br><em>your ideal client.</em></h1>
+    <p>Content ideas pulled from your ICA profile and top venues — so every post is working towards the enquiries you actually want.</p>
+  </div>
+
+  <div class="main">
+
+    <!-- ── SECTION 1: ICA PROFILE ──────────────────────── -->
+    <div class="section">
+      <div class="section-label">Section 1</div>
+      <div class="section-title">Your Ideal Client Profile</div>
+      <div class="section-sub">Pulled automatically from your Find Your Most Profitable Client tool.</div>
+      <div id="ica-content">
+        <div class="shimmer-block">
+          <div class="shimmer" style="width:55%"></div>
+          <div class="shimmer" style="width:75%"></div>
+          <div class="shimmer" style="width:45%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 2: VENUE IDEAS ──────────────────────── -->
+    <div class="section">
+      <div class="section-label">Section 2</div>
+      <div class="section-title">Venue-Led Content Ideas</div>
+      <div class="section-sub">Based on your ICA's dream venues and your highest-enquiry venues from the Lead Tracker. Click any idea to drop it into your weekly planner.</div>
+
+      <div class="venue-filter" id="venue-filter">
+        <button class="vf-btn active" onclick="filterVenue(this,'all')">All Venues</button>
+      </div>
+
+      <div class="suggestion-grid" id="suggestion-grid">
+        <div class="shimmer-block" style="grid-column:1/-1">
+          <div class="shimmer" style="width:65%"></div>
+          <div class="shimmer" style="width:45%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 3: PLATFORM FOCUS ───────────────────── -->
+    <div class="section">
+      <div class="section-label">Section 3</div>
+      <div class="section-title">Platform Focus</div>
+      <div class="section-sub">Select the platforms you're posting on. Tips are tailored to wedding suppliers on each one.</div>
+
+      <div class="platform-grid">
+        <div class="plat-card active" onclick="togglePlat(this,'instagram')" data-plat="instagram">
+          <div class="plat-icon">📸</div>
+          <div class="plat-name">Instagram</div>
+          <div class="plat-desc">Reels + carousels</div>
+        </div>
+        <div class="plat-card" onclick="togglePlat(this,'tiktok')" data-plat="tiktok">
+          <div class="plat-icon">🎵</div>
+          <div class="plat-name">TikTok</div>
+          <div class="plat-desc">Short-form video</div>
+        </div>
+        <div class="plat-card" onclick="togglePlat(this,'pinterest')" data-plat="pinterest">
+          <div class="plat-icon">📌</div>
+          <div class="plat-name">Pinterest</div>
+          <div class="plat-desc">Long-game traffic</div>
+        </div>
+        <div class="plat-card" onclick="togglePlat(this,'facebook')" data-plat="facebook">
+          <div class="plat-icon">👥</div>
+          <div class="plat-name">Facebook</div>
+          <div class="plat-desc">Groups + pages</div>
+        </div>
+        <div class="plat-card" onclick="togglePlat(this,'linkedin')" data-plat="linkedin">
+          <div class="plat-icon">💼</div>
+          <div class="plat-name">LinkedIn</div>
+          <div class="plat-desc">B2B + venue collabs</div>
+        </div>
+        <div class="plat-card" onclick="togglePlat(this,'blog')" data-plat="blog">
+          <div class="plat-icon">✍️</div>
+          <div class="plat-name">Blog / SEO</div>
+          <div class="plat-desc">Evergreen content</div>
+        </div>
+      </div>
+
+      <div class="plat-tip-box visible" id="plat-tip-box">
+        <p><strong>Instagram:</strong> Reels shot at your ICA's dream venues perform best. Aim for 3–4 posts per week — 2 Reels, 1 carousel (tips or process), and 1 Story sequence behind the scenes. Consistency beats frequency.</p>
+      </div>
+    </div>
+
+    <!-- ── SECTION 4: WEEKLY PLANNER ───────────────────── -->
+    <div class="section">
+      <div class="section-label">Section 4</div>
+      <div class="section-title">Weekly Content Planner</div>
+      <div class="section-sub">Write your post ideas for the week. Use the platform tags to track where each post is going. Your planner saves automatically.</div>
+
+      <div class="week-nav">
+        <button class="wn-btn" onclick="changeWeek(-1)">‹</button>
+        <div class="wn-label" id="wn-label">Loading...</div>
+        <button class="wn-btn" onclick="changeWeek(1)">›</button>
+      </div>
+
+      <div class="week-grid" id="week-grid"></div>
+
+      <div class="save-bar">
+        <div class="save-status" id="save-status">✦ Auto-saves as you type</div>
+        <button class="btn-save" id="save-btn" onclick="savePlanner()">Save Week</button>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /app-screen -->
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────
+const SUPABASE_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_CS3XLLfWaZNA-B2oE37N-g_z2FMWCzq";
+if (!window._wbwSb) {
+  window._wbwSb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { storageKey: 'wbw-auth', autoRefreshToken: true, persistSession: true }
+  });
+}
+const sb = window._wbwSb;
+
+let currentUser = null;
+let icaData     = null;
+let venueData   = [];
+let plannerData = {};          // { weekKey: { mon:{text,plats}, ... } }
+let weekOffset  = 0;
+let saveTimer   = null;
+let activePlats = new Set(['instagram']);
+let activeVenueFilter = 'all';
+
+// ── AUTH ──────────────────────────────────────────────────────
+function switchTab(mode) {
+  ['in','up'].forEach(m => {
+    document.getElementById('tab-'+m).classList.toggle('active', m===mode);
+    document.getElementById('form-'+m).style.display = m===mode ? '' : 'none';
+  });
+}
+
+async function signIn() {
+  const email = document.getElementById('in-email').value.trim();
+  const pass  = document.getElementById('in-pass').value;
+  const msg   = document.getElementById('in-msg');
+  const btn   = document.getElementById('signin-btn');
+  msg.className = 'auth-msg'; msg.textContent = '';
+  if (!email||!pass) { msg.className='auth-msg error'; msg.textContent='Please fill in all fields.'; return; }
+  btn.disabled=true; btn.textContent='Signing in…';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password:pass });
+  if (error) { msg.className='auth-msg error'; msg.textContent=error.message; btn.disabled=false; btn.textContent='Sign In'; return; }
+  currentUser = data.user;
+  launchApp();
+}
+
+async function signUp() {
+  const email = document.getElementById('up-email').value.trim();
+  const pass  = document.getElementById('up-pass').value;
+  const msg   = document.getElementById('up-msg');
+  const btn   = document.getElementById('signup-btn');
+  msg.className = 'auth-msg'; msg.textContent = '';
+  if (!email||!pass) { msg.className='auth-msg error'; msg.textContent='Please fill in all fields.'; return; }
+  if (pass.length<6) { msg.className='auth-msg error'; msg.textContent='Password must be at least 6 characters.'; return; }
+  btn.disabled=true; btn.textContent='Creating account…';
+  const { data, error } = await sb.auth.signUp({ email, password:pass });
+  if (error) { msg.className='auth-msg error'; msg.textContent=error.message; btn.disabled=false; btn.textContent='Create Account'; return; }
+  msg.className='auth-msg success'; msg.textContent='Account created! Check your email to confirm.';
+  btn.disabled=false; btn.textContent='Create Account';
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  currentUser=null;
+  document.getElementById('app-screen').style.display='none';
+  document.getElementById('auth-screen').style.display='flex';
+}
+
+async function checkSession() {
+  const { data } = await sb.auth.getSession();
+  if (data.session) { currentUser=data.session.user; launchApp(); }
+}
+
+function launchApp() {
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('app-screen').style.display='block';
+  document.getElementById('nav-user').textContent = currentUser.email;
+  renderWeekGrid();
+  loadICA();
+  loadVenues();
+  loadPlannerData();
+}
+
+// keyboard submit
+document.addEventListener('keydown', e => {
+  if (e.key!=='Enter') return;
+  const id = document.activeElement && document.activeElement.id;
+  if (id==='in-email'||id==='in-pass') signIn();
+  if (id==='up-email'||id==='up-pass') signUp();
+});
+
+// ── ICA DATA ──────────────────────────────────────────────────
+async function loadICA() {
+  const { data, error } = await sb
+    .from('ideal_client_profiles')
+    .select('data')
+    .eq('user_id', currentUser.id)
+    .single();
+
+  const el = document.getElementById('ica-content');
+  if (error || !data) {
+    el.innerHTML = `<div class="ica-empty"><p>No ideal client profile found yet. <a href="ideal-client.html">Complete the Find Your Most Profitable Client tool</a> — your ICA will appear here automatically.</p></div>`;
+    buildVenueSuggestions();
+    return;
+  }
+
+  icaData = data.data;
+  const d = icaData;
+
+  const fields = [
+    { label:'Name',          value: d.avatarName || d.name },
+    { label:'Occupation',    value: d.occupation || d.job },
+    { label:'Budget',        value: d.budget || d.budgetRange },
+    { label:'Dream Venue',   value: d.venues?.[0] || d.dreamVenue },
+    { label:'Wedding Style', value: d.style || d.weddingStyle },
+    { label:'Values Most',   value: d.values || d.priorities },
+    { label:'Finds You Via', value: d.discoveryChannel || d.howTheyFindYou },
+    { label:'Pain Point',    value: d.painPoint || d.mainConcern },
+  ].filter(f => f.value);
+
+  el.innerHTML = fields.length
+    ? `<div class="ica-grid">${fields.map(f=>`<div class="ica-chip"><div class="ica-chip-label">${f.label}</div><div class="ica-chip-value">${f.value}</div></div>`).join('')}</div>`
+    : `<div class="ica-empty"><p>ICA profile found but no details saved yet. <a href="ideal-client.html">Complete the tool</a> to populate this section.</p></div>`;
+
+  buildVenueSuggestions();
+}
+
+// ── VENUE DATA ─────────────────────────────────────────────────
+async function loadVenues() {
+  // Pull from Lead Tracker — count enquiries per venue
+  const { data } = await sb
+    .from('leads')
+    .select('venue')
+    .eq('user_id', currentUser.id)
+    .not('venue', 'is', null);
+
+  const counts = {};
+  (data || []).forEach(row => {
+    const v = (row.venue || '').trim();
+    if (v) counts[v] = (counts[v]||0) + 1;
+  });
+
+  const leadVenues = Object.entries(counts)
+    .sort((a,b) => b[1]-a[1])
+    .slice(0,5)
+    .map(([name,count]) => ({ name, count, source:'leads' }));
+
+  // Pull from ICA
+  const icaVenues = (icaData?.venues || [])
+    .slice(0,3)
+    .map(name => ({ name, source:'ica' }));
+
+  // Merge + dedup
+  const seen = new Set();
+  venueData = [];
+  [...icaVenues, ...leadVenues].forEach(v => {
+    const key = v.name.toLowerCase();
+    if (!seen.has(key)) { seen.add(key); venueData.push(v); }
+  });
+
+  buildVenueTabs();
+  buildVenueSuggestions();
+}
+
+function buildVenueTabs() {
+  const el = document.getElementById('venue-filter');
+  el.innerHTML = `<button class="vf-btn active" onclick="filterVenue(this,'all')">All Venues</button>`;
+  venueData.forEach(v => {
+    const btn = document.createElement('button');
+    btn.className = 'vf-btn';
+    btn.textContent = v.name + (v.count ? ` (${v.count})` : '');
+    btn.onclick = function(){ filterVenue(this, v.name); };
+    el.appendChild(btn);
+  });
+}
+
+function filterVenue(btn, venue) {
+  document.querySelectorAll('.vf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeVenueFilter = venue;
+  buildVenueSuggestions();
+}
+
+const IDEA_TYPES = [
+  { type:'Behind the Scenes',  fn: v => `Behind the scenes at ${v} — what the day actually looks like from your side`,                 hint:'Works best as a Reel or Story sequence. Authentic low-production content performs well here.' },
+  { type:'Client Feature',     fn: v => `Spotlight on a couple who chose ${v} — why it was perfect for them`,                           hint:'Ask permission before posting. Tag the couple if they\'re happy to be featured.' },
+  { type:'Venue Collab',       fn: v => `Tag ${v} in a post featuring your best work there — great for reaching each other\'s audiences`, hint:'Venues often reshare content that shows their space at its best. Make it easy for them.' },
+  { type:'Expert Positioning', fn: v => `"Top tips for couples booking ${v}" — share what you know, position yourself as the expert`,    hint:'Works brilliantly as a carousel. Couples planning at that venue will find you.' },
+  { type:'Reel Hook',          fn: v => `"If you\'re getting married at ${v}, you need to see this…" — strong Reel opener`,              hint:'Hook in the first 2 seconds. Pair with your best real footage from that venue.' },
+  { type:'SEO Content',        fn: v => `Write a caption or blog post: "Best [service] for ${v} weddings" — searchable, evergreen`,     hint:'This type of content ranks in Google and attracts your exact ICA when they\'re searching.' },
+  { type:'Story Poll',         fn: v => `"Dream venue — ${v} or [other venue]?" — run a poll to drive engagement from your ICA`,        hint:'Follow up with a "results" Story. Great way to understand your audience.' },
+  { type:'Testimonial Hook',   fn: v => `Share a quote from a ${v} couple — social proof from the venue your ideal client loves most`,   hint:'Overlay text on a real photo from that wedding for the strongest visual impact.' },
+];
+
+function buildVenueSuggestions() {
+  const grid = document.getElementById('suggestion-grid');
+  const venues = activeVenueFilter === 'all'
+    ? venueData
+    : venueData.filter(v => v.name === activeVenueFilter);
+
+  if (!venues.length) {
+    grid.innerHTML = `<div class="no-venues">No venue data yet. Add venues to your <a href="ideal-client.html">ICA tool</a> and <a href="lead-tracker.html">Lead Tracker</a> to unlock content ideas here.</div>`;
+    return;
+  }
+
+  const cards = [];
+  venues.forEach(v => {
+    const typesToShow = activeVenueFilter === 'all' ? IDEA_TYPES.slice(0,3) : IDEA_TYPES;
+    typesToShow.forEach(t => {
+      cards.push(`<div class="sug-card" onclick="useIdea(${JSON.stringify(t.fn(v.name))})">
+        <div class="sug-use">+ Use idea</div>
+        <div class="sug-type">${t.type} · ${v.name}</div>
+        <div class="sug-text">${t.fn(v.name)}</div>
+        <div class="sug-hint">${t.hint}</div>
+      </div>`);
+    });
+  });
+
+  grid.innerHTML = cards.join('');
+}
+
+function useIdea(text) {
+  // Find first empty slot in current week
+  const slots = document.querySelectorAll('.post-slot');
+  let target = null;
+  for (const s of slots) { if (!s.value) { target=s; break; } }
+  if (!target) target = slots[0]; // fallback to first slot
+  target.value = text;
+  target.classList.add('filled');
+  syncSlotToData(target);
+  target.scrollIntoView({ behavior:'smooth', block:'center' });
+  target.focus();
+  queueAutoSave();
+}
+
+// ── PLATFORM FOCUS ────────────────────────────────────────────
+const PLAT_TIPS = {
+  instagram: '<strong>Instagram:</strong> Reels shot at your ICA\'s dream venues perform best. Aim for 3–4 posts per week — 2 Reels, 1 carousel (tips or process), and 1 Story sequence. Consistency beats frequency.',
+  tiktok:    '<strong>TikTok:</strong> Hook within the first 2 seconds. "Things nobody tells you about weddings at [Venue]…" style hooks work brilliantly for wedding suppliers. Post 1–2 times per week consistently.',
+  pinterest: '<strong>Pinterest:</strong> A slow-burn platform, but pins about specific venues rank in Google searches. Create boards per venue. Repurpose any blog content here for extra reach.',
+  facebook:  '<strong>Facebook:</strong> Join local wedding supplier Facebook groups. Share helpful tips rather than just your portfolio. Behind-the-scenes and real wedding stories get the best organic engagement.',
+  linkedin:  '<strong>LinkedIn:</strong> Position yourself as a wedding industry expert. Sharing insights about running a profitable wedding business attracts venue coordinators and planner referrals.',
+  blog:      '<strong>Blog / SEO:</strong> "Best [your service] suppliers for [Venue Name] weddings" posts rank well and attract your exact ICA at the research stage. One post per month can drive consistent enquiries over time.',
+};
+
+function togglePlat(card, plat) {
+  card.classList.toggle('active');
+  activePlats[card.classList.contains('active') ? 'add' : 'delete'](plat);
+  updatePlatTip();
+}
+
+function updatePlatTip() {
+  const box = document.getElementById('plat-tip-box');
+  if (!activePlats.size) { box.classList.remove('visible'); return; }
+  box.innerHTML = Array.from(activePlats).map(p => `<p>${PLAT_TIPS[p]}</p>`).join('');
+  box.classList.add('visible');
+}
+
+// ── WEEKLY PLANNER ────────────────────────────────────────────
+const DAYS   = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const PLATS  = ['📸 IG','🎵 TT','📌 Pin','✍️ Blog'];
+
+function weekStart(offset=0) {
+  const now = new Date();
+  const diff = now.getDay()===0 ? -6 : 1-now.getDay();
+  const d = new Date(now);
+  d.setDate(now.getDate()+diff+offset*7);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function weekKey(d) { return d.toISOString().slice(0,10); }
+
+function renderWeekGrid() {
+  const ws  = weekStart(weekOffset);
+  const wk  = weekKey(ws);
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  const end = new Date(ws); end.setDate(ws.getDate()+6);
+  const fmt = d => d.toLocaleDateString('en-IE',{day:'numeric',month:'short'});
+  document.getElementById('wn-label').textContent = `${fmt(ws)} – ${fmt(end)}`;
+
+  const saved = plannerData[wk] || {};
+  const grid  = document.getElementById('week-grid');
+  grid.innerHTML = '';
+
+  DAYS.forEach((day,i) => {
+    const date = new Date(ws); date.setDate(ws.getDate()+i);
+    const isToday = date.getTime()===today.getTime();
+    const key = day.toLowerCase();
+    const slot = saved[key] || { text:'', plats:[] };
+
+    const col = document.createElement('div');
+    col.className = 'day-col';
+    col.innerHTML = `
+      <div class="day-head${isToday?' today':''}">${day}</div>
+      <div class="day-date${isToday?' today':''}">${date.getDate()}</div>
+      <div class="slot-wrap">
+        <textarea class="post-slot${slot.text?' filled':''}"
+          placeholder="Post idea…"
+          data-week="${wk}" data-day="${key}"
+          oninput="onSlotInput(this)">${slot.text||''}</textarea>
+      </div>
+      <div class="slot-plats" data-week="${wk}" data-day="${key}">
+        ${PLATS.map(p=>`<button class="sp-btn${(slot.plats||[]).includes(p)?' on':''}" onclick="toggleSlotPlat(this,'${p}','${wk}','${key}')">${p}</button>`).join('')}
+      </div>`;
+    grid.appendChild(col);
+  });
+}
+
+function changeWeek(dir) {
+  weekOffset += dir;
+  renderWeekGrid();
+}
+
+function onSlotInput(el) {
+  el.classList.toggle('filled', !!el.value);
+  syncSlotToData(el);
+  queueAutoSave();
+}
+
+function syncSlotToData(el) {
+  const wk  = el.dataset.week;
+  const day = el.dataset.day;
+  if (!plannerData[wk]) plannerData[wk] = {};
+  if (!plannerData[wk][day]) plannerData[wk][day] = { text:'', plats:[] };
+  plannerData[wk][day].text = el.value;
+}
+
+function toggleSlotPlat(btn, plat, wk, day) {
+  btn.classList.toggle('on');
+  if (!plannerData[wk]) plannerData[wk] = {};
+  if (!plannerData[wk][day]) plannerData[wk][day] = { text:'', plats:[] };
+  const plats = plannerData[wk][day].plats || [];
+  const idx = plats.indexOf(plat);
+  if (idx>=0) plats.splice(idx,1); else plats.push(plat);
+  plannerData[wk][day].plats = plats;
+  queueAutoSave();
+}
+
+function queueAutoSave() {
+  const s = document.getElementById('save-status');
+  s.className='save-status saving'; s.textContent='⏳ Saving…';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(savePlanner, 1500);
+}
+
+async function loadPlannerData() {
+  const { data } = await sb
+    .from('social_planner')
+    .select('planner_data')
+    .eq('user_id', currentUser.id)
+    .single();
+
+  if (data?.planner_data) {
+    plannerData = data.planner_data;
+    renderWeekGrid();
+  }
+}
+
+async function savePlanner() {
+  // Sync DOM → data first
+  document.querySelectorAll('.post-slot').forEach(el => syncSlotToData(el));
+
+  const btn = document.getElementById('save-btn');
+  const s   = document.getElementById('save-status');
+  btn.disabled = true;
+
+  const { error } = await sb.from('social_planner').upsert({
+    user_id:      currentUser.id,
+    planner_data: plannerData,
+    updated_at:   new Date().toISOString(),
+  }, { onConflict:'user_id' });
+
+  if (error) {
+    s.className='save-status'; s.textContent='⚠ Save failed — try again';
+  } else {
+    s.className='save-status saved'; s.textContent='✓ Saved';
+    setTimeout(()=>{ s.className='save-status'; s.textContent='✦ Auto-saves as you type'; }, 3000);
+  }
+  btn.disabled = false;
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+checkSession();
+</script>
+
+<!--
+SUPABASE TABLE — run once in your SQL editor:
+
+CREATE TABLE IF NOT EXISTS social_planner (
+  id           UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id      UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL UNIQUE,
+  planner_data JSONB DEFAULT '{}',
+  updated_at   TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE social_planner ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users manage own planner" ON social_planner
+  FOR ALL USING (auth.uid() = user_id);
+-->
+
+</body>
+</html>
