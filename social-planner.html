@@ -406,51 +406,52 @@ document.addEventListener('keydown', e => {
 // ── ICA DATA ──────────────────────────────────────────────────
 async function loadICA() {
   const { data, error } = await sb
-    .from('ideal_client_profiles')
+    .from('ideal_client')
     .select('data')
     .eq('user_id', currentUser.id)
-    .single();
+    .limit(1);
 
   const el = document.getElementById('ica-content');
-  if (error || !data) {
+  if (error || !data || !data.length) {
     el.innerHTML = `<div class="ica-empty"><p>No ideal client profile found yet. <a href="ideal-client.html">Complete the Find Your Most Profitable Client tool</a> — your ICA will appear here automatically.</p></div>`;
     buildVenueSuggestions();
     return;
   }
 
-  icaData = data.data;
-  const d = icaData;
+  // Data is nested: row.data.avatar
+  const row = data[0].data || {};
+  const av  = row.avatar || {};
+  icaData   = av;
 
   const fields = [
-    { label:'Name',          value: d.avatarName || d.name },
-    { label:'Occupation',    value: d.occupation || d.job },
-    { label:'Budget',        value: d.budget || d.budgetRange },
-    { label:'Dream Venue',   value: d.venues?.[0] || d.dreamVenue },
-    { label:'Wedding Style', value: d.style || d.weddingStyle },
-    { label:'Values Most',   value: d.values || d.priorities },
-    { label:'Finds You Via', value: d.discoveryChannel || d.howTheyFindYou },
-    { label:'Pain Point',    value: d.painPoint || d.mainConcern },
+    { label:'Name',       value: av.name },
+    { label:'Career',     value: av.career },
+    { label:'Budget',     value: av.budget },
+    { label:'Venues',     value: av.venues },
+    { label:'Aesthetic',  value: av.aesthetic },
+    { label:'Finds You',  value: av.social },
+    { label:'Spends On',  value: av.spend },
+    { label:'Fears',      value: av.fears },
   ].filter(f => f.value);
 
   el.innerHTML = fields.length
     ? `<div class="ica-grid">${fields.map(f=>`<div class="ica-chip"><div class="ica-chip-label">${f.label}</div><div class="ica-chip-value">${f.value}</div></div>`).join('')}</div>`
-    : `<div class="ica-empty"><p>ICA profile found but no details saved yet. <a href="ideal-client.html">Complete the tool</a> to populate this section.</p></div>`;
+    : `<div class="ica-empty"><p>ICA profile found but no avatar details saved yet. <a href="ideal-client.html">Complete the avatar builder</a> to populate this section.</p></div>`;
 
   buildVenueSuggestions();
 }
 
 // ── VENUE DATA ─────────────────────────────────────────────────
 async function loadVenues() {
-  // Pull from Lead Tracker — count enquiries per venue
+  // Leads table stores everything inside data JSONB — must select('data')
   const { data } = await sb
     .from('leads')
-    .select('venue')
-    .eq('user_id', currentUser.id)
-    .not('venue', 'is', null);
+    .select('data')
+    .eq('user_id', currentUser.id);
 
   const counts = {};
   (data || []).forEach(row => {
-    const v = (row.venue || '').trim();
+    const v = ((row.data && row.data.venue) || '').trim();
     if (v) counts[v] = (counts[v]||0) + 1;
   });
 
@@ -459,10 +460,12 @@ async function loadVenues() {
     .slice(0,5)
     .map(([name,count]) => ({ name, count, source:'leads' }));
 
-  // Pull from ICA
-  const icaVenues = (icaData?.venues || [])
-    .slice(0,3)
-    .map(name => ({ name, source:'ica' }));
+  // Pull venues from ICA avatar — stored as a comma-separated string
+  let icaVenueNames = [];
+  if (icaData && icaData.venues) {
+    icaVenueNames = icaData.venues.split(',').map(v => v.trim()).filter(Boolean).slice(0,3);
+  }
+  const icaVenues = icaVenueNames.map(name => ({ name, source:'ica' }));
 
   // Merge + dedup
   const seen = new Set();
