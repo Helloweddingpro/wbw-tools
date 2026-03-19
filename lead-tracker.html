@@ -9,20 +9,11 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --navy: #3B3C6D;
-  --pink: #FB478E;
-  --orange: #FF6B1A;
-  --cream: #FAF8F6;
-  --white: #FFFFFF;
-  --border: rgba(59,60,109,.12);
-  --muted: rgba(59,60,109,.5);
-  --text: #2A2B4A;
-  --green: #27ae60;
-  --red: #c0392b;
+  --navy: #3B3C6D; --pink: #FB478E; --orange: #FF6B1A; --cream: #FAF8F6;
+  --white: #FFFFFF; --border: rgba(59,60,109,.12); --muted: rgba(59,60,109,.5);
+  --text: #2A2B4A; --green: #27ae60; --red: #c0392b;
 }
 body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
-
-/* AUTH */
 #auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:var(--cream); }
 .auth-card { background:var(--white); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; box-shadow:0 8px 40px rgba(59,60,109,.1); }
 .auth-logo { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:700; color:var(--navy); margin-bottom:4px; }
@@ -39,10 +30,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .auth-submit:hover { opacity:.88; }
 .auth-submit:disabled { opacity:.5; cursor:not-allowed; }
 .auth-msg { margin-top:12px; font-size:13px; font-weight:700; text-align:center; min-height:18px; }
-.auth-msg.error { color:var(--red); }
-.auth-msg.success { color:var(--green); }
-
-/* APP */
+.auth-msg.error { color:var(--red); } .auth-msg.success { color:var(--green); }
 #app-screen { display:none; }
 .topnav { background:var(--navy); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:64px; position:sticky; top:0; z-index:100; }
 .nav-left { display:flex; align-items:center; gap:16px; }
@@ -54,27 +42,17 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .nav-user { font-size:12px; font-weight:600; color:rgba(255,255,255,.6); }
 .nav-signout { padding:8px 16px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:10px; color:rgba(255,255,255,.8); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:background .2s; }
 .nav-signout:hover { background:rgba(255,255,255,.2); }
-
 .main { max-width:1100px; margin:0 auto; padding:36px 24px 80px; }
-
 .page-header { margin-bottom:28px; }
 .page-header h1 { font-family:'Cormorant Garamond',serif; font-size:36px; font-weight:700; color:var(--navy); margin-bottom:6px; }
 .page-header p { font-size:14px; font-weight:600; color:var(--muted); }
-
-/* STATS */
 .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:28px; }
 .stat-card { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:16px 18px; }
 .stat-label { font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
 .stat-value { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:700; color:var(--navy); line-height:1; }
-.stat-value.pink { color:var(--pink); }
-.stat-value.green { color:var(--green); }
-.stat-value.orange { color:var(--orange); }
-
-/* CARDS */
+.stat-value.green { color:var(--green); } .stat-value.orange { color:var(--orange); }
 .card { background:var(--white); border:1px solid var(--border); border-radius:18px; padding:24px; margin-bottom:20px; }
 .card-title { font-size:16px; font-weight:900; color:var(--navy); margin-bottom:18px; }
-
-/* ADD FORM */
 .add-form { background:rgba(255,107,26,.04); border:1px solid rgba(255,107,26,.15); }
 .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .form-group { display:flex; flex-direction:column; gap:6px; }
@@ -85,10 +63,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .add-btn { width:100%; padding:13px; background:var(--orange); color:#fff; border:none; border-radius:13px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:opacity .2s; margin-top:4px; }
 .add-btn:hover { opacity:.9; }
 .add-msg { font-size:13px; font-weight:700; min-height:18px; margin-top:6px; }
-.add-msg.ok { color:var(--green); }
-.add-msg.err { color:var(--red); }
-
-/* FOLLOW UPS */
+.add-msg.ok { color:var(--green); } .add-msg.err { color:var(--red); }
 .followup-item { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px 16px; border:1.5px solid rgba(255,107,26,.25); border-radius:13px; margin-bottom:10px; background:rgba(255,107,26,.04); }
 .followup-item:last-child { margin-bottom:0; }
 .fu-name { font-size:15px; font-weight:800; color:var(--navy); }
@@ -96,11 +71,8 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .fu-venue { font-size:12px; font-weight:600; color:var(--muted); margin-top:1px; }
 .fu-done-msg { font-size:12px; font-weight:700; color:var(--green); margin-top:4px; display:none; }
 .mark-done-btn { padding:9px 16px; background:var(--orange); color:#fff; border:none; border-radius:11px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:opacity .2s; }
-.mark-done-btn:hover { opacity:.88; }
-.mark-done-btn:disabled { opacity:.4; cursor:not-allowed; }
+.mark-done-btn:hover { opacity:.88; } .mark-done-btn:disabled { opacity:.4; cursor:not-allowed; }
 .all-clear { background:rgba(39,174,96,.08); border:1px solid rgba(39,174,96,.2); border-radius:12px; padding:14px 16px; font-size:14px; font-weight:700; color:var(--green); }
-
-/* TABLE */
 .table-wrap { overflow-x:auto; }
 table { width:100%; border-collapse:collapse; min-width:750px; }
 thead tr { border-bottom:2px solid var(--border); }
@@ -108,14 +80,12 @@ th { padding:10px 12px; font-size:11px; font-weight:900; text-transform:uppercas
 td { padding:11px 12px; border-top:1px solid var(--border); vertical-align:middle; font-size:13px; }
 .couple-name { font-weight:800; color:var(--navy); font-size:14px; }
 .couple-venue { font-size:11px; font-weight:600; color:var(--muted); margin-top:2px; }
-
 .chip { display:inline-block; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:800; letter-spacing:.04em; white-space:nowrap; }
 .chip-replied { background:rgba(59,60,109,.1); color:var(--navy); }
 .chip-deposit { background:rgba(255,107,26,.12); color:#c45000; }
 .chip-booked  { background:rgba(39,174,96,.12); color:var(--green); }
-.chip-lost     { background:rgba(192,57,43,.1); color:var(--red); }
+.chip-lost    { background:rgba(192,57,43,.1); color:var(--red); }
 .chip-followup { background:rgba(255,107,26,.12); color:var(--orange); }
-
 .actions { display:grid; grid-template-columns:1fr 1fr; gap:5px; min-width:140px; }
 .actions button { padding:7px 8px; border-radius:9px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer; border:none; transition:opacity .2s; }
 .actions button:hover { opacity:.85; }
@@ -126,11 +96,8 @@ td { padding:11px 12px; border-top:1px solid var(--border); vertical-align:middl
 .btn-lost   { background:var(--white); color:var(--text); border:1px solid var(--border) !important; }
 .btn-undo   { background:rgba(192,57,43,.1); color:var(--red); border:1px solid rgba(192,57,43,.25) !important; }
 .btn-del    { grid-column:1/-1; background:var(--white); color:var(--red); border:1px solid rgba(192,57,43,.25) !important; }
-
 .bal-outstanding { color:var(--orange); font-weight:800; }
 .bal-clear { color:var(--green); font-weight:800; }
-
-/* MODAL */
 .overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; padding:20px; z-index:9999; }
 .modal { background:var(--white); border-radius:20px; padding:28px; width:min(560px,100%); max-height:90vh; overflow-y:auto; box-shadow:0 24px 60px rgba(0,0,0,.2); font-family:'Montserrat',sans-serif; }
 .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
@@ -146,29 +113,23 @@ td { padding:11px 12px; border-top:1px solid var(--border); vertical-align:middl
 .mbtn-primary { background:var(--navy); color:#fff; }
 .mbtn-orange  { background:var(--orange); color:#fff; }
 .mbtn-ghost   { background:var(--cream); color:var(--text); }
-
 .pay-row { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; margin-bottom:8px; }
 .pay-row input { width:100%; padding:10px 13px; border:1.5px solid var(--border); border-radius:11px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; color:var(--text); }
 .pay-row input:focus { outline:none; border-color:var(--orange); }
 .pay-row button { padding:10px 14px; border-radius:10px; border:1px solid var(--border); background:var(--white); color:var(--red); font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap; font-family:'Montserrat',sans-serif; }
 .pay-summary { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
 .pay-sum-card { border-radius:13px; padding:14px; }
-
 #toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:11px 20px; border-radius:12px; font-size:13px; font-weight:800; opacity:0; pointer-events:none; transition:opacity .3s; z-index:99999; }
 #toast.show { opacity:1; }
-
 @media(max-width:640px){
-  .topnav { padding:0 16px; }
-  .main { padding:20px 14px 60px; }
-  .form-grid { grid-template-columns:1fr; }
-  .modal-grid { grid-template-columns:1fr; }
+  .topnav { padding:0 16px; } .main { padding:20px 14px 60px; }
+  .form-grid { grid-template-columns:1fr; } .modal-grid { grid-template-columns:1fr; }
   .stats-grid { grid-template-columns:1fr 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- AUTH -->
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">Lead Tracker</div>
@@ -192,7 +153,6 @@ td { padding:11px 12px; border-top:1px solid var(--border); vertical-align:middl
   </div>
 </div>
 
-<!-- APP -->
 <div id="app-screen">
   <nav class="topnav">
     <div class="nav-left">
@@ -206,7 +166,6 @@ td { padding:11px 12px; border-top:1px solid var(--border); vertical-align:middl
   </nav>
 
   <div class="main">
-
     <div class="page-header">
       <h1>Lead Tracker</h1>
       <p>Track every enquiry, follow up on time, and see exactly where your best bookings come from.</p>
@@ -214,16 +173,14 @@ td { padding:11px 12px; border-top:1px solid var(--border); vertical-align:middl
 
     <div class="stats-grid" id="stats-row"></div>
 
-    <!-- FOLLOW UPS -->
     <div class="card">
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
         <div class="card-title" style="margin-bottom:0;">Follow-ups Due</div>
-        <div id="today-display" style="font-size:12px; font-weight:700; color:var(--muted);"></div>
+        <div id="today-display" style="font-size:12px;font-weight:700;color:var(--muted);"></div>
       </div>
       <div id="followups-list"></div>
     </div>
 
-    <!-- ADD LEAD -->
     <div class="card add-form">
       <div class="card-title">Add a Lead</div>
       <div class="form-grid">
@@ -260,30 +217,25 @@ td { padding:11px 12px; border-top:1px solid var(--border); vertical-align:middl
       </div>
     </div>
 
-    <!-- LEADS TABLE -->
     <div class="card">
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
         <div class="card-title" style="margin-bottom:0;">All Leads</div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button id="export-btn" style="padding:8px 14px; background:var(--navy); color:#fff; border:none; border-radius:10px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer;">Export CSV</button>
-          <button id="backup-btn" style="padding:8px 14px; background:var(--white); color:var(--navy); border:1px solid var(--border); border-radius:10px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer;">Backup</button>
-          <label style="padding:8px 14px; background:var(--white); color:var(--navy); border:1px solid var(--border); border-radius:10px; font-size:12px; font-weight:800; cursor:pointer; font-family:'Montserrat',sans-serif;">Restore <input type="file" id="restore-input" accept="application/json" style="display:none;"></label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button id="export-btn" style="padding:8px 14px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer;">Export CSV</button>
+          <button id="backup-btn" style="padding:8px 14px;background:var(--white);color:var(--navy);border:1px solid var(--border);border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer;">Backup</button>
+          <label style="padding:8px 14px;background:var(--white);color:var(--navy);border:1px solid var(--border);border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Montserrat',sans-serif;">Restore <input type="file" id="restore-input" accept="application/json" style="display:none;"></label>
         </div>
       </div>
       <div class="table-wrap">
         <table>
           <thead>
-            <tr>
-              <th>Couple</th><th>Source</th><th>Status</th><th>Wedding Date</th>
-              <th>Next Follow-up</th><th>Quoted</th><th>Paid</th><th>Balance</th><th>Actions</th>
-            </tr>
+            <tr><th>Couple</th><th>Source</th><th>Status</th><th>Wedding Date</th><th>Next Follow-up</th><th>Quoted</th><th>Paid</th><th>Balance</th><th>Actions</th></tr>
           </thead>
           <tbody id="leads-tbody"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- SOURCE PERFORMANCE -->
     <div class="card">
       <div class="card-title">Lead Source Performance</div>
       <div class="table-wrap">
@@ -293,7 +245,6 @@ td { padding:11px 12px; border-top:1px solid var(--border); vertical-align:middl
         </table>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -332,7 +283,6 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove("show"), 2500);
 }
 
-// AUTH
 document.getElementById("tab-in").onclick = () => switchTab("in");
 document.getElementById("tab-up").onclick = () => switchTab("up");
 document.getElementById("signin-btn").onclick = signIn;
@@ -374,39 +324,31 @@ let _ltInitialised = false;
 async function initApp(user) {
   if (_ltInitialised) return;
   _ltInitialised = true;
-
   currentUser = user;
   document.getElementById("auth-screen").style.display = "none";
   document.getElementById("app-screen").style.display  = "block";
   document.getElementById("nav-user").textContent = currentUser.email;
   document.getElementById("today-display").textContent = "Today: "+fmtDate(todayISO());
   document.getElementById("f-enquiry").value = todayISO();
-
   document.getElementById("signout-btn").onclick    = signOut;
   document.getElementById("add-lead-btn").onclick   = addLead;
   document.getElementById("export-btn").onclick     = exportCSV;
   document.getElementById("backup-btn").onclick     = backup;
   document.getElementById("restore-input").onchange = restore;
-
   await loadLeads();
   render();
 }
 
-// Fire immediately on page load — handles navigation from dashboard
 sb.auth.getSession().then(({ data: { session } }) => {
   if (session?.user) initApp(session.user);
 });
 
 sb.auth.onAuthStateChange(async (event, session) => {
-  if (event === "SIGNED_IN" && session?.user) {
-    _ltInitialised = false;
-    initApp(session.user);
-  } else if (event === "SIGNED_OUT") {
-    _ltInitialised = false;
-    currentUser = null;
+  if (event === "SIGNED_IN" && session?.user) { _ltInitialised = false; initApp(session.user); }
+  else if (event === "SIGNED_OUT") {
+    _ltInitialised = false; currentUser = null; leads = [];
     document.getElementById("app-screen").style.display  = "none";
     document.getElementById("auth-screen").style.display = "flex";
-    leads = [];
   }
 });
 
@@ -435,7 +377,6 @@ async function removeLeadFromDB(id) {
 async function addLead() {
   const name = document.getElementById("f-name").value.trim();
   if (!name) { setAddMsg("Please enter the couple name.",false); return; }
-
   const enquiry = document.getElementById("f-enquiry").value || todayISO();
   const wedding = document.getElementById("f-wedding").value;
   const venue   = document.getElementById("f-venue").value.trim();
@@ -461,7 +402,6 @@ async function addLead() {
     nextFollowUp: isActive ? autoFollowUp(enquiry) : "",
     followupStep: isActive ? 1 : 0,
   };
-
   leads.push(lead);
   clearForm();
   setAddMsg("Lead added ✓",true);
@@ -490,18 +430,17 @@ function renderStats() {
   const received= leads.reduce((s,l)=>s+totalPaid(l),0);
   const today   = todayISO();
   const due     = leads.filter(l=>l.nextFollowUp&&l.nextFollowUp<=today&&l.status!=="Booked"&&l.status!=="Lost").length;
-
   document.getElementById("stats-row").innerHTML = [
-    {label:"Total Leads",    value:leads.length,     cls:""},
-    {label:"Active",         value:active.length,    cls:""},
-    {label:"Booked",         value:booked.length,    cls:"green"},
-    {label:"Follow-ups Due", value:due,              cls:due>0?"orange":"green"},
-   {label:"Total Projected Income this year", value:fmtEuro(revenue), cls:"green"},
-{label:"Total Received this year",   value:fmtEuro(received),cls:""},
+    {label:"Total Leads",          value:leads.length,     cls:""},
+    {label:"Active",               value:active.length,    cls:""},
+    {label:"Booked",               value:booked.length,    cls:"green"},
+    {label:"Follow-ups Due",       value:due,              cls:due>0?"orange":"green"},
+    {label:"Total Projected Income",value:fmtEuro(revenue),cls:"green"},
+    {label:"Total Received",       value:fmtEuro(received),cls:""},
   ].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value ${s.cls}">${s.value}</div></div>`).join("");
 }
 
-const FOLLOWUP_STEPS = [2,3,3,3,3]; // Days between each follow-up email
+const FOLLOWUP_STEPS = [2,3,3,3,3];
 
 function renderFollowups() {
   const today = todayISO();
@@ -527,8 +466,7 @@ async function markDone(id) {
   const step = Number(l.followupStep||1);
   const totalDays = FOLLOWUP_STEPS.slice(0,step+1).reduce((s,d)=>s+d,0);
   if (step < FOLLOWUP_STEPS.length) {
-    l.followupStep = step+1;
-    l.status = "Follow-up " + step;
+    l.followupStep = step+1; l.status = "Follow-up "+step;
     const d=new Date(l.enquiry||todayISO()); d.setDate(d.getDate()+totalDays);
     l.nextFollowUp = d.toISOString().slice(0,10);
   } else { l.nextFollowUp=""; l.followupStep=0; l.status="Follow-up "+step; }
@@ -541,7 +479,7 @@ async function markDone(id) {
 
 function renderTable() {
   const tbody=document.getElementById("leads-tbody");
-  if (!leads.length) { tbody.innerHTML='<tr><td colspan="9" style="padding:20px; text-align:center; color:var(--muted); font-weight:700;">No leads yet — add your first enquiry above.</td></tr>'; return; }
+  if (!leads.length) { tbody.innerHTML='<tr><td colspan="9" style="padding:20px;text-align:center;color:var(--muted);font-weight:700;">No leads yet — add your first enquiry above.</td></tr>'; return; }
   const today=todayISO();
   const sorted=[...leads].sort((a,b)=>{
     const aA=a.status!=="Booked"&&a.status!=="Lost", bA=b.status!=="Booked"&&b.status!=="Lost";
@@ -556,7 +494,7 @@ function renderTable() {
       <td>${esc(l.source||"")}</td>
       <td>${chipHtml(l.status)}</td>
       <td style="font-weight:700;">${fmtDate(l.wedding)}</td>
-      <td style="font-weight:700; color:${overdue?"var(--orange)":"inherit"};">${fmtDate(l.nextFollowUp)}</td>
+      <td style="font-weight:700;color:${overdue?"var(--orange)":"inherit"};">${fmtDate(l.nextFollowUp)}</td>
       <td>${fmtEuro(l.priceQuoted)}</td>
       <td>${paid>0?fmtEuro(paid):"—"}</td>
       <td class="${l.priceQuoted?(bal>0?"bal-outstanding":"bal-clear"):""}">${l.priceQuoted?fmtEuro(bal):"—"}</td>
@@ -582,7 +520,7 @@ function renderSources() {
   const rows=Object.entries(map).map(([s,d])=>({source:s,...d,rate:d.count?Math.round(d.booked/d.count*100):0})).sort((a,b)=>b.booked-a.booked);
   document.getElementById("source-tbody").innerHTML=rows.length
     ?rows.map(r=>`<tr><td style="font-weight:800;">${esc(r.source)}</td><td>${r.count}</td><td>${r.booked}</td><td style="font-weight:800;">${r.rate}%</td><td style="font-weight:800;">${fmtEuro(r.value)}</td></tr>`).join("")
-    :'<tr><td colspan="5" style="padding:14px; color:var(--muted); font-weight:700;">No data yet</td></tr>';
+    :'<tr><td colspan="5" style="padding:14px;color:var(--muted);font-weight:700;">No data yet</td></tr>';
 }
 
 async function toggleBooked(id) {
@@ -653,6 +591,7 @@ function openPayModal(id) {
     <div class="modal-grid">
       <div><label>Price Quoted (€)</label><input id="p-quoted" type="number" value="${l.priceQuoted||0}"></div>
       <div><label>Deposit Paid (€)</label><input id="p-deposit" type="number" value="${l.depositPaid||0}"></div>
+      <div id="deposit-hint" style="grid-column:1/-1;display:none;background:rgba(255,107,26,.08);border:1px solid rgba(255,107,26,.25);border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;color:#c45000;line-height:1.6;">💡 Deposit received? Remember to mark this lead as <strong>Booked</strong> using the <strong>Book ✓</strong> button on the lead.</div>
     </div>
     <div style="margin-bottom:14px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
@@ -678,8 +617,10 @@ function openPayModal(id) {
   </div>`;
   document.body.appendChild(overlay);
   const qEl=overlay.querySelector("#p-quoted"), dEl=overlay.querySelector("#p-deposit"), iList=overlay.querySelector("#p-inst-list");
+  const hint=overlay.querySelector("#deposit-hint");
+
   function recalc(){
-    const q=Number(qEl.value||0),dep=Number(dEl.value||0);
+    const q=Number(qEl.value||0), dep=Number(dEl.value||0);
     const ins=Array.from(iList.querySelectorAll(".inst-val")).map(i=>Number(i.value||0));
     const paid=dep+ins.reduce((s,x)=>s+x,0);
     overlay.querySelector("#p-total").textContent=fmtEuro(paid)||"€0";
@@ -693,7 +634,16 @@ function openPayModal(id) {
     iList.appendChild(row); recalc();
   }
   (l.instalments||[]).forEach(v=>addRow(v));
-  qEl.oninput=recalc; dEl.oninput=recalc; recalc();
+
+  qEl.oninput=recalc;
+  dEl.oninput=function(){
+    recalc();
+    if(hint) hint.style.display=Number(dEl.value)>0?"block":"none";
+  };
+  // Show hint immediately if deposit is already filled in
+  if(Number(l.depositPaid)>0 && hint) hint.style.display="block";
+
+  recalc();
   overlay.querySelector("#p-add").onclick=()=>addRow(0);
   const close=()=>overlay.remove();
   overlay.querySelector("#pclose").onclick=close;
