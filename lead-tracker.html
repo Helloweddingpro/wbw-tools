@@ -496,8 +496,8 @@ function renderStats() {
     {label:"Active",         value:active.length,    cls:""},
     {label:"Booked",         value:booked.length,    cls:"green"},
     {label:"Follow-ups Due", value:due,              cls:due>0?"orange":"green"},
-   {label:"Projected Income", value:fmtEuro(revenue), cls:"green"},
-{label:"Total Received",   value:fmtEuro(received),cls:""},
+   {label:"Total Projected Income this year", value:fmtEuro(revenue), cls:"green"},
+{label:"Total Received this year",   value:fmtEuro(received),cls:""},
   ].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value ${s.cls}">${s.value}</div></div>`).join("");
 }
 
