@@ -255,41 +255,28 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
       <div class="section-title">Platform Focus</div>
       <div class="section-sub">Select the platforms you're posting on. Tips are tailored to wedding suppliers on each one.</div>
 
-      <div class="platform-grid">
+      <div class="platform-grid" style="grid-template-columns:repeat(3,1fr);">
         <div class="plat-card active" onclick="togglePlat(this,'instagram')" data-plat="instagram">
           <div class="plat-icon">📸</div>
           <div class="plat-name">Instagram</div>
-          <div class="plat-desc">Reels + carousels</div>
+          <div class="plat-desc">Reels + Stories</div>
         </div>
-        <div class="plat-card" onclick="togglePlat(this,'tiktok')" data-plat="tiktok">
+        <div class="plat-card active" onclick="togglePlat(this,'facebook')" data-plat="facebook">
+          <div class="plat-icon">👥</div>
+          <div class="plat-name">Facebook</div>
+          <div class="plat-desc">Reels + Groups</div>
+        </div>
+        <div class="plat-card active" onclick="togglePlat(this,'tiktok')" data-plat="tiktok">
           <div class="plat-icon">🎵</div>
           <div class="plat-name">TikTok</div>
           <div class="plat-desc">Short-form video</div>
         </div>
-        <div class="plat-card" onclick="togglePlat(this,'pinterest')" data-plat="pinterest">
-          <div class="plat-icon">📌</div>
-          <div class="plat-name">Pinterest</div>
-          <div class="plat-desc">Long-game traffic</div>
-        </div>
-        <div class="plat-card" onclick="togglePlat(this,'facebook')" data-plat="facebook">
-          <div class="plat-icon">👥</div>
-          <div class="plat-name">Facebook</div>
-          <div class="plat-desc">Groups + pages</div>
-        </div>
-        <div class="plat-card" onclick="togglePlat(this,'linkedin')" data-plat="linkedin">
-          <div class="plat-icon">💼</div>
-          <div class="plat-name">LinkedIn</div>
-          <div class="plat-desc">B2B + venue collabs</div>
-        </div>
-        <div class="plat-card" onclick="togglePlat(this,'blog')" data-plat="blog">
-          <div class="plat-icon">✍️</div>
-          <div class="plat-name">Blog / SEO</div>
-          <div class="plat-desc">Evergreen content</div>
-        </div>
       </div>
 
       <div class="plat-tip-box visible" id="plat-tip-box">
-        <p><strong>Instagram:</strong> Reels shot at your ICA's dream venues perform best. Aim for 3–4 posts per week — 2 Reels, 1 carousel (tips or process), and 1 Story sequence behind the scenes. Consistency beats frequency.</p>
+        <p><strong>Instagram:</strong> Post your 10–15 sec venue video as a Reel. Use the venue name and location in the first line of your caption. Tag the venue and every supplier visible in the clip.</p>
+        <p><strong>Facebook:</strong> Share the Reel directly to your Facebook page — don't cross-post from Instagram as reach is lower. Tag the venue's Facebook page and any suppliers. Also share in local wedding groups.</p>
+        <p><strong>TikTok:</strong> Hook in the first 2 seconds — start mid-action. Use the venue name and location as hashtags and in the caption. Tag the venue if they have a TikTok account.</p>
       </div>
     </div>
 
@@ -333,7 +320,7 @@ let venueData   = [];
 let plannerData = {};          // { weekKey: { mon:{text,plats}, ... } }
 let weekOffset  = 0;
 let saveTimer   = null;
-let activePlats = new Set(['instagram']);
+let activePlats = new Set(['instagram','facebook','tiktok']);
 let activeVenueFilter = 'all';
 
 // ── AUTH ──────────────────────────────────────────────────────
@@ -418,25 +405,24 @@ async function loadICA() {
     return;
   }
 
-  // Data is nested: row.data.avatar
-  const row = data[0].data || {};
-  const av  = row.avatar || {};
-  icaData   = av;
+  // Saved as data.avatar
+  const av = (data[0].data && data[0].data.avatar) || {};
+  icaData = av;
 
   const fields = [
-    { label:'Name',       value: av.name },
-    { label:'Career',     value: av.career },
-    { label:'Budget',     value: av.budget },
-    { label:'Venues',     value: av.venues },
-    { label:'Aesthetic',  value: av.aesthetic },
-    { label:'Finds You',  value: av.social },
-    { label:'Spends On',  value: av.spend },
-    { label:'Fears',      value: av.fears },
+    { label:'Name',        value: av.name },
+    { label:'Career',      value: av.career },
+    { label:'Budget',      value: av.budget },
+    { label:'Venues',      value: av.venues },
+    { label:'Aesthetic',   value: av.aesthetic },
+    { label:'Finds You',   value: av.social },
+    { label:'Spends On',   value: av.spend },
+    { label:'Personality', value: av.personality },
   ].filter(f => f.value);
 
   el.innerHTML = fields.length
     ? `<div class="ica-grid">${fields.map(f=>`<div class="ica-chip"><div class="ica-chip-label">${f.label}</div><div class="ica-chip-value">${f.value}</div></div>`).join('')}</div>`
-    : `<div class="ica-empty"><p>ICA profile found but no avatar details saved yet. <a href="ideal-client.html">Complete the avatar builder</a> to populate this section.</p></div>`;
+    : `<div class="ica-empty"><p>ICA profile found but no avatar saved yet. <a href="ideal-client.html">Complete the avatar builder</a> to populate this section.</p></div>`;
 
   buildVenueSuggestions();
 }
@@ -499,14 +485,36 @@ function filterVenue(btn, venue) {
 }
 
 const IDEA_TYPES = [
-  { type:'Behind the Scenes',  fn: v => `Behind the scenes at ${v} — what the day actually looks like from your side`,                 hint:'Works best as a Reel or Story sequence. Authentic low-production content performs well here.' },
-  { type:'Client Feature',     fn: v => `Spotlight on a couple who chose ${v} — why it was perfect for them`,                           hint:'Ask permission before posting. Tag the couple if they\'re happy to be featured.' },
-  { type:'Venue Collab',       fn: v => `Tag ${v} in a post featuring your best work there — great for reaching each other\'s audiences`, hint:'Venues often reshare content that shows their space at its best. Make it easy for them.' },
-  { type:'Expert Positioning', fn: v => `"Top tips for couples booking ${v}" — share what you know, position yourself as the expert`,    hint:'Works brilliantly as a carousel. Couples planning at that venue will find you.' },
-  { type:'Reel Hook',          fn: v => `"If you\'re getting married at ${v}, you need to see this…" — strong Reel opener`,              hint:'Hook in the first 2 seconds. Pair with your best real footage from that venue.' },
-  { type:'SEO Content',        fn: v => `Write a caption or blog post: "Best [service] for ${v} weddings" — searchable, evergreen`,     hint:'This type of content ranks in Google and attracts your exact ICA when they\'re searching.' },
-  { type:'Story Poll',         fn: v => `"Dream venue — ${v} or [other venue]?" — run a poll to drive engagement from your ICA`,        hint:'Follow up with a "results" Story. Great way to understand your audience.' },
-  { type:'Testimonial Hook',   fn: v => `Share a quote from a ${v} couple — social proof from the venue your ideal client loves most`,   hint:'Overlay text on a real photo from that wedding for the strongest visual impact.' },
+  {
+    type: 'Arrival / Exterior Shot',
+    fn: v => `Film a 10–15 sec clip of the couple arriving at ${v} or walking its grounds. No words needed — let the venue speak.`,
+    caption: (v, loc) => `Caption: Use "${v}" and "${loc} wedding" as keywords in the first line. Tag @${v.toLowerCase().replace(/[\s']/g,'')} and any wedding planner or coordinator involved.`,
+  },
+  {
+    type: 'Ceremony Moment',
+    fn: v => `Capture 10–15 secs of a key ceremony moment at ${v} — the first look, the vows, or the kiss. Raw and real performs best.`,
+    caption: (v, loc) => `Caption: Open with "${v} wedding ceremony" — a searchable phrase. Tag the venue, the florist if flowers are visible, and the celebrant.`,
+  },
+  {
+    type: 'Reception Detail',
+    fn: v => `Film a slow 10–15 sec pan of the reception room or tablescape at ${v}. Pair with trending audio.`,
+    caption: (v, loc) => `Caption: Use "${v} reception" and "${loc} wedding supplier" as keywords. Tag the venue, stylist, and stationer if applicable.`,
+  },
+  {
+    type: 'Behind the Scenes',
+    fn: v => `Show 10–15 secs of you setting up or working at ${v} — candid and unpolished. "A day in the life at ${v}" style.`,
+    caption: (v, loc) => `Caption: Start with "Getting ready for a wedding at ${v}…" — personal hooks get saves. Tag the venue and any suppliers you're working alongside.`,
+  },
+  {
+    type: 'Supplier Collab Clip',
+    fn: v => `Film a 10–15 sec clip featuring another supplier's work at ${v} — florist, cake, or dress. Cross-promote intentionally.`,
+    caption: (v, loc) => `Caption: Mention "${v}" and "${loc}" in the caption. Tag every supplier visible in the clip — they will reshare it to their audience.`,
+  },
+  {
+    type: 'Hook / Talking Head',
+    fn: v => `Record a 10–15 sec piece to camera: "If you're getting married at ${v}, here's what you need to know…" No fancy setup needed.`,
+    caption: (v, loc) => `Caption: Use "${v} wedding tips" and "${loc} wedding" as your opening keywords. Tag the venue — they often reshare supplier content that positions them well.`,
+  },
 ];
 
 function buildVenueSuggestions() {
@@ -516,19 +524,22 @@ function buildVenueSuggestions() {
     : venueData.filter(v => v.name === activeVenueFilter);
 
   if (!venues.length) {
-    grid.innerHTML = `<div class="no-venues">No venue data yet. Add venues to your <a href="ideal-client.html">ICA tool</a> and <a href="lead-tracker.html">Lead Tracker</a> to unlock content ideas here.</div>`;
+    grid.innerHTML = `<div class="no-venues">No venue data yet. Add venues to your <a href="ideal-client.html">ICA tool</a> and <a href="lead-tracker.html">Lead Tracker</a> to unlock video ideas here.</div>`;
     return;
   }
+
+  const location = (icaData && icaData.location) ? icaData.location : 'your area';
 
   const cards = [];
   venues.forEach(v => {
     const typesToShow = activeVenueFilter === 'all' ? IDEA_TYPES.slice(0,3) : IDEA_TYPES;
     typesToShow.forEach(t => {
-      cards.push(`<div class="sug-card" onclick="useIdea(${JSON.stringify(t.fn(v.name))})">
+      const captionText = t.caption(v.name, location);
+      cards.push(`<div class="sug-card" onclick="useIdea(${JSON.stringify(t.fn(v.name) + '\n\n' + captionText)})">
         <div class="sug-use">+ Use idea</div>
-        <div class="sug-type">${t.type} · ${v.name}</div>
+        <div class="sug-type">📹 10–15 sec video · ${t.type} · ${v.name}</div>
         <div class="sug-text">${t.fn(v.name)}</div>
-        <div class="sug-hint">${t.hint}</div>
+        <div class="sug-hint">${captionText}</div>
       </div>`);
     });
   });
@@ -552,12 +563,9 @@ function useIdea(text) {
 
 // ── PLATFORM FOCUS ────────────────────────────────────────────
 const PLAT_TIPS = {
-  instagram: '<strong>Instagram:</strong> Reels shot at your ICA\'s dream venues perform best. Aim for 3–4 posts per week — 2 Reels, 1 carousel (tips or process), and 1 Story sequence. Consistency beats frequency.',
-  tiktok:    '<strong>TikTok:</strong> Hook within the first 2 seconds. "Things nobody tells you about weddings at [Venue]…" style hooks work brilliantly for wedding suppliers. Post 1–2 times per week consistently.',
-  pinterest: '<strong>Pinterest:</strong> A slow-burn platform, but pins about specific venues rank in Google searches. Create boards per venue. Repurpose any blog content here for extra reach.',
-  facebook:  '<strong>Facebook:</strong> Join local wedding supplier Facebook groups. Share helpful tips rather than just your portfolio. Behind-the-scenes and real wedding stories get the best organic engagement.',
-  linkedin:  '<strong>LinkedIn:</strong> Position yourself as a wedding industry expert. Sharing insights about running a profitable wedding business attracts venue coordinators and planner referrals.',
-  blog:      '<strong>Blog / SEO:</strong> "Best [your service] suppliers for [Venue Name] weddings" posts rank well and attract your exact ICA at the research stage. One post per month can drive consistent enquiries over time.',
+  instagram: '<strong>Instagram:</strong> Post your 10–15 sec venue video as a Reel. Use the venue name and location in the first line of your caption — Instagram indexes captions for search. Tag the venue account and every supplier visible in the clip. Aim for 3–4 Reels per week.',
+  facebook:  '<strong>Facebook:</strong> Share the same Reel directly to your Facebook page — do not cross-post from Instagram as reach is lower. Use the full venue name and location in the caption. Tag the venue\'s Facebook page and any suppliers. Facebook Groups are also powerful — share helpful clips in local wedding groups.',
+  tiktok:    '<strong>TikTok:</strong> Hook in the first 2 seconds — start mid-action, not with a logo or intro. Use the venue name and location as hashtags AND in the caption text. Tag @venue if they have a TikTok account. TikTok rewards consistency — post at least 3x per week.',
 };
 
 function togglePlat(card, plat) {
@@ -575,7 +583,7 @@ function updatePlatTip() {
 
 // ── WEEKLY PLANNER ────────────────────────────────────────────
 const DAYS   = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const PLATS  = ['📸 IG','🎵 TT','📌 Pin','✍️ Blog'];
+const PLATS  = ['📸 IG','👥 FB','🎵 TT'];
 
 function weekStart(offset=0) {
   const now = new Date();
