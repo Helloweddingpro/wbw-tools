@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram Ready — Wedding Business Workspace</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:    #3B3C6D;
+  --pink:    #FB478E;
+  --purple:  #7C3AED;
+  --pu-light: rgba(124,58,237,.1);
+  --pu-mid:   rgba(124,58,237,.2);
+  --cream:   #FAF8F6;
+  --white:   #FFFFFF;
+  --border:  rgba(59,60,109,.12);
+  --muted:   rgba(59,60,109,.5);
+  --text:    #2A2B4A;
+  --green:   #27ae60;
+  --red:     #c0392b;
+}
+body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
+
+/* ── AUTH ─────────────────────────────────────────────── */
+#auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+.auth-card { background:var(--white); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; box-shadow:0 8px 40px rgba(59,60,109,.1); }
+.auth-logo { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+.auth-tagline { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:32px; }
+.auth-tabs { display:flex; gap:6px; background:var(--cream); border-radius:14px; padding:5px; margin-bottom:24px; }
+.auth-tab { flex:1; padding:9px; border-radius:10px; border:none; background:transparent; color:var(--muted); font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+.auth-tab.active { background:var(--white); color:var(--navy); box-shadow:0 2px 8px rgba(59,60,109,.1); }
+.auth-field { margin-bottom:14px; }
+.auth-field label { display:block; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.auth-field input { width:100%; padding:12px 16px; background:var(--cream); border:1.5px solid var(--border); border-radius:12px; color:var(--text); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; transition:border-color .2s; }
+.auth-field input:focus { outline:none; border-color:var(--purple); }
+.auth-submit { width:100%; padding:14px; background:var(--purple); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; margin-top:6px; transition:opacity .2s; }
+.auth-submit:hover { opacity:.88; }
+.auth-submit:disabled { opacity:.5; cursor:not-allowed; }
+.auth-msg { margin-top:12px; font-size:13px; font-weight:700; text-align:center; min-height:18px; }
+.auth-msg.error { color:var(--red); } .auth-msg.success { color:var(--green); }
+
+/* ── NAV ──────────────────────────────────────────────── */
+#app-screen { display:none; }
+.topnav { background:var(--navy); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:64px; position:sticky; top:0; z-index:100; }
+.nav-left { display:flex; align-items:center; gap:16px; }
+.nav-back { font-size:13px; font-weight:700; color:rgba(255,255,255,.6); text-decoration:none; transition:color .2s; }
+.nav-back:hover { color:#fff; }
+.nav-logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:700; color:#fff; }
+.nav-logo span { color:var(--pink); }
+.nav-right { display:flex; align-items:center; gap:14px; }
+.nav-user { font-size:12px; font-weight:600; color:rgba(255,255,255,.5); }
+.nav-signout { padding:8px 16px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:10px; color:rgba(255,255,255,.7); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all .2s; }
+.nav-signout:hover { background:rgba(255,255,255,.2); color:#fff; }
+
+/* ── PAGE HERO ────────────────────────────────────────── */
+.page-hero { background:var(--navy); padding:40px 48px 44px; border-bottom:3px solid var(--purple); }
+.hero-eyebrow { font-size:11px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--purple); margin-bottom:10px; }
+.page-hero h1 { font-family:'Cormorant Garamond',serif; font-size:38px; font-weight:700; color:#fff; line-height:1.15; margin-bottom:10px; }
+.page-hero h1 em { color:var(--purple); font-style:italic; }
+.page-hero p { font-size:14px; font-weight:600; color:rgba(255,255,255,.6); max-width:560px; line-height:1.65; }
+
+/* ── CHAPTER NAV ──────────────────────────────────────── */
+.chapter-nav { background:var(--white); border-bottom:1px solid var(--border); padding:0 48px; display:flex; gap:0; position:sticky; top:64px; z-index:90; }
+.ch-tab { padding:18px 24px; font-size:12px; font-weight:800; color:var(--muted); border-bottom:3px solid transparent; cursor:pointer; transition:all .2s; white-space:nowrap; letter-spacing:.02em; }
+.ch-tab:hover { color:var(--navy); }
+.ch-tab.active { color:var(--purple); border-bottom-color:var(--purple); }
+.ch-num { font-size:10px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:2px; }
+.ch-tab.active .ch-num { color:var(--purple); }
+.ch-tab.done .ch-num::after { content:' ✓'; color:var(--green); }
+
+/* ── MAIN ─────────────────────────────────────────────── */
+.main { max-width:760px; margin:0 auto; padding:40px 32px 80px; }
+
+/* ── CHAPTER PANELS ───────────────────────────────────── */
+.chapter { display:none; }
+.chapter.active { display:block; }
+
+/* ── LESSON BLOCKS ────────────────────────────────────── */
+.lesson-intro { margin-bottom:32px; }
+.lesson-intro h2 { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--navy); margin-bottom:10px; line-height:1.25; }
+.lesson-intro p { font-size:14px; font-weight:600; color:var(--muted); line-height:1.75; margin-bottom:12px; }
+.lesson-intro p strong { color:var(--navy); }
+
+.insight-box { background:var(--pu-light); border-left:3px solid var(--purple); border-radius:0 14px 14px 0; padding:18px 22px; margin:20px 0; }
+.insight-box p { font-size:13px; font-weight:700; color:var(--navy); line-height:1.65; }
+.insight-box p em { color:var(--purple); font-style:normal; font-weight:800; }
+
+.example-box { background:var(--navy); border-radius:16px; padding:24px 28px; margin:20px 0; }
+.example-label { font-size:10px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.5); margin-bottom:12px; }
+.example-bio-name { font-size:20px; font-weight:800; color:#fff; margin-bottom:8px; line-height:1.3; }
+.example-bio-text { font-size:14px; font-weight:600; color:rgba(255,255,255,.75); line-height:1.7; margin-bottom:8px; }
+.example-bio-cta { font-size:14px; font-weight:700; color:var(--pink); }
+.example-bio-loc { font-size:13px; font-weight:600; color:rgba(255,255,255,.4); margin-top:6px; }
+
+/* ── BIO BUILDER ──────────────────────────────────────── */
+.builder-card { background:var(--white); border-radius:20px; padding:32px 36px; box-shadow:0 2px 16px rgba(59,60,109,.06); border:1px solid var(--border); margin-bottom:24px; }
+.builder-title { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--purple); margin-bottom:20px; }
+.field-group { margin-bottom:20px; }
+.field-group label { display:block; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+.field-group input, .field-group textarea { width:100%; padding:12px 16px; background:var(--cream); border:1.5px solid var(--border); border-radius:12px; color:var(--text); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; transition:border-color .2s; outline:none; }
+.field-group input:focus, .field-group textarea:focus { border-color:var(--purple); background:var(--white); }
+.field-group textarea { resize:none; line-height:1.6; }
+.field-hint { font-size:11px; font-weight:600; color:var(--muted); margin-top:6px; line-height:1.5; }
+
+.bio-output { background:var(--navy); border-radius:16px; padding:24px 28px; margin-top:20px; display:none; }
+.bio-output.visible { display:block; }
+.bio-output-label { font-size:10px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:14px; }
+.bio-name-result { font-size:18px; font-weight:800; color:#fff; margin-bottom:10px; line-height:1.3; }
+.bio-text-result { font-size:13px; font-weight:600; color:rgba(255,255,255,.75); line-height:1.7; margin-bottom:10px; white-space:pre-line; }
+.bio-cta-result { font-size:13px; font-weight:700; color:var(--pink); margin-bottom:6px; }
+.bio-loc-result { font-size:12px; font-weight:600; color:rgba(255,255,255,.35); }
+
+.btn-generate { padding:13px 28px; background:var(--purple); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:opacity .2s; margin-top:4px; }
+.btn-generate:hover { opacity:.88; }
+.btn-copy { padding:9px 20px; background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.2); border-radius:10px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all .2s; margin-top:14px; display:inline-block; }
+.btn-copy:hover { background:rgba(255,255,255,.2); }
+.btn-copy.copied { background:rgba(39,174,96,.2); border-color:rgba(39,174,96,.4); color:#52d68a; }
+
+/* ── CHECKLIST ────────────────────────────────────────── */
+.checklist { display:flex; flex-direction:column; gap:10px; margin:20px 0; }
+.check-item { display:flex; align-items:flex-start; gap:14px; background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:16px 18px; cursor:pointer; transition:all .2s; }
+.check-item.checked { border-color:var(--purple); background:var(--pu-light); }
+.check-box { width:22px; height:22px; border-radius:6px; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; transition:all .2s; }
+.check-item.checked .check-box { background:var(--purple); border-color:var(--purple); }
+.check-box::after { content:'✓'; font-size:12px; font-weight:900; color:#fff; opacity:0; transition:opacity .2s; }
+.check-item.checked .check-box::after { opacity:1; }
+.check-text { font-size:13px; font-weight:700; color:var(--navy); line-height:1.5; }
+.check-text span { display:block; font-size:12px; font-weight:600; color:var(--muted); margin-top:2px; }
+
+/* ── POST FORMULA ─────────────────────────────────────── */
+.post-cards { display:flex; flex-direction:column; gap:16px; margin:24px 0; }
+.post-card { background:var(--white); border-radius:18px; padding:26px 28px; border:1.5px solid var(--border); box-shadow:0 2px 12px rgba(59,60,109,.05); }
+.post-day { font-size:10px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--purple); margin-bottom:6px; }
+.post-title { font-size:17px; font-weight:800; color:var(--navy); margin-bottom:10px; }
+.post-desc { font-size:13px; font-weight:600; color:var(--muted); line-height:1.7; margin-bottom:16px; }
+.keyword-strip { background:var(--pu-light); border-radius:10px; padding:14px 16px; }
+.keyword-strip-label { font-size:10px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:var(--purple); margin-bottom:8px; }
+.keyword-row { display:flex; flex-direction:column; gap:6px; }
+.keyword-item { font-size:12px; font-weight:700; color:var(--navy); display:flex; align-items:flex-start; gap:8px; line-height:1.5; }
+.keyword-item::before { content:'→'; color:var(--purple); flex-shrink:0; }
+.tag-note { margin-top:10px; padding-top:10px; border-top:1px solid var(--pu-mid); font-size:12px; font-weight:700; color:var(--navy); }
+.tag-note strong { color:var(--purple); }
+
+/* ── KEYWORD INPUT AREA ───────────────────────────────── */
+.keyword-inputs { background:var(--white); border-radius:20px; padding:28px 32px; border:1px solid var(--border); box-shadow:0 2px 16px rgba(59,60,109,.06); margin-bottom:24px; }
+.ki-title { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--purple); margin-bottom:16px; }
+.ki-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.ki-field label { display:block; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.ki-field input { width:100%; padding:11px 14px; background:var(--cream); border:1.5px solid var(--border); border-radius:10px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:700; color:var(--text); outline:none; transition:border-color .2s; }
+.ki-field input:focus { border-color:var(--purple); background:var(--white); }
+
+/* ── HABIT CARDS ──────────────────────────────────────── */
+.habit-cards { display:flex; flex-direction:column; gap:14px; margin:24px 0; }
+.habit-card { background:var(--white); border-radius:16px; padding:22px 24px; border:1.5px solid var(--border); display:flex; gap:16px; align-items:flex-start; }
+.habit-icon { font-size:24px; flex-shrink:0; margin-top:2px; }
+.habit-body {}
+.habit-title { font-size:14px; font-weight:800; color:var(--navy); margin-bottom:5px; }
+.habit-desc { font-size:13px; font-weight:600; color:var(--muted); line-height:1.65; }
+.habit-desc strong { color:var(--navy); }
+
+/* ── CHAPTER FOOTER ───────────────────────────────────── */
+.chapter-footer { display:flex; align-items:center; justify-content:space-between; margin-top:36px; padding-top:24px; border-top:1px solid var(--border); }
+.btn-next { padding:13px 32px; background:var(--purple); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; transition:opacity .2s; }
+.btn-next:hover { opacity:.88; }
+.btn-prev { padding:13px 24px; background:transparent; color:var(--muted); border:1.5px solid var(--border); border-radius:14px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+.btn-prev:hover { border-color:var(--navy); color:var(--navy); }
+.progress-dots { display:flex; gap:6px; }
+.dot { width:8px; height:8px; border-radius:50%; background:var(--border); transition:background .2s; }
+.dot.active { background:var(--purple); }
+.dot.done { background:var(--purple); opacity:.4; }
+
+/* ── SAVE STATUS ──────────────────────────────────────── */
+.save-pill { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:var(--muted); padding:5px 12px; background:var(--cream); border-radius:20px; border:1px solid var(--border); margin-bottom:24px; }
+.save-pill.saved { color:var(--green); }
+
+/* ── CAPTION STRUCTURE ────────────────────────────────── */
+.caption-structure { margin-top:14px; padding-top:14px; border-top:1px solid var(--pu-mid); }
+.cs-label { font-size:10px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:var(--purple); margin-bottom:10px; }
+.cs-row { display:flex; gap:12px; align-items:flex-start; margin-bottom:8px; }
+.cs-num { width:22px; height:22px; border-radius:50%; background:var(--purple); color:#fff; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+.cs-text { font-size:12px; font-weight:600; color:var(--navy); line-height:1.55; }
+.cs-text strong { color:var(--purple); }
+.toast { position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--navy); color:#fff; padding:12px 24px; border-radius:12px; font-size:13px; font-weight:700; opacity:0; pointer-events:none; transition:all .3s; z-index:999; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ── RESPONSIVE ───────────────────────────────────────── */
+@media(max-width:768px) {
+  .topnav { padding:0 20px; }
+  .page-hero { padding:28px 24px 32px; }
+  .page-hero h1 { font-size:28px; }
+  .chapter-nav { padding:0 20px; overflow-x:auto; }
+  .main { padding:24px 20px 60px; }
+  .builder-card { padding:24px 20px; }
+  .ki-row { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── AUTH ────────────────────────────────────────────────── -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">Instagram Ready</div>
+    <div class="auth-tagline">Wedding Business Workspace</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-in" onclick="switchTab('in')">Sign In</button>
+      <button class="auth-tab" id="tab-up" onclick="switchTab('up')">Create Account</button>
+    </div>
+    <div id="form-in">
+      <div class="auth-field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="in-pass" placeholder="Your password"></div>
+      <button class="auth-submit" id="signin-btn" onclick="signIn()">Sign In</button>
+      <div class="auth-msg" id="in-msg"></div>
+    </div>
+    <div id="form-up" style="display:none">
+      <div class="auth-field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="up-pass" placeholder="Min 6 characters"></div>
+      <button class="auth-submit" id="signup-btn" onclick="signUp()">Create Account</button>
+      <div class="auth-msg" id="up-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ─────────────────────────────────────────────────── -->
+<div id="app-screen">
+
+  <nav class="topnav">
+    <div class="nav-left">
+      <a class="nav-back" href="index.html">← Dashboard</a>
+      <div class="nav-logo">Instagram <span>Ready</span></div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-user" id="nav-user"></div>
+      <button class="nav-signout" onclick="signOut()">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="hero-eyebrow">Wedding Business Workspace</div>
+    <h1>Get your Instagram<br><em>working for you.</em></h1>
+    <p>A proven system from a wedding videographer with 20+ years in the industry. Three chapters. Set it up once, use it every week.</p>
+  </div>
+
+  <div class="chapter-nav">
+    <div class="ch-tab active" id="chtab-0" onclick="goChapter(0)">
+      <span class="ch-num">Introduction</span>Start Here
+    </div>
+    <div class="ch-tab" id="chtab-1" onclick="goChapter(1)">
+      <span class="ch-num">Chapter 1</span>Your Bio
+    </div>
+    <div class="ch-tab" id="chtab-2" onclick="goChapter(2)">
+      <span class="ch-num">Chapter 2</span>The 3-Post Formula
+    </div>
+    <div class="ch-tab" id="chtab-3" onclick="goChapter(3)">
+      <span class="ch-num">Chapter 3</span>The Daily Habit
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="save-pill" id="save-pill">✦ Progress saves automatically</div>
+
+
+    <!-- ══ INTRO ═════════════════════════════════════════════ -->
+    <div class="chapter active" id="ch-0">
+      <div class="lesson-intro">
+        <h2>Instagram doesn't have<br>to be complicated.</h2>
+        <p>The algorithm changes, the trends change, and it can feel like you need to post every day just to keep up. That leads to burnout — and most wedding suppliers either give up entirely or post randomly with no real strategy behind it.</p>
+        <p>Here's the truth: for a wedding business working in your local area, you don't need to become a full-time content creator. You don't need to go viral. You don't need to master every new feature Instagram throws at you.</p>
+        <p>You need a simple, repeatable system that does three things.</p>
+      </div>
+
+      <div class="post-cards">
+        <div class="post-card" style="border-color:var(--pu-mid);">
+          <div class="post-day" style="font-size:22px;margin-bottom:8px;">🎯</div>
+          <div class="post-title">Attract the right couples</div>
+          <div class="post-desc">Use the right keywords so couples find you when they're searching for suppliers at their venue — putting your work in front of the people most likely to book you.</div>
+        </div>
+        <div class="post-card" style="border-color:var(--pu-mid);">
+          <div class="post-day" style="font-size:22px;margin-bottom:8px;">🤝</div>
+          <div class="post-title">Build a referral community</div>
+          <div class="post-desc">Connect with the suppliers you work alongside — photographers, florists, bands, planners — and turn them into a community of referral partners who send work your way.</div>
+        </div>
+        <div class="post-card" style="border-color:var(--pu-mid);">
+          <div class="post-day" style="font-size:22px;margin-bottom:8px;">💕</div>
+          <div class="post-title">Hook them with emotion</div>
+          <div class="post-desc">When a couple lands on your profile, they should feel something. Content that connects emotionally — that speaks to how they want to feel on their wedding day — is what turns a follower into an enquiry.</div>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <p>Three posts a week. Stories after every wedding. Five minutes of genuine engagement every day. Follow this system consistently and it's enough to <em>grow a following, stay visible, and turn Instagram into a steady source of new enquiries.</em></p>
+      </div>
+
+      <div class="chapter-footer">
+        <div class="progress-dots">
+          <div class="dot active"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        <button class="btn-next" onclick="goChapter(1)">Start: Your Bio →</button>
+      </div>
+    </div>
+
+    <!-- ══ CHAPTER 1: YOUR BIO ══════════════════════════════ -->
+    <div class="chapter active" id="ch-1">
+
+      <div class="lesson-intro">
+        <h2>Your bio is your<br>most important post.</h2>
+        <p>Most wedding suppliers treat their Instagram bio like a business card. They put their name, maybe a few emojis, and a link. That's a missed opportunity.</p>
+        <p>Your bio has two jobs: <strong>get found</strong> and <strong>make someone feel something</strong>. The name field is pure SEO — it's what Instagram searches. The bio text is emotion — it's what makes a couple stop and think "that's exactly what I want."</p>
+      </div>
+
+      <div class="insight-box">
+        <p>Instagram's search works off your <em>name field</em> — not your username. A couple searching "wedding videographer Waterford" will find suppliers whose name field contains those exact words. Most suppliers don't know this.</p>
+      </div>
+
+      <div class="lesson-intro" style="margin-top:28px;">
+        <h2>Here's a real example<br>of what works.</h2>
+        <p>This is the bio that attracted consistent enquiries from couples at the right venues, at the right budget.</p>
+      </div>
+
+      <div class="example-box">
+        <div class="example-label">Real bio — Wedding Videographer, Waterford & Kilkenny</div>
+        <div class="example-bio-name">Wedding Videographer - Waterford | Kilkenny</div>
+        <div class="example-bio-text">Capturing Family Bonds, Laughter with Friends, Intimate Moments between you as a couple 💕
+Without You Even Knowing We Are There!</div>
+        <div class="example-bio-cta">Check Availability 👇</div>
+        <div class="example-bio-loc">📍 Waterford, Ireland · www.mdmvideo.com</div>
+      </div>
+
+      <div class="lesson-intro" style="margin-top:28px;">
+        <p>Notice what this does: the <strong>name field</strong> tells Instagram exactly what this person does and where. The <strong>bio text</strong> doesn't describe a service — it describes a feeling. The <strong>CTA</strong> is clear and direct. The <strong>location</strong> is set. The <strong>link</strong> goes straight to an enquiry form.</p>
+        <p>Now build yours.</p>
+      </div>
+
+      <!-- BIO BUILDER -->
+      <div class="builder-card">
+        <div class="builder-title">Bio Builder</div>
+
+        <div class="ki-row" style="margin-bottom:20px;">
+          <div class="ki-field">
+            <label>Your Service Type</label>
+            <input type="text" id="service-type" placeholder="e.g. Wedding Photographer" oninput="updateBioPreview()">
+          </div>
+          <div class="ki-field">
+            <label>Primary Location</label>
+            <input type="text" id="location-1" placeholder="e.g. Waterford" oninput="updateBioPreview()">
+          </div>
+        </div>
+        <div class="ki-row" style="margin-bottom:20px;">
+          <div class="ki-field">
+            <label>Second Location <span style="font-weight:600;text-transform:none;letter-spacing:0;">(optional)</span></label>
+            <input type="text" id="location-2" placeholder="e.g. Kilkenny" oninput="updateBioPreview()">
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>What emotion do you capture? <span style="font-weight:600;text-transform:none;letter-spacing:0;">(think feelings, not services)</span></label>
+          <textarea id="emotion" rows="2" placeholder="e.g. The laughter, the tears, the quiet moments between just the two of you" oninput="updateBioPreview()"></textarea>
+          <div class="field-hint">Think about what a couple would feel watching your work back. Write that.</div>
+        </div>
+
+        <div class="field-group">
+          <label>Your Call to Action</label>
+          <input type="text" id="cta" placeholder="e.g. Check Availability 👇" oninput="updateBioPreview()">
+          <div class="field-hint">Keep it short and direct. Link your CTA to your enquiry form — not your homepage.</div>
+        </div>
+
+        <div class="field-hint" id="bio-char-count" style="text-align:right;margin-top:-8px;margin-bottom:12px;">0 / 150 characters</div>
+
+        <div class="bio-output" id="bio-output">
+          <div class="bio-output-label">Your Instagram Bio — ready to copy</div>
+          <div class="bio-name-result" id="bio-name-result"></div>
+          <div class="bio-text-result" id="bio-text-result"></div>
+          <div class="bio-cta-result" id="bio-cta-result"></div>
+          <div class="bio-loc-result" id="bio-loc-result"></div>
+          <button class="btn-copy" id="copy-bio-btn" onclick="copyBio()">Copy Bio</button>
+        </div>
+      </div>
+
+      <!-- CHECKLIST -->
+      <div class="lesson-intro">
+        <h2>Profile checklist.</h2>
+        <p>Once your bio is written, tick these off. Every one of these affects how couples find you and whether they trust you enough to enquire.</p>
+      </div>
+
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)" data-key="check-name">
+          <div class="check-box"></div>
+          <div class="check-text">Name field updated with service + locations
+            <span>Settings → Edit Profile → Name. This is what Instagram searches — not your username.</span>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)" data-key="check-bio">
+          <div class="check-box"></div>
+          <div class="check-text">Bio text written with emotion + USP + CTA
+            <span>Paste your bio from the builder above. Keep it under 150 characters.</span>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)" data-key="check-link">
+          <div class="check-box"></div>
+          <div class="check-text">Link goes to your enquiry or contact form
+            <span>Not your homepage. Couples should be able to get in touch in one tap.</span>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)" data-key="check-photo">
+          <div class="check-box"></div>
+          <div class="check-text">Profile photo is a clear, professional headshot or logo
+            <span>Couples want to know who they're hiring. A face builds trust faster than a logo.</span>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)" data-key="check-location-post">
+          <div class="check-box"></div>
+          <div class="check-text">Add your location to every post when publishing
+            <span>When posting, use Instagram's location tag to add the venue. Couples browsing that venue's location feed will find your content.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chapter-footer">
+        <div class="progress-dots">
+          <div class="dot active"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        <button class="btn-next" onclick="goChapter(2)">Next: The 3-Post Formula →</button>
+      </div>
+    </div>
+
+    <!-- ══ CHAPTER 2: THE 3-POST FORMULA ════════════════════ -->
+    <div class="chapter" id="ch-2">
+
+      <div class="lesson-intro">
+        <h2>Three posts a week.<br>One simple formula.</h2>
+        <p>Every post you make should do one thing: put your work in front of couples getting married at your best venues. The way you do that is by using the <strong>venue name and location as keywords</strong> — in the on-screen text of your video and in the first line of your caption.</p>
+        <p>When a couple searches "wedding photographer Ashford Castle" on Instagram, they find suppliers who use those words consistently. That's the entire strategy.</p>
+      </div>
+
+      <div class="insight-box">
+        <p>You don't need to write a long caption. You need the <em>right words in the right places</em>. The venue name and location in the first line of your caption is worth more than a paragraph of generic text.</p>
+      </div>
+
+      <div class="insight-box" style="margin-bottom:24px;">
+        <p><strong>Get into the habit of capturing content on every wedding day.</strong> You don't need to film anything elaborate — a few quick clips or photos of what's going on around you is enough. Create a folder on your phone and label it with the couple's name and venue (e.g. "Sarah & Tom — Ashford Castle"). This makes it easy to find your content when you're ready to post, and you can reuse it across all three posts that week.</p>
+      </div>
+
+      <!-- KEYWORD INPUTS -->
+      <div class="keyword-inputs">
+        <div class="ki-title">Enter your keywords for this week</div>
+        <div class="ki-row">
+          <div class="ki-field">
+            <label>Venue Name</label>
+            <input type="text" id="kw-venue" placeholder="e.g. Ashford Castle" oninput="updatePostCards()">
+          </div>
+          <div class="ki-field">
+            <label>Location</label>
+            <input type="text" id="kw-location" placeholder="e.g. Mayo" oninput="updatePostCards()">
+          </div>
+        </div>
+      </div>
+
+      <!-- POST CARDS -->
+      <div class="post-cards">
+
+        <div class="post-card">
+          <div class="post-day">Monday — Post 1</div>
+          <div class="post-title">Your Work at the Wedding</div>
+          <div class="post-desc">Use a 10–15 second behind-the-scenes video or a collection of still images from a wedding you worked at. This is your work — let it speak for itself.</div>
+          <div class="keyword-strip">
+            <div class="keyword-strip-label">Where to use your keywords</div>
+            <div class="keyword-row" id="kw-post1">
+              <div class="keyword-item">On-screen text: <em style="color:var(--purple);margin-left:4px;" id="kw1-screen">Venue + Location</em></div>
+              <div class="keyword-item">First line of caption: <em style="color:var(--purple);margin-left:4px;" id="kw1-caption">Venue + Location + wedding</em></div>
+              <div class="keyword-item">Hashtags: <em style="color:var(--purple);margin-left:4px;" id="kw1-hash">#Venue #Location #Locationwedding</em></div>
+            </div>
+            <div class="tag-note">Tag: <strong>the venue's Instagram account</strong></div>
+          </div>
+          <div class="caption-structure">
+            <div class="cs-label">Caption Structure</div>
+            <div class="cs-row"><span class="cs-num">1</span><span class="cs-text"><strong>Hook</strong> — First line with venue + location keywords. This is what stops the scroll.</span></div>
+            <div class="cs-row"><span class="cs-num">2</span><span class="cs-text"><strong>Emotional text</strong> — One or two sentences about what this moment meant. Write how it felt, not what happened.</span></div>
+            <div class="cs-row"><span class="cs-num">3</span><span class="cs-text"><strong>CTA</strong> — "Check availability" or "Link in bio to enquire" — short and direct.</span></div>
+            <div class="cs-row"><span class="cs-num">4</span><span class="cs-text"><strong>Hashtags</strong> — Add venue + location hashtags at the end.</span></div>
+            <div class="cs-row"><span class="cs-num">5</span><span class="cs-text"><strong>When posting</strong> — Add the venue as a location tag and tag the venue account in the post settings.</span></div>
+          </div>
+        </div>
+
+        <div class="post-card">
+          <div class="post-day">Wednesday — Post 2</div>
+          <div class="post-title">Supplier Shout-Out or Venue Feature</div>
+          <div class="post-desc">Use a 10–15 second behind-the-scenes video or still images. Either shout out a supplier you worked alongside on the day — the florist, the band, the cake maker — or feature the venue itself. Both work well for this post.</div>
+          <div class="keyword-strip">
+            <div class="keyword-strip-label">Where to use your keywords</div>
+            <div class="keyword-row">
+              <div class="keyword-item">On-screen text: <em style="color:var(--purple);margin-left:4px;" id="kw2-screen">Venue + Location</em></div>
+              <div class="keyword-item">First line of caption: <em style="color:var(--purple);margin-left:4px;" id="kw2-caption">Venue + Location + wedding</em></div>
+              <div class="keyword-item">Hashtags: <em style="color:var(--purple);margin-left:4px;" id="kw2-hash">#Venue #Location #Locationwedding</em></div>
+            </div>
+            <div class="tag-note">Tag: <strong>the supplier you're featuring</strong> — they will reshare it to their audience. If featuring the venue, tag the venue account instead.</div>
+          </div>
+          <div class="caption-structure">
+            <div class="cs-label">Caption Structure</div>
+            <div class="cs-row"><span class="cs-num">1</span><span class="cs-text"><strong>Hook</strong> — First line with venue + location keywords.</span></div>
+            <div class="cs-row"><span class="cs-num">2</span><span class="cs-text"><strong>Emotional text</strong> — Say something genuine about the supplier's work or the venue and what it brought to the day.</span></div>
+            <div class="cs-row"><span class="cs-num">3</span><span class="cs-text"><strong>CTA</strong> — "Check availability" or "Link in bio to enquire."</span></div>
+            <div class="cs-row"><span class="cs-num">4</span><span class="cs-text"><strong>Hashtags</strong> — Venue + location hashtags at the end.</span></div>
+            <div class="cs-row"><span class="cs-num">5</span><span class="cs-text"><strong>When posting</strong> — Add the venue as a location tag and tag the supplier in the post settings.</span></div>
+          </div>
+        </div>
+
+        <div class="post-card">
+          <div class="post-day">Friday — Post 3</div>
+          <div class="post-title">Shout Out the Couple</div>
+          <div class="post-desc">Use a 10–15 second behind-the-scenes video or still images featuring the couple — a moment, a reaction, a look between them. Celebrate them. Always ask for permission before posting.</div>
+          <div class="keyword-strip">
+            <div class="keyword-strip-label">Where to use your keywords</div>
+            <div class="keyword-row">
+              <div class="keyword-item">On-screen text: <em style="color:var(--purple);margin-left:4px;" id="kw3-screen">Venue + Location</em></div>
+              <div class="keyword-item">First line of caption: <em style="color:var(--purple);margin-left:4px;" id="kw3-caption">Venue + Location + wedding</em></div>
+              <div class="keyword-item">Hashtags: <em style="color:var(--purple);margin-left:4px;" id="kw3-hash">#Venue #Location #Locationwedding</em></div>
+            </div>
+            <div class="tag-note">Tag: <strong>the couple</strong> if they are happy to be tagged</div>
+          </div>
+          <div class="caption-structure">
+            <div class="cs-label">Caption Structure</div>
+            <div class="cs-row"><span class="cs-num">1</span><span class="cs-text"><strong>Hook</strong> — First line with venue + location keywords.</span></div>
+            <div class="cs-row"><span class="cs-num">2</span><span class="cs-text"><strong>Emotional text</strong> — Write about this couple and what made their day special. Make it personal.</span></div>
+            <div class="cs-row"><span class="cs-num">3</span><span class="cs-text"><strong>CTA</strong> — "Check availability" or "Link in bio to enquire."</span></div>
+            <div class="cs-row"><span class="cs-num">4</span><span class="cs-text"><strong>Hashtags</strong> — Venue + location hashtags at the end.</span></div>
+            <div class="cs-row"><span class="cs-num">5</span><span class="cs-text"><strong>When posting</strong> — Add the venue as a location tag and tag the couple if they've given permission.</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="insight-box">
+        <p>You don't need to write a long caption. Open with the keyword line. Add one or two sentences about what's in the video. Add your hashtags. That's it. The video does the work — the keywords make sure the right people find it.</p>
+      </div>
+
+      <div class="chapter-footer">
+        <button class="btn-prev" onclick="goChapter(1)">← Back</button>
+        <div class="progress-dots">
+          <div class="dot done"></div>
+          <div class="dot active"></div>
+          <div class="dot"></div>
+        </div>
+        <button class="btn-next" onclick="goChapter(3)">Next: The Daily Habit →</button>
+      </div>
+    </div>
+
+    <!-- ══ CHAPTER 3: THE DAILY HABIT ═══════════════════════ -->
+    <div class="chapter" id="ch-3">
+
+      <div class="lesson-intro">
+        <h2>Posting is only<br>half the job.</h2>
+        <p>The Instagram algorithm rewards accounts that are active — not just posting, but engaging. Five minutes a day of genuine connection with other suppliers in your area will do more for your reach than any hashtag strategy.</p>
+      </div>
+
+      <div class="habit-cards">
+
+        <div class="habit-card">
+          <div class="habit-icon">📱</div>
+          <div class="habit-body">
+            <div class="habit-title">Post a Story at every wedding</div>
+            <div class="habit-desc">You don't need to edit it. A raw clip from the day — the venue, the setup, a moment — posted as a Story keeps your account active between your three weekly posts. Stories also show couples that you're working regularly. <strong>Post it the day of or the day after the wedding.</strong></div>
+          </div>
+        </div>
+
+        <div class="habit-card">
+          <div class="habit-icon">🤝</div>
+          <div class="habit-body">
+            <div class="habit-title">Connect with every supplier you work with</div>
+            <div class="habit-desc">After every wedding, follow every supplier you worked alongside on Instagram. Leave a <strong>genuine, specific comment</strong> on one of their recent posts — not "great work 🔥" but something about what you actually saw them do on the day. This builds real relationships and puts your name in front of their audience.</div>
+          </div>
+        </div>
+
+        <div class="habit-card">
+          <div class="habit-icon">💬</div>
+          <div class="habit-body">
+            <div class="habit-title">5 minutes a day — long comments on supplier posts</div>
+            <div class="habit-desc">Every day, find 2–3 posts from other wedding suppliers in your area and leave a <strong>long, genuine comment</strong> — at least 4–5 words, ideally a sentence or two. This signals to Instagram that you're an active, engaged account. It also puts your name in front of suppliers who may refer you. <strong>Do not use generic comments.</strong> Be specific about what you see in their post.</div>
+          </div>
+        </div>
+
+        <div class="habit-card">
+          <div class="habit-icon">📍</div>
+          <div class="habit-body">
+            <div class="habit-title">Tag the venue location on every post</div>
+            <div class="habit-desc">When you post, always add the venue as a <strong>location tag</strong> — not just in the caption, but using Instagram's actual location feature. Couples who browse a venue's location feed will find your content. This is free visibility to exactly the right audience.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="insight-box">
+        <p>This system works because it's <em>consistent and targeted</em> — not because it's complicated. Three posts a week using the same venue keywords, stories after every wedding, and five minutes of daily engagement. That's it. Do it for 90 days and you will see the difference in your enquiries.</p>
+      </div>
+
+      <!-- FINAL CHECKLIST -->
+      <div class="lesson-intro" style="margin-top:32px;">
+        <h2>Your weekly checklist.</h2>
+        <p>Tick these off every week to keep the system running.</p>
+      </div>
+
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)" data-key="w-post1">
+          <div class="check-box"></div>
+          <div class="check-text">Monday — Posted your work video with venue + location keywords</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)" data-key="w-post2">
+          <div class="check-box"></div>
+          <div class="check-text">Wednesday — Posted a supplier shoutout with venue + location keywords</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)" data-key="w-post3">
+          <div class="check-box"></div>
+          <div class="check-text">Friday — Posted a couple shoutout with venue + location keywords</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)" data-key="w-stories">
+          <div class="check-box"></div>
+          <div class="check-text">Posted Stories on the days between your posts</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)" data-key="w-engage">
+          <div class="check-box"></div>
+          <div class="check-text">Spent 5 minutes each day leaving genuine comments on supplier posts</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)" data-key="w-connect">
+          <div class="check-box"></div>
+          <div class="check-text">Connected on Instagram with every supplier from this week's wedding</div>
+        </div>
+      </div>
+
+      <div class="chapter-footer">
+        <button class="btn-prev" onclick="goChapter(2)">← Back</button>
+        <div class="progress-dots">
+          <div class="dot done"></div>
+          <div class="dot done"></div>
+          <div class="dot active"></div>
+        </div>
+        <button class="btn-next" onclick="clearWeeklyChecklist()">Clear for New Week ↺</button>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app-screen -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────
+const SUPABASE_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_CS3XLLfWaZNA-B2oE37N-g_z2FMWCzq";
+if (!window._wbwSb) {
+  window._wbwSb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { storageKey: 'wbw-auth', autoRefreshToken: true, persistSession: true }
+  });
+}
+const sb = window._wbwSb;
+let currentUser = null;
+let saveTimer   = null;
+let toolData    = {};
+let currentChapter = 0;
+
+// ── AUTH ──────────────────────────────────────────────────────
+function switchTab(t) {
+  ['in','up'].forEach(m => {
+    document.getElementById('tab-'+m).classList.toggle('active', m===t);
+    document.getElementById('form-'+m).style.display = m===t ? '' : 'none';
+  });
+}
+
+async function signIn() {
+  const email = document.getElementById('in-email').value.trim();
+  const pass  = document.getElementById('in-pass').value;
+  const msg   = document.getElementById('in-msg');
+  const btn   = document.getElementById('signin-btn');
+  msg.className='auth-msg'; msg.textContent='';
+  if (!email||!pass) { msg.className='auth-msg error'; msg.textContent='Please fill in all fields.'; return; }
+  btn.disabled=true; btn.textContent='Signing in…';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password:pass });
+  if (error) { msg.className='auth-msg error'; msg.textContent=error.message; btn.disabled=false; btn.textContent='Sign In'; return; }
+  currentUser = data.user; launchApp();
+}
+
+async function signUp() {
+  const email = document.getElementById('up-email').value.trim();
+  const pass  = document.getElementById('up-pass').value;
+  const msg   = document.getElementById('up-msg');
+  const btn   = document.getElementById('signup-btn');
+  msg.className='auth-msg'; msg.textContent='';
+  if (!email||!pass) { msg.className='auth-msg error'; msg.textContent='Please fill in all fields.'; return; }
+  if (pass.length<6) { msg.className='auth-msg error'; msg.textContent='Password must be at least 6 characters.'; return; }
+  btn.disabled=true; btn.textContent='Creating account…';
+  const { data, error } = await sb.auth.signUp({ email, password:pass });
+  if (error) { msg.className='auth-msg error'; msg.textContent=error.message; btn.disabled=false; btn.textContent='Create Account'; return; }
+  msg.className='auth-msg success'; msg.textContent='Account created! Check your email to confirm.';
+  btn.disabled=false; btn.textContent='Create Account';
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  currentUser=null;
+  document.getElementById('app-screen').style.display='none';
+  document.getElementById('auth-screen').style.display='flex';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key!=='Enter') return;
+  const id = document.activeElement && document.activeElement.id;
+  if (id==='in-email'||id==='in-pass') signIn();
+  if (id==='up-email'||id==='up-pass') signUp();
+});
+
+async function checkSession() {
+  const { data } = await sb.auth.getSession();
+  if (data.session) { currentUser=data.session.user; launchApp(); }
+}
+
+function launchApp() {
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('app-screen').style.display='block';
+  document.getElementById('nav-user').textContent = currentUser.email;
+  loadToolData();
+}
+
+// ── CHAPTER NAV ───────────────────────────────────────────────
+function goChapter(idx) {
+  document.getElementById('ch-'+currentChapter).classList.remove('active');
+  document.getElementById('chtab-'+currentChapter).classList.remove('active');
+  currentChapter = idx;
+  document.getElementById('ch-'+idx).classList.add('active');
+  document.getElementById('chtab-'+idx).classList.add('active');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+// ── BIO BUILDER ───────────────────────────────────────────────
+function updateBioPreview() {
+  const service  = document.getElementById('service-type').value.trim();
+  const loc1     = document.getElementById('location-1').value.trim();
+  const loc2     = document.getElementById('location-2').value.trim();
+  const emotion  = document.getElementById('emotion').value.trim();
+  const cta      = document.getElementById('cta').value.trim();
+
+  // Character count — bio text + CTA capped at 150
+  const bioText = emotion + (emotion && cta ? '\n' : '') + cta;
+  const charCount = bioText.length;
+  const counter = document.getElementById('bio-char-count');
+  if (counter) {
+    counter.textContent = charCount + ' / 150 characters';
+    counter.style.color = charCount > 150 ? 'var(--red)' : charCount > 120 ? '#F59E0B' : 'var(--muted)';
+  }
+  // Warn in emotion field if over limit
+  const emotionEl = document.getElementById('emotion');
+  if (charCount > 150) {
+    emotionEl.style.borderColor = 'var(--red)';
+  } else {
+    emotionEl.style.borderColor = '';
+  }
+
+  if (!service && !loc1) { document.getElementById('bio-output').classList.remove('visible'); return; }
+
+  let nameField = service;
+  if (loc1) nameField += ' - ' + loc1;
+  if (loc2) nameField += ' | ' + loc2;
+
+  document.getElementById('bio-name-result').textContent = nameField;
+  document.getElementById('bio-text-result').textContent = emotion || '(Add your emotional bio text above)';
+  document.getElementById('bio-cta-result').textContent  = cta || 'Check Availability 👇';
+  document.getElementById('bio-loc-result').textContent  = loc1 ? '📍 ' + loc1 + (loc2 ? ', Ireland' : '') : '';
+  document.getElementById('bio-output').classList.add('visible');
+
+  queueSave();
+}
+
+function copyBio() {
+  const name    = document.getElementById('bio-name-result').textContent;
+  const text    = document.getElementById('bio-text-result').textContent;
+  const cta     = document.getElementById('bio-cta-result').textContent;
+  const full    = name + '\n\n' + text + '\n' + cta;
+  navigator.clipboard.writeText(full).then(() => {
+    const btn = document.getElementById('copy-bio-btn');
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent='Copy Bio'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+
+// ── POST CARD KEYWORDS ────────────────────────────────────────
+function updatePostCards() {
+  const venue = document.getElementById('kw-venue').value.trim();
+  const loc   = document.getElementById('kw-location').value.trim();
+
+  const vDisplay  = venue || 'Venue Name';
+  const lDisplay  = loc   || 'Location';
+  const vSlug     = venue.replace(/\s+/g,'') || 'VenueName';
+  const lSlug     = loc.replace(/\s+/g,'')   || 'Location';
+
+  const screenKw  = `${vDisplay} | ${lDisplay}`;
+  const captionKw = `${vDisplay}, ${lDisplay} wedding`;
+  const hashKw    = `#${vSlug} #${lSlug} #${lSlug}wedding`;
+
+  ['kw1','kw2','kw3'].forEach(prefix => {
+    const s = document.getElementById(prefix+'-screen');
+    const c = document.getElementById(prefix+'-caption');
+    const h = document.getElementById(prefix+'-hash');
+    if (s) s.textContent = screenKw;
+    if (c) c.textContent = captionKw;
+    if (h) h.textContent = hashKw;
+  });
+
+  queueSave();
+}
+
+// ── CHECKLIST ─────────────────────────────────────────────────
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const key = el.dataset.key;
+  if (!toolData.checks) toolData.checks = {};
+  toolData.checks[key] = el.classList.contains('checked');
+  queueSave();
+}
+
+function restoreChecks() {
+  if (!toolData.checks) return;
+  document.querySelectorAll('.check-item').forEach(el => {
+    if (toolData.checks[el.dataset.key]) el.classList.add('checked');
+  });
+}
+
+// ── COMPLETE ──────────────────────────────────────────────────
+function completeool() {
+  toolData.completed = true;
+  saveToolData();
+  showToast('✓ Instagram Ready complete!');
+}
+
+function completeool() { completeool(); } // alias
+
+// ── SAVE / LOAD ───────────────────────────────────────────────
+function queueSave() {
+  const pill = document.getElementById('save-pill');
+  pill.className = 'save-pill'; pill.textContent = '⏳ Saving…';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveToolData, 1500);
+  syncFormToData();
+}
+
+function syncFormToData() {
+  toolData.serviceType = document.getElementById('service-type').value;
+  toolData.location1   = document.getElementById('location-1').value;
+  toolData.location2   = document.getElementById('location-2').value;
+  toolData.emotion     = document.getElementById('emotion').value;
+  toolData.cta         = document.getElementById('cta').value;
+  toolData.kwVenue     = document.getElementById('kw-venue').value;
+  toolData.kwLocation  = document.getElementById('kw-location').value;
+}
+
+function restoreFormFromData() {
+  if (toolData.serviceType) document.getElementById('service-type').value = toolData.serviceType;
+  if (toolData.location1)   document.getElementById('location-1').value   = toolData.location1;
+  if (toolData.location2)   document.getElementById('location-2').value   = toolData.location2;
+  if (toolData.emotion)     document.getElementById('emotion').value       = toolData.emotion;
+  if (toolData.cta)         document.getElementById('cta').value           = toolData.cta;
+  if (toolData.kwVenue)     document.getElementById('kw-venue').value      = toolData.kwVenue;
+  if (toolData.kwLocation)  document.getElementById('kw-location').value   = toolData.kwLocation;
+  updateBioPreview();
+  updatePostCards();
+  restoreChecks();
+}
+
+async function saveToolData() {
+  syncFormToData();
+  const { error } = await sb.from('instagram_ready').upsert({
+    user_id:    currentUser.id,
+    data:       toolData,
+    updated_at: new Date().toISOString(),
+  }, { onConflict:'user_id' });
+  const pill = document.getElementById('save-pill');
+  if (error) { pill.className='save-pill'; pill.textContent='⚠ Save failed'; }
+  else { pill.className='save-pill saved'; pill.textContent='✓ Saved'; setTimeout(()=>{ pill.className='save-pill'; pill.textContent='✦ Progress saves automatically'; }, 2500); }
+}
+
+async function loadToolData() {
+  const { data } = await sb.from('instagram_ready').select('data').eq('user_id', currentUser.id).single();
+  if (data && data.data) { toolData = data.data; restoreFormFromData(); }
+}
+
+// ── TOAST ──────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function completeool() {
+  toolData.completed = true;
+  saveToolData();
+  showToast('✓ Instagram Ready — system set up!');
+}
+
+// ── CLEAR WEEKLY CHECKLIST ────────────────────────────────────
+function clearWeeklyChecklist() {
+  const weeklyKeys = ['w-post1','w-post2','w-post3','w-stories','w-engage','w-connect'];
+  document.querySelectorAll('.check-item').forEach(el => {
+    if (weeklyKeys.includes(el.dataset.key)) {
+      el.classList.remove('checked');
+      if (!toolData.checks) toolData.checks = {};
+      toolData.checks[el.dataset.key] = false;
+    }
+  });
+  saveToolData();
+  showToast('✓ Weekly checklist cleared — ready for a new week!');
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+checkSession();
+</script>
+
+<!--
+SUPABASE TABLE — run once in your SQL editor:
+
+CREATE TABLE IF NOT EXISTS instagram_ready (
+  id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id    UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL UNIQUE,
+  data       JSONB DEFAULT '{}',
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE instagram_ready ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users manage own instagram ready" ON instagram_ready
+  FOR ALL USING (auth.uid() = user_id);
+-->
+
+</body>
+</html>
