@@ -111,6 +111,17 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .footer-logo { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:700; color:var(--navy); }
 .footer-logo span { color:var(--pink); }
 .footer-copy { font-size:12px; font-weight:600; color:var(--muted); }
+
+/* ── IG PROMPT CARD ───────────────────────────────────── */
+.ig-prompt-card { background:linear-gradient(135deg,#7C3AED 0%,#5B21B6 100%); border-radius:20px; padding:24px 28px; margin-bottom:28px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; position:relative; overflow:hidden; }
+.ig-prompt-card::after { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; background:rgba(255,255,255,.06); border-radius:50%; pointer-events:none; }
+.ig-prompt-left {}
+.ig-prompt-eyebrow { font-size:10px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.6); margin-bottom:6px; }
+.ig-prompt-title { font-size:17px; font-weight:800; color:#fff; margin-bottom:4px; }
+.ig-prompt-sub { font-size:13px; font-weight:600; color:rgba(255,255,255,.7); line-height:1.5; }
+.ig-prompt-sub strong { color:#fff; }
+.ig-prompt-btn { padding:12px 24px; background:#fff; color:#7C3AED; border:none; border-radius:12px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; text-decoration:none; white-space:nowrap; flex-shrink:0; transition:opacity .2s; display:inline-block; }
+.ig-prompt-btn:hover { opacity:.9; }
 @media(max-width:640px){
   .topnav{padding:0 16px;}
   .main{padding:24px 16px 60px;}
@@ -187,6 +198,16 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       </div>
     </div>
 
+
+    <div class="ig-prompt-card" id="ig-prompt-card">
+      <div class="ig-prompt-left">
+        <div class="ig-prompt-eyebrow">📸 Today's Instagram Prompt</div>
+        <div class="ig-prompt-title" id="ig-prompt-title">Loading your post prompt...</div>
+        <div class="ig-prompt-sub" id="ig-prompt-sub"></div>
+      </div>
+      <a href="instagram-ready.html" class="ig-prompt-btn">Open Instagram Ready →</a>
+    </div>
+
     <div class="category">
       <div class="category-header"><div class="cat-label">Income &amp; Pricing</div><div class="cat-line"></div></div>
       <div class="tools-grid">
@@ -240,11 +261,11 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
     <div class="category">
       <div class="category-header"><div class="cat-label">Marketing &amp; Social Media</div><div class="cat-line"></div></div>
       <div class="tools-grid">
-        <a href="social-planner.html" class="tool-card">
-          <div class="tool-top-bar" style="background:linear-gradient(90deg,#8B5CF6,#B794F4);"></div>
-          <div class="tool-icon" style="background:rgba(139,92,246,.1);">📱</div>
-          <div class="tool-name">Social Media Planner</div>
-          <div class="tool-desc">Stop guessing what to post. Build a content strategy that speaks directly to your most profitable couples.</div>
+        <a href="instagram-ready.html" class="tool-card">
+          <div class="tool-top-bar" style="background:linear-gradient(90deg,#7C3AED,#9D5FF0);"></div>
+          <div class="tool-icon" style="background:rgba(124,58,237,.1);">📸</div>
+          <div class="tool-name">Instagram Ready</div>
+          <div class="tool-desc">A proven system to set up your Instagram bio, post three times a week with the right keywords, and turn followers into enquiries.</div>
           <div class="tool-footer"><span class="badge badge-live">Live</span><span class="tool-arrow">→</span></div>
         </a>
       </div>
@@ -333,6 +354,7 @@ async function initApp(user) {
   var h = new Date().getHours();
   var greeting = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
   document.getElementById("hero-greeting").textContent = greeting + " ✨";
+  renderIGPrompt();
   document.getElementById("wts-results-area").innerHTML = '<div style="padding:16px 0; font-size:13px; font-weight:700; color:var(--muted);">Loading your results...</div>';
 
   try {
@@ -478,7 +500,7 @@ var SCORE_META = {
   pricing: { label:"Pricing Confidence",     color:"#FB478E", tool:"Income & Pricing Planner", url:"#" },
   leads:   { label:"Lead Tracking",           color:"#FF6B1A", tool:"Lead Tracker",             url:"lead-tracker.html" },
   ica:     { label:"Most Profitable Couples", color:"#8B5CF6", tool:"Ideal Client Clarity",     url:"ideal-client.html" },
-  social:  { label:"Social Media",            color:"#5B8DEF", tool:"Social Media Planner",     url:"social-planner.html" },
+  social:  { label:"Social Media",            color:"#7C3AED", tool:"Instagram Ready",           url:"instagram-ready.html" },
   income:  { label:"Income Goals",            color:"#F5A800", tool:"Income & Pricing Planner", url:"income-planner.html" }
 };
 
@@ -541,6 +563,41 @@ function renderWTSResults(scores) {
     });
   });
 }
+
+// ── IG DAILY PROMPT ───────────────────────────────────────────
+function renderIGPrompt() {
+  var day = new Date().getDay(); // 0=Sun,1=Mon,...6=Sat
+  var card = document.getElementById('ig-prompt-card');
+  var title = document.getElementById('ig-prompt-title');
+  var sub   = document.getElementById('ig-prompt-sub');
+
+  var postDays = { 1: true, 3: true, 5: true };
+
+  if (!postDays[day]) {
+    document.getElementById('ig-prompt-card').style.display = 'none';
+    return;
+  }
+
+  var prompts = {
+    1: {
+      title: "Today's IG Post — Your Work at the Wedding 🎬",
+      sub: "Share a 10–15 second behind-the-scenes video or still images from a wedding you worked at. Use the <strong>venue name + location</strong> in your on-screen text and the first line of your caption. Tag the venue. ⏰ Best posting time: 6pm – 9pm."
+    },
+    3: {
+      title: "Today's IG Post — Supplier Shout-Out or Venue Feature 🤝",
+      sub: "Feature a supplier you worked alongside, or showcase the venue itself. Use the same <strong>venue name + location</strong> keywords. Tag the supplier or venue — they'll likely reshare it. ⏰ Best posting time: 6pm – 9pm."
+    },
+    5: {
+      title: "Today's IG Post — Shout Out the Couple 💕",
+      sub: "Share a moment that features the couple — a reaction, a look, a quiet moment between them. Use your <strong>venue name + location</strong> keywords. Tag the couple if they're happy to be tagged. ⏰ Best posting time: 6pm – 9pm."
+    }
+  };
+
+  var p = prompts[day];
+  title.textContent = p.title;
+  sub.innerHTML = p.sub;
+}
+
 </script>
 </body>
 </html>
