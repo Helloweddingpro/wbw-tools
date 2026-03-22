@@ -176,6 +176,14 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
 .save-pill { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:var(--muted); padding:5px 12px; background:var(--cream); border-radius:20px; border:1px solid var(--border); margin-bottom:24px; }
 .save-pill.saved { color:var(--green); }
 
+/* ── WTS PROMPT BANNER ────────────────────────────────── */
+.wts-banner { background:linear-gradient(135deg,#7C3AED,#5B21B6); border-radius:16px; padding:18px 22px; margin-bottom:24px; display:none; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+.wts-banner.visible { display:flex; }
+.wts-banner-eyebrow { font-size:10px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.6); margin-bottom:4px; }
+.wts-banner-text { font-size:14px; font-weight:700; color:#fff; line-height:1.5; }
+.wts-banner-text strong { color:#FFD35C; }
+.wts-banner-link { padding:9px 18px; background:#fff; color:#7C3AED; border-radius:10px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; text-decoration:none; white-space:nowrap; flex-shrink:0; }
+
 /* ── CAPTION STRUCTURE ────────────────────────────────── */
 .caption-structure { margin-top:14px; padding-top:14px; border-top:1px solid var(--pu-mid); }
 .cs-label { font-size:10px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:var(--purple); margin-bottom:10px; }
@@ -260,6 +268,14 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
   </div>
 
   <div class="main">
+    <div class="wts-banner" id="wts-banner">
+      <div>
+        <div class="wts-banner-eyebrow">📊 From Your Where To Start Assessment</div>
+        <div class="wts-banner-text">Your <strong>Social Media score</strong> is one of your lowest areas. This tool is exactly where to focus — work through the three chapters and start the system this week.</div>
+      </div>
+      <a href="where-to-start.html" class="wts-banner-link">View full results</a>
+    </div>
+
     <div class="save-pill" id="save-pill">✦ Progress saves automatically</div>
 
 
@@ -886,6 +902,24 @@ async function saveToolData() {
 async function loadToolData() {
   const { data } = await sb.from('instagram_ready').select('data').eq('user_id', currentUser.id).single();
   if (data && data.data) { toolData = data.data; restoreFormFromData(); }
+
+  // Connect to Where To Start — check social score
+  try {
+    const { data: wts } = await sb.from('where_to_start').select('data').eq('user_id', currentUser.id).order('updated_at', { ascending: false }).limit(1);
+    if (wts && wts.length && wts[0].data && wts[0].data.scores && wts[0].data.scores.social) {
+      const score = wts[0].data.scores.social;
+      const pct = Number.isFinite(score.pct) ? score.pct : (score.max ? Math.round((score.raw / score.max) * 100) : 0);
+      if (pct < 60) {
+        showWTSPrompt(pct);
+      }
+    }
+  } catch(e) { console.log('WTS load:', e); }
+}
+
+// ── WTS CONNECTION ────────────────────────────────────────────
+function showWTSPrompt(pct) {
+  const banner = document.getElementById('wts-banner');
+  if (banner) banner.classList.add('visible');
 }
 
 // ── TOAST ──────────────────────────────────────────────────────
