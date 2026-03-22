@@ -558,6 +558,46 @@ Without You Even Knowing We Are There!</div>
         <p>You don't need to write a long caption. Open with the keyword line. Add one or two sentences about what's in the video. Add your hashtags. That's it. The video does the work — the keywords make sure the right people find it.</p>
       </div>
 
+      <!-- ICA BONUS SECTION -->
+      <div class="builder-card" style="border:2px solid var(--pu-mid);margin-top:28px;">
+        <div class="builder-title" style="display:flex;align-items:center;gap:8px;">
+          <span>✨</span> Bonus — Got More Time? Use Your ICA Profile
+        </div>
+        <div class="lesson-intro" style="margin-bottom:20px;">
+          <p>If you want to go deeper than the three weekly posts, your Ideal Client Profile is a powerful creative brief. Download your ICA profile from the <a href="ideal-client.html" style="color:var(--purple);font-weight:800;text-decoration:none;">Find Your Most Profitable Client tool</a> and upload it to any AI tool — ChatGPT, Claude, Gemini — with the prompt below.</p>
+          <p style="margin-top:10px;">It will generate a full week of content ideas tailored specifically to your ideal client, complete with visual ideas, carousel slides and captions with your keywords already in them.</p>
+        </div>
+
+        <div style="background:var(--navy);border-radius:14px;padding:22px 24px;position:relative;">
+          <div style="font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px;">AI Prompt — copy and paste this</div>
+          <div id="ica-prompt-text" style="font-size:13px;font-weight:600;color:rgba(255,255,255,.85);line-height:1.8;white-space:pre-line;">Act as a wedding marketing expert who specialises in Instagram content for wedding suppliers.
+
+I have attached my Ideal Client Profile. Using this profile, create the following content for my Instagram:
+
+1. One Reel idea — give me a visual concept using footage or images I might already have on my phone from a real wedding. Include the on-screen text hook and a full caption.
+
+2. One Carousel post — give me 5–10 slide ideas with text for each slide. The final slide should have a clear call to action. Include a full caption for the post.
+
+3. Three Story ideas — one for each of the next three days. Keep them simple and achievable with a phone.
+
+For every piece of content, use "weddings in [my location]" and "[venue name]" as the keywords — include them in the first line of every caption and as hashtags.
+
+Write in a warm, emotional tone that speaks directly to my ideal client.</div>
+          <button class="btn-copy" id="copy-prompt-btn" onclick="copyPrompt()" style="margin-top:16px;">Copy Prompt</button>
+        </div>
+
+        <div style="margin-top:16px;padding:14px 16px;background:var(--pu-light);border-radius:12px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;">How to use this</div>
+          <div style="font-size:13px;font-weight:600;color:var(--navy);line-height:1.65;">
+            1. Go to your <a href="ideal-client.html" style="color:var(--purple);font-weight:800;text-decoration:none;">ICA tool</a> and download your profile as a PDF<br>
+            2. Open ChatGPT, Claude or Gemini<br>
+            3. Upload the PDF and paste in the prompt above<br>
+            4. Replace [my location] and [venue name] with your actual details<br>
+            5. Use the ideas it gives you to create your content that week
+          </div>
+        </div>
+      </div>
+
       <div class="chapter-footer">
         <button class="btn-prev" onclick="goChapter(1)">← Back</button>
         <div class="progress-dots">
@@ -790,6 +830,16 @@ function updateBioPreview() {
   document.getElementById('bio-output').classList.add('visible');
 
   queueSave();
+}
+
+function copyPrompt() {
+  const text = document.getElementById('ica-prompt-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-prompt-btn');
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy Prompt'; btn.classList.remove('copied'); }, 2500);
+  });
 }
 
 function copyBio() {
