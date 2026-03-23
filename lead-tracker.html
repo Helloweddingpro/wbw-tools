@@ -65,12 +65,15 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .add-msg { font-size:13px; font-weight:700; min-height:18px; margin-top:6px; }
 .add-msg.ok { color:var(--green); } .add-msg.err { color:var(--red); }
 .followup-item { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px 16px; border:1.5px solid rgba(255,107,26,.25); border-radius:13px; margin-bottom:10px; background:rgba(255,107,26,.04); }
+.followup-item.overdue { border-color:rgba(192,57,43,.35); background:rgba(192,57,43,.04); }
 .followup-item:last-child { margin-bottom:0; }
 .fu-name { font-size:15px; font-weight:800; color:var(--navy); }
 .fu-date { font-size:12px; font-weight:700; color:var(--orange); margin-top:2px; }
+.fu-date.overdue { color:var(--red); }
 .fu-venue { font-size:12px; font-weight:600; color:var(--muted); margin-top:1px; }
 .fu-done-msg { font-size:12px; font-weight:700; color:var(--green); margin-top:4px; display:none; }
 .mark-done-btn { padding:9px 16px; background:var(--orange); color:#fff; border:none; border-radius:11px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:opacity .2s; }
+.mark-done-btn.overdue { background:var(--red); }
 .mark-done-btn:hover { opacity:.88; } .mark-done-btn:disabled { opacity:.4; cursor:not-allowed; }
 .all-clear { background:rgba(39,174,96,.08); border:1px solid rgba(39,174,96,.2); border-radius:12px; padding:14px 16px; font-size:14px; font-weight:700; color:var(--green); }
 .table-wrap { overflow-x:auto; }
@@ -119,8 +122,34 @@ td { padding:11px 12px; border-top:1px solid var(--border); vertical-align:middl
 .pay-row button { padding:10px 14px; border-radius:10px; border:1px solid var(--border); background:var(--white); color:var(--red); font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap; font-family:'Montserrat',sans-serif; }
 .pay-summary { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
 .pay-sum-card { border-radius:13px; padding:14px; }
-#toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:11px 20px; border-radius:12px; font-size:13px; font-weight:800; opacity:0; pointer-events:none; transition:opacity .3s; z-index:99999; }
-#toast.show { opacity:1; }
+/* ── CALENDAR VIEW ────────────────────────────────────── */
+.view-toggle { display:flex; gap:8px; }
+.view-btn { padding:8px 16px; border-radius:10px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer; border:1.5px solid var(--border); background:var(--white); color:var(--muted); transition:all .2s; }
+.view-btn.active { background:var(--navy); color:#fff; border-color:var(--navy); }
+.calendar-wrap { display:none; }
+.calendar-wrap.show { display:block; }
+.cal-year { margin-bottom:36px; }
+.cal-year-title { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--navy); margin-bottom:16px; display:flex; align-items:center; gap:12px; }
+.cal-year-badge { font-size:11px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px; border-radius:999px; background:rgba(59,60,109,.08); color:var(--muted); font-family:'Montserrat',sans-serif; }
+.cal-year-badge.current { background:rgba(251,71,142,.12); color:var(--pink); }
+.cal-months { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.cal-month { background:var(--white); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+.cal-month-name { font-size:11px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding:10px 12px 8px; border-bottom:1px solid var(--border); }
+.cal-month.has-wedding .cal-month-name { color:var(--navy); }
+.cal-days { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; padding:8px; }
+.cal-day { aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; color:var(--muted); border-radius:6px; position:relative; }
+.cal-day.empty { opacity:0; pointer-events:none; }
+.cal-day.has-event { font-weight:900; color:#fff; cursor:pointer; }
+.cal-day.booked-day { background:var(--navy); }
+.cal-day.deposit-day { background:#FFB800; color:var(--navy); }
+.cal-day.today-day { outline:2px solid var(--pink); outline-offset:1px; }
+.cal-event-tooltip { position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:var(--navy); color:#fff; font-size:11px; font-weight:700; padding:5px 9px; border-radius:8px; white-space:nowrap; z-index:10; pointer-events:none; opacity:0; transition:opacity .15s; }
+.cal-day.has-event:hover .cal-event-tooltip { opacity:1; }
+.cal-legend { display:flex; gap:16px; margin-bottom:20px; }
+.cal-legend-item { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--muted); }
+.cal-legend-dot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
+@media(max-width:640px){ .cal-months { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:400px){ .cal-months { grid-template-columns:1fr 1fr; } }
 @media(max-width:640px){
   .topnav { padding:0 16px; } .main { padding:20px 14px 60px; }
   .form-grid { grid-template-columns:1fr; } .modal-grid { grid-template-columns:1fr; }
@@ -220,19 +249,36 @@ td { padding:11px 12px; border-top:1px solid var(--border); vertical-align:middl
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
         <div class="card-title" style="margin-bottom:0;">All Leads</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <div class="view-toggle">
+            <button class="view-btn active" id="view-list-btn" onclick="switchView('list')">☰ List</button>
+            <button class="view-btn" id="view-cal-btn" onclick="switchView('calendar')">📅 Calendar</button>
+          </div>
           <button id="export-btn" style="padding:8px 14px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer;">Export CSV</button>
           <button id="backup-btn" style="padding:8px 14px;background:var(--white);color:var(--navy);border:1px solid var(--border);border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer;">Backup</button>
           <label style="padding:8px 14px;background:var(--white);color:var(--navy);border:1px solid var(--border);border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Montserrat',sans-serif;">Restore <input type="file" id="restore-input" accept="application/json" style="display:none;"></label>
         </div>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Couple</th><th>Source</th><th>Status</th><th>Wedding Date</th><th>Next Follow-up</th><th>Quoted</th><th>Paid</th><th>Balance</th><th>Actions</th></tr>
-          </thead>
-          <tbody id="leads-tbody"></tbody>
-        </table>
+
+      <!-- LIST VIEW -->
+      <div id="list-view">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Couple</th><th>Source</th><th>Status</th><th>Wedding Date</th><th>Next Follow-up</th><th>Quoted</th><th>Paid</th><th>Balance</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="leads-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CALENDAR VIEW -->
+      <div id="calendar-view" class="calendar-wrap">
+        <div class="cal-legend">
+          <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--navy);"></div>Booked</div>
+          <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#FFB800;"></div>Deposit Paid</div>
+        </div>
+        <div id="calendar-content"></div>
       </div>
     </div>
 
@@ -268,7 +314,32 @@ const fmtDate = iso => { if (!iso) return "—"; const [y,m,d] = iso.split("-");
 const fmtEuro = n => n ? "€"+Number(n).toLocaleString("en-IE",{minimumFractionDigits:0}) : "—";
 const totalPaid = l => Number(l.depositPaid||0)+(l.instalments||[]).reduce((s,x)=>s+Number(x||0),0);
 const balance = l => Math.max(0,Number(l.priceQuoted||0)-totalPaid(l));
-const autoFollowUp = enquiry => { const d=new Date(enquiry||todayISO()); d.setDate(d.getDate()+3); return d.toISOString().slice(0,10); };
+const autoFollowUp = (fromDate, days) => {
+  const d = new Date(fromDate || todayISO());
+  d.setDate(d.getDate() + (days || 2));
+  return d.toISOString().slice(0,10);
+};
+
+// ── Follow-up schedule ──────────────────────────────────────
+// First follow-up: 2 days from enquiry date
+// All subsequent: 3 days from the day marked done (today)
+const FIRST_FOLLOWUP_DAYS = 2;
+const SUBSEQUENT_FOLLOWUP_DAYS = 3;
+const MAX_FOLLOWUP_STEPS = 5;
+
+function getNextFollowUpDate() {
+  // Always 3 days from TODAY — used when marking a follow-up as done
+  const d = new Date();
+  d.setDate(d.getDate() + SUBSEQUENT_FOLLOWUP_DAYS);
+  return d.toISOString().slice(0,10);
+}
+
+function getFirstFollowUpDate(enquiryDate) {
+  // 2 days from enquiry date
+  const d = new Date(enquiryDate || todayISO());
+  d.setDate(d.getDate() + FIRST_FOLLOWUP_DAYS);
+  return d.toISOString().slice(0,10);
+}
 
 function chipHtml(status) {
   const map = {"Replied":"replied","Deposit Paid":"deposit","Booked":"booked","Lost":"lost"};
@@ -394,13 +465,16 @@ async function addLead() {
   }
 
   const isActive = status!=="Lost" && status!=="Booked" && status!=="Deposit Paid";
+  const followupStep = isActive ? 1 : 0;
+
   const lead = {
     id: Date.now().toString(16)+Math.random().toString(16).slice(2),
     createdAt: new Date().toISOString(),
     name, enquiry, wedding, venue, email, source, status,
-    priceQuoted:price, depositPaid:0, instalments:[],
-    nextFollowUp: isActive ? autoFollowUp(enquiry) : "",
-    followupStep: isActive ? 1 : 0,
+    priceQuoted: price, depositPaid: 0, instalments: [],
+    // Auto-set next follow-up date from enquiry date
+    nextFollowUp: isActive ? getFirstFollowUpDate(enquiry) : "",
+    followupStep,
   };
   leads.push(lead);
   clearForm();
@@ -428,8 +502,8 @@ function renderStats() {
   const active  = leads.filter(l=>l.status!=="Lost");
   const revenue = booked.reduce((s,l)=>s+Number(l.priceQuoted||0),0);
   const received= leads.reduce((s,l)=>s+totalPaid(l),0);
-  const today   = todayISO();
-  const due     = leads.filter(l=>l.nextFollowUp&&l.nextFollowUp<=today&&l.status!=="Booked"&&l.status!=="Lost").length;
+  // Count ALL pending follow-ups — not just today's
+  const due = leads.filter(l=>l.nextFollowUp&&l.status!=="Booked"&&l.status!=="Lost"&&l.status!=="Deposit Paid").length;
   document.getElementById("stats-row").innerHTML = [
     {label:"Total Leads",          value:leads.length,     cls:""},
     {label:"Active",               value:active.length,    cls:""},
@@ -440,61 +514,94 @@ function renderStats() {
   ].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value ${s.cls}">${s.value}</div></div>`).join("");
 }
 
-const FOLLOWUP_STEPS = [2,3,3,3,3];
-
 function renderFollowups() {
   const today = todayISO();
-  const due = leads.filter(l=>l.nextFollowUp&&l.nextFollowUp<=today&&l.status!=="Booked"&&l.status!=="Lost")
-    .sort((a,b)=>(a.nextFollowUp||"").localeCompare(b.nextFollowUp||""));
+  // Show ALL pending follow-ups — overdue ones stay until marked done
+  const due = leads
+    .filter(l => l.nextFollowUp && l.status!=="Booked" && l.status!=="Lost" && l.status!=="Deposit Paid")
+    .sort((a,b) => (a.nextFollowUp||"").localeCompare(b.nextFollowUp||""));
+
   const list = document.getElementById("followups-list");
-  if (!due.length) { list.innerHTML='<div class="all-clear">✅ No follow-ups due today — you are all caught up!</div>'; return; }
-  list.innerHTML = due.map(l=>`
-    <div class="followup-item" id="fu-${l.id}">
+  if (!due.length) {
+    list.innerHTML='<div class="all-clear">✅ No follow-ups pending — you are all caught up!</div>';
+    return;
+  }
+
+  list.innerHTML = due.map(l => {
+    const isOverdue = l.nextFollowUp < today;
+    const isDueToday = l.nextFollowUp === today;
+    const dateLabel = isOverdue
+      ? "⚠️ Overdue: " + fmtDate(l.nextFollowUp)
+      : isDueToday
+        ? "Due today: " + fmtDate(l.nextFollowUp)
+        : "Due: " + fmtDate(l.nextFollowUp);
+    return `
+    <div class="followup-item${isOverdue?' overdue':''}" id="fu-${l.id}">
       <div>
         <div class="fu-name">${esc(l.name)}</div>
-        <div class="fu-date">Due: ${fmtDate(l.nextFollowUp)}</div>
-        ${l.venue?'<div class="fu-venue">📍 '+esc(l.venue)+'</div>':""}
+        <div class="fu-date${isOverdue?' overdue':''}">${dateLabel}</div>
+        ${l.venue ? '<div class="fu-venue">📍 '+esc(l.venue)+'</div>' : ""}
+        <div style="font-size:11px;font-weight:700;color:var(--muted);margin-top:3px;">${esc(l.status||"")}</div>
         <div class="fu-done-msg" id="fu-done-${l.id}"></div>
       </div>
-      <button class="mark-done-btn" data-fu="${l.id}">Mark done ✓</button>
-    </div>`).join("");
-  list.querySelectorAll("[data-fu]").forEach(btn=>btn.onclick=()=>markDone(btn.getAttribute("data-fu")));
+      <button class="mark-done-btn${isOverdue?' overdue':''}" data-fu="${l.id}">Mark done ✓</button>
+    </div>`;
+  }).join("");
+
+  list.querySelectorAll("[data-fu]").forEach(btn => btn.onclick = () => markDone(btn.getAttribute("data-fu")));
 }
 
 async function markDone(id) {
-  const l = leads.find(x=>x.id===id); if (!l) return;
-  const step = Number(l.followupStep||1);
-  const totalDays = FOLLOWUP_STEPS.slice(0,step+1).reduce((s,d)=>s+d,0);
-  if (step < FOLLOWUP_STEPS.length) {
-    l.followupStep = step+1; l.status = "Follow-up "+step;
-    const d=new Date(l.enquiry||todayISO()); d.setDate(d.getDate()+totalDays);
-    l.nextFollowUp = d.toISOString().slice(0,10);
-  } else { l.nextFollowUp=""; l.followupStep=0; l.status="Follow-up "+step; }
-  const doneEl=document.getElementById("fu-done-"+id);
-  const btn=document.querySelector('[data-fu="'+id+'"]');
-  if (doneEl) { doneEl.style.display="block"; doneEl.textContent=l.nextFollowUp?"✓ Next follow-up: "+fmtDate(l.nextFollowUp):"✓ All follow-ups complete!"; }
+  const l = leads.find(x => x.id===id); if (!l) return;
+  const step = Number(l.followupStep || 1);
+
+  if (step < MAX_FOLLOWUP_STEPS) {
+    // Move to next step — always 3 days from TODAY (not original date)
+    l.followupStep = step + 1;
+    l.status = "Follow-up " + (step + 1);
+    l.nextFollowUp = getNextFollowUpDate();
+  } else {
+    // Final follow-up done — clear it
+    l.nextFollowUp = "";
+    l.followupStep = 0;
+    l.status = "Follow-up " + step;
+  }
+
+  const doneEl = document.getElementById("fu-done-"+id);
+  const btn = document.querySelector('[data-fu="'+id+'"]');
+  if (doneEl) {
+    doneEl.style.display = "block";
+    doneEl.textContent = l.nextFollowUp
+      ? "✓ Next follow-up: " + fmtDate(l.nextFollowUp)
+      : "✓ All follow-ups complete!";
+  }
   if (btn) { btn.disabled=true; btn.textContent="Done ✓"; }
-  render(); await saveLead(l);
+
+  render();
+  await saveLead(l);
 }
 
 function renderTable() {
-  const tbody=document.getElementById("leads-tbody");
-  if (!leads.length) { tbody.innerHTML='<tr><td colspan="9" style="padding:20px;text-align:center;color:var(--muted);font-weight:700;">No leads yet — add your first enquiry above.</td></tr>'; return; }
-  const today=todayISO();
-  const sorted=[...leads].sort((a,b)=>{
-    const aA=a.status!=="Booked"&&a.status!=="Lost", bA=b.status!=="Booked"&&b.status!=="Lost";
-    if (aA!==bA) return aA?-1:1;
+  const tbody = document.getElementById("leads-tbody");
+  if (!leads.length) {
+    tbody.innerHTML='<tr><td colspan="9" style="padding:20px;text-align:center;color:var(--muted);font-weight:700;">No leads yet — add your first enquiry above.</td></tr>';
+    return;
+  }
+  const today = todayISO();
+  const sorted = [...leads].sort((a,b) => {
+    const aA = a.status!=="Booked" && a.status!=="Lost", bA = b.status!=="Booked" && b.status!=="Lost";
+    if (aA!==bA) return aA ? -1 : 1;
     return (a.nextFollowUp||"9999").localeCompare(b.nextFollowUp||"9999");
   });
-  tbody.innerHTML = sorted.map(l=>{
+  tbody.innerHTML = sorted.map(l => {
     const paid=totalPaid(l), bal=balance(l);
-    const overdue=l.nextFollowUp&&l.nextFollowUp<=today&&l.status!=="Booked"&&l.status!=="Lost";
+    const overdue = l.nextFollowUp && l.nextFollowUp <= today && l.status!=="Booked" && l.status!=="Lost" && l.status!=="Deposit Paid";
     return `<tr>
       <td><div class="couple-name">${esc(l.name)}</div>${l.venue?'<div class="couple-venue">'+esc(l.venue)+'</div>':""}</td>
       <td>${esc(l.source||"")}</td>
       <td>${chipHtml(l.status)}</td>
       <td style="font-weight:700;">${fmtDate(l.wedding)}</td>
-      <td style="font-weight:700;color:${overdue?"var(--orange)":"inherit"};">${fmtDate(l.nextFollowUp)}</td>
+      <td style="font-weight:700;color:${overdue?"var(--red)":"inherit"};">${fmtDate(l.nextFollowUp)}</td>
       <td>${fmtEuro(l.priceQuoted)}</td>
       <td>${paid>0?fmtEuro(paid):"—"}</td>
       <td class="${l.priceQuoted?(bal>0?"bal-outstanding":"bal-clear"):""}">${l.priceQuoted?fmtEuro(bal):"—"}</td>
@@ -525,15 +632,29 @@ function renderSources() {
 
 async function toggleBooked(id) {
   const l=leads.find(x=>x.id===id); if(!l) return;
-  if (l.status==="Booked"){l.status="Replied";l.nextFollowUp=autoFollowUp(l.enquiry);l.followupStep=1;}
-  else{l.status="Booked";l.nextFollowUp="";l.followupStep=0;}
+  if (l.status==="Booked") {
+    l.status="Replied";
+    l.nextFollowUp=getNextFollowUpDate();
+    l.followupStep=1;
+  } else {
+    l.status="Booked";
+    l.nextFollowUp="";
+    l.followupStep=0;
+  }
   render(); await saveLead(l);
 }
 
 async function toggleLost(id) {
   const l=leads.find(x=>x.id===id); if(!l) return;
-  if (l.status==="Lost"){l.status="Replied";l.nextFollowUp=autoFollowUp(l.enquiry);l.followupStep=1;}
-  else{l.status="Lost";l.nextFollowUp="";l.followupStep=0;}
+  if (l.status==="Lost") {
+    l.status="Replied";
+    l.nextFollowUp=getNextFollowUpDate();
+    l.followupStep=1;
+  } else {
+    l.status="Lost";
+    l.nextFollowUp="";
+    l.followupStep=0;
+  }
   render(); await saveLead(l);
 }
 
@@ -569,16 +690,44 @@ function openEditModal(id) {
   overlay.querySelector("#eclose").onclick=close;
   overlay.querySelector("#ecancel").onclick=close;
   overlay.querySelector("#epay").onclick=()=>{close();openPayModal(id);};
-  overlay.querySelector("#esave").onclick=async()=>{
-    l.name=overlay.querySelector(".e-name").value.trim();
-    l.wedding=overlay.querySelector(".e-wedding").value;
-    l.venue=overlay.querySelector(".e-venue").value.trim();
-    l.email=overlay.querySelector(".e-email").value.trim();
-    l.source=overlay.querySelector(".e-source").value;
-    l.status=overlay.querySelector(".e-status").value;
-    l.nextFollowUp=overlay.querySelector(".e-followup").value;
-    l.priceQuoted=Number(overlay.querySelector(".e-price").value)||0;
-    if(l.status==="Booked"||l.status==="Lost"){l.nextFollowUp="";l.followupStep=0;}
+
+  // Auto-update follow-up date when status changes in edit modal
+  overlay.querySelector(".e-status").onchange = function() {
+    const newStatus = this.value;
+    const followupInput = overlay.querySelector(".e-followup");
+    if (newStatus === "Booked" || newStatus === "Lost" || newStatus === "Deposit Paid") {
+      followupInput.value = "";
+    } else if (newStatus.startsWith("Follow-up") && !followupInput.value) {
+      followupInput.value = getNextFollowUpDate();
+    }
+  };
+
+  overlay.querySelector("#esave").onclick = async () => {
+    l.name        = overlay.querySelector(".e-name").value.trim();
+    l.wedding     = overlay.querySelector(".e-wedding").value;
+    l.venue       = overlay.querySelector(".e-venue").value.trim();
+    l.email       = overlay.querySelector(".e-email").value.trim();
+    l.source      = overlay.querySelector(".e-source").value;
+    const newStatus   = overlay.querySelector(".e-status").value;
+    const newFollowup = overlay.querySelector(".e-followup").value;
+    l.priceQuoted = Number(overlay.querySelector(".e-price").value) || 0;
+
+    if (newStatus === "Booked" || newStatus === "Lost" || newStatus === "Deposit Paid") {
+      l.status = newStatus;
+      l.nextFollowUp = "";
+      l.followupStep = 0;
+    } else if (newStatus.startsWith("Follow-up")) {
+      l.status = newStatus;
+      const stepNum = parseInt(newStatus.replace("Follow-up ","")) || 1;
+      l.followupStep = stepNum;
+      // Use manually set date if provided, otherwise 3 days from today
+      l.nextFollowUp = newFollowup || getNextFollowUpDate();
+    } else {
+      l.status = newStatus;
+      l.nextFollowUp = newFollowup || getNextFollowUpDate();
+      l.followupStep = l.followupStep || 1;
+    }
+
     close(); render(); await saveLead(l);
   };
 }
@@ -640,7 +789,6 @@ function openPayModal(id) {
     recalc();
     if(hint) hint.style.display=Number(dEl.value)>0?"block":"none";
   };
-  // Show hint immediately if deposit is already filled in
   if(Number(l.depositPaid)>0 && hint) hint.style.display="block";
 
   recalc();
@@ -665,7 +813,112 @@ function exportCSV(){
   const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download="wbw-leads.csv"; a.click();
 }
 
-function backup(){
+// ── CALENDAR VIEW ─────────────────────────────────────────────────────
+function switchView(view) {
+  const listView = document.getElementById('list-view');
+  const calView  = document.getElementById('calendar-view');
+  const listBtn  = document.getElementById('view-list-btn');
+  const calBtn   = document.getElementById('view-cal-btn');
+
+  if (view === 'calendar') {
+    listView.style.display = 'none';
+    calView.classList.add('show');
+    listBtn.classList.remove('active');
+    calBtn.classList.add('active');
+    renderCalendar();
+  } else {
+    listView.style.display = 'block';
+    calView.classList.remove('show');
+    listBtn.classList.add('active');
+    calBtn.classList.remove('active');
+  }
+}
+
+function renderCalendar() {
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const todayStr = todayISO();
+  const currentYear = new Date().getFullYear();
+
+  // Get only booked/deposit paid leads with a wedding date
+  const booked = leads.filter(l =>
+    (l.status === 'Booked' || l.status === 'Deposit Paid') && l.wedding
+  );
+
+  if (!booked.length) {
+    document.getElementById('calendar-content').innerHTML =
+      '<div style="text-align:center;padding:40px;color:var(--muted);font-size:14px;font-weight:600;">No booked weddings to display yet.</div>';
+    return;
+  }
+
+  // Group by year
+  const yearMap = {};
+  booked.forEach(l => {
+    const yr = new Date(l.wedding).getFullYear();
+    if (!yearMap[yr]) yearMap[yr] = [];
+    yearMap[yr].push(l);
+  });
+
+  const years = Object.keys(yearMap).map(Number).sort();
+  let html = '';
+
+  years.forEach(yr => {
+    const isCurrent = yr === currentYear;
+    html += `<div class="cal-year">`;
+    html += `<div class="cal-year-title">${yr} <span class="cal-year-badge ${isCurrent ? 'current' : ''}">${isCurrent ? 'Current Year' : 'Pipeline'}</span></div>`;
+    html += `<div class="cal-months">`;
+
+    for (let m = 0; m < 12; m++) {
+      // Find weddings in this month/year
+      const monthLeads = yearMap[yr].filter(l => {
+        const d = new Date(l.wedding);
+        return d.getFullYear() === yr && d.getMonth() === m;
+      });
+      const hasWedding = monthLeads.length > 0;
+
+      html += `<div class="cal-month${hasWedding ? ' has-wedding' : ''}">`;
+      html += `<div class="cal-month-name">${MONTHS[m]}</div>`;
+      html += `<div class="cal-days">`;
+
+      // Day of week headers
+      ['M','T','W','T','F','S','S'].forEach(d => {
+        html += `<div style="font-size:9px;font-weight:800;color:var(--muted);text-align:center;padding:2px 0;">${d}</div>`;
+      });
+
+      // First day of month (0=Sun, need Mon-based)
+      const firstDay = new Date(yr, m, 1).getDay();
+      const offset = firstDay === 0 ? 6 : firstDay - 1; // Convert to Mon-start
+      const daysInMonth = new Date(yr, m + 1, 0).getDate();
+
+      for (let i = 0; i < offset; i++) {
+        html += `<div class="cal-day empty"></div>`;
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${yr}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const dayLead = monthLeads.find(l => l.wedding === dateStr);
+        const isToday = dateStr === todayStr;
+
+        let cls = 'cal-day';
+        let tooltip = '';
+        if (dayLead) {
+          cls += ' has-event';
+          cls += dayLead.status === 'Deposit Paid' ? ' deposit-day' : ' booked-day';
+          tooltip = `<div class="cal-event-tooltip">${esc(dayLead.name)}</div>`;
+        }
+        if (isToday) cls += ' today-day';
+
+        html += `<div class="${cls}">${d}${tooltip}</div>`;
+      }
+
+      html += `</div></div>`;
+    }
+
+    html += `</div></div>`;
+  });
+
+  document.getElementById('calendar-content').innerHTML = html;
+}
+
   const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([JSON.stringify({leads,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"})); a.download="wbw-leads-backup.json"; a.click();
 }
 
