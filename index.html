@@ -187,7 +187,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       <div class="snapshot-header">
         <div>
           <div class="snapshot-title">Business Snapshot</div>
-          <div class="snapshot-sub">Live data from your tools — updates automatically</div>
+          <div class="snapshot-sub" id="snapshot-sub">Live data from your tools — updates automatically</div>
         </div>
       </div>
       <div class="snapshot-grid" id="snapshot-grid"></div>
@@ -288,6 +288,11 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       </div>
     </div>
 
+  </div>
+
+  <div class="category" id="yearly-section" style="display:none;">
+    <div class="category-header"><div class="cat-label" id="yearly-label">Bookings Pipeline</div><div class="cat-line"></div></div>
+    <div id="yearly-breakdown"></div>
   </div>
 
   <footer class="dash-footer">
@@ -515,9 +520,56 @@ async function loadLeadData(userId) {
       if (snapData.weddingsNeeded) {
         snapData.stillNeeded = Math.max(0, snapData.weddingsNeeded - bookedThisYear.length);
       }
+
+      // Build yearly breakdown from all booked/deposit paid leads
+      var allBooked = leads.filter(function(l) {
+        return l.status === "Booked" || l.status === "Deposit Paid";
+      });
+      var yearMap = {};
+      allBooked.forEach(function(l) {
+        var yr = l.wedding ? new Date(l.wedding).getFullYear() : 'No date';
+        if (!yearMap[yr]) yearMap[yr] = { count: 0, income: 0 };
+        yearMap[yr].count++;
+        yearMap[yr].income += Number(l.priceQuoted || 0);
+      });
+      renderYearlyBreakdown(yearMap, snapData.currency);
     }
   } catch(e) { console.log("Lead data error:", e.message); }
   renderSnapshot();
+}
+
+function renderYearlyBreakdown(yearMap, currency) {
+  var el      = document.getElementById('yearly-breakdown');
+  var section = document.getElementById('yearly-section');
+  var years   = Object.keys(yearMap).sort();
+  if (!years.length) { section.style.display = 'none'; return; }
+
+  var CURR = { EUR:'€', GBP:'£', USD:'$', AUD:'A$', CAD:'C$' };
+  var sym = CURR[currency] || '€';
+  var currentYear = new Date().getFullYear();
+
+  // Update snapshot subtitle with current year
+  var sub = document.getElementById('snapshot-sub');
+  if (sub) sub.textContent = currentYear + ' — updates automatically as you use your tools';
+
+  var html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;">';
+  years.forEach(function(yr) {
+    var d = yearMap[yr];
+    var isCurrent = String(yr) === String(currentYear);
+    html += '<div style="background:var(--white);border:1px solid var(--border);border-radius:16px;padding:20px 22px;position:relative;overflow:hidden;">';
+    if (isCurrent) {
+      html += '<div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--pink),var(--navy));border-radius:16px 16px 0 0;"></div>';
+    }
+    html += '<div style="font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:' + (isCurrent ? 'var(--pink)' : 'var(--muted)') + ';margin-bottom:8px;">' + yr + (isCurrent ? ' · Current Year' : '') + '</div>';
+    html += '<div style="font-family:\'Cormorant Garamond\',serif;font-size:32px;font-weight:700;color:var(--navy);line-height:1;margin-bottom:4px;">' + d.count + '</div>';
+    html += '<div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;">' + (d.count === 1 ? 'wedding booked' : 'weddings booked') + '</div>';
+    html += '<div style="font-size:16px;font-weight:800;color:' + (isCurrent ? 'var(--navy)' : 'var(--muted)') + ';">' + sym + Math.round(d.income).toLocaleString('en-IE') + '</div>';
+    html += '<div style="font-size:11px;font-weight:600;color:var(--muted);margin-top:2px;">projected income</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  el.innerHTML = html;
+  section.style.display = 'block';
 }
 
 var SCORE_META = {
