@@ -112,7 +112,17 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .footer-logo span { color:var(--pink); }
 .footer-copy { font-size:12px; font-weight:600; color:var(--muted); }
 
-/* ── WELCOME BANNER ───────────────────────────────────── */
+/* ── NAME CAPTURE MODAL ───────────────────────────────── */
+.name-modal-overlay { position:fixed; inset:0; background:rgba(20,20,50,.7); display:flex; align-items:center; justify-content:center; padding:24px; z-index:9999; backdrop-filter:blur(4px); }
+.name-modal { background:var(--white); border-radius:24px; padding:40px; width:100%; max-width:420px; box-shadow:0 24px 60px rgba(0,0,0,.25); text-align:center; }
+.name-modal-eyebrow { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--pink); margin-bottom:12px; }
+.name-modal-title { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:700; color:var(--navy); margin-bottom:10px; line-height:1.2; }
+.name-modal-sub { font-size:13px; font-weight:600; color:var(--muted); line-height:1.7; margin-bottom:24px; }
+.name-modal-input { width:100%; padding:14px 16px; border:1.5px solid var(--border); border-radius:14px; font-family:'Montserrat',sans-serif; font-size:16px; font-weight:700; color:var(--navy); background:var(--cream); text-align:center; margin-bottom:14px; transition:border-color .2s; }
+.name-modal-input:focus { outline:none; border-color:var(--pink); }
+.name-modal-btn { width:100%; padding:14px; background:var(--navy); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:opacity .2s; }
+.name-modal-btn:hover { opacity:.88; }
+.name-modal-btn:disabled { opacity:.5; cursor:not-allowed; }
 .welcome-banner { background:linear-gradient(135deg,var(--navy) 0%,#5B5C9D 100%); border-radius:20px; padding:28px 32px; margin-bottom:28px; display:none; position:relative; overflow:hidden; }
 .welcome-banner.show { display:block; }
 .welcome-banner::after { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; background:rgba(255,255,255,.05); border-radius:50%; pointer-events:none; }
@@ -392,9 +402,19 @@ async function initApp(user) {
   document.getElementById("auth-screen").style.display = "none";
   document.getElementById("app-screen").style.display = "block";
   document.getElementById("nav-user").textContent = user.email;
+
+  // Load profile name first
+  var firstName = await loadProfileName(user.id);
   var h = new Date().getHours();
-  var greeting = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+  var timeGreeting = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+  var greeting = firstName ? timeGreeting + ", " + firstName : timeGreeting;
   document.getElementById("hero-greeting").textContent = greeting + " ✨";
+  document.getElementById("nav-user").textContent = firstName || user.email;
+
+  // Show name modal if no name saved yet
+  if (!firstName) {
+    showNameModal(user.id);
+  }
   renderIGPrompt();
   document.getElementById("wts-results-area").innerHTML = '<div style="padding:16px 0; font-size:13px; font-weight:700; color:var(--muted);">Loading your results...</div>';
 
@@ -712,7 +732,56 @@ function renderIGPrompt() {
   title.textContent = p.title;
   sub.innerHTML = p.sub;
 }
+// ── PROFILE NAME ──────────────────────────────────────────────
+async function loadProfileName(userId) {
+  try {
+    var result = await sb.from('profiles').select('first_name').eq('user_id', userId).single();
+    if (result.data && result.data.first_name) return result.data.first_name;
+  } catch(e) {}
+  return null;
+}
 
-</script>
+function showNameModal(userId) {
+  var overlay = document.getElementById('name-modal-overlay');
+  var input   = document.getElementById('name-modal-input');
+  var btn     = document.getElementById('name-modal-btn');
+  overlay.style.display = 'flex';
+  setTimeout(function() { input.focus(); }, 300);
+
+  // Allow pressing Enter
+  input.onkeydown = function(e) { if (e.key === 'Enter') btn.click(); };
+
+  btn.onclick = async function() {
+    var name = input.value.trim();
+    if (!name) { input.style.borderColor = 'var(--pink)'; input.focus(); return; }
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      await sb.from('profiles').upsert({
+        user_id: userId,
+        first_name: name,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'user_id' });
+    } catch(e) { console.log('Profile save error:', e); }
+    // Update greeting with name
+    var h = new Date().getHours();
+    var timeGreeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+    document.getElementById('hero-greeting').textContent = timeGreeting + ', ' + name + ' ✨';
+    document.getElementById('nav-user').textContent = name;
+    overlay.style.display = 'none';
+  };
+}
+
+
+
+<div id="name-modal-overlay" class="name-modal-overlay" style="display:none;">
+  <div class="name-modal">
+    <div class="name-modal-eyebrow">Welcome to Hello Wedding Pro</div>
+    <div class="name-modal-title">What's your first name?</div>
+    <div class="name-modal-sub">We'd love to make this feel a little more personal. Just your first name is all we need.</div>
+    <input type="text" id="name-modal-input" class="name-modal-input" placeholder="e.g. Darina" maxlength="50" autocomplete="given-name">
+    <button class="name-modal-btn" id="name-modal-btn">Let's go →</button>
+  </div>
+</div>
+
 </body>
 </html>
