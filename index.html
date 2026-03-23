@@ -477,15 +477,8 @@ function renderSnapshot() {
 async function loadLeadData(userId) {
   try {
     var result = await sb.from("leads").select("data").eq("user_id", userId);
-    console.log("Dashboard leads result:", result);
-    console.log("Leads count:", result.data ? result.data.length : 0);
     if (result.data && result.data.length > 0) {
       var leads = result.data.map(function(r) { return r.data; }).filter(Boolean);
-      console.log("Mapped leads:", leads.length);
-      console.log("Sample lead:", leads[0]);
-      leads.forEach(function(l, i) {
-        console.log("Lead " + i + ":", l.name, "status:", l.status, "nextFollowUp:", l.nextFollowUp);
-      });
 
       var currentYear = new Date().getFullYear();
       var today = new Date().toISOString().slice(0, 10);
@@ -506,8 +499,6 @@ async function loadLeadData(userId) {
       snapData.bookedCount    = bookedThisYear.length;
       snapData.totalLeads     = leads.length;
       snapData.followupsDue   = followupsDue;
-
-      renderFollowUpPrompt(followupsDue);
 
       // Projected income = total quoted from this year's booked weddings
       snapData.projectedIncome = bookedThisYear.reduce(function(s, l) {
@@ -542,6 +533,10 @@ async function loadLeadData(userId) {
     }
   } catch(e) { console.log("Lead data error:", e.message); }
   renderSnapshot();
+  // Call after renderSnapshot so it's not overwritten
+  if (snapData.followupsDue > 0) {
+    renderFollowUpPrompt(snapData.followupsDue);
+  }
 }
 
 function renderYearlyBreakdown(yearMap, currency) {
