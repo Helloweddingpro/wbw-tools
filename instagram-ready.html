@@ -81,6 +81,11 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
 /* ── LESSON BLOCKS ────────────────────────────────────── */
 .lesson-intro { margin-bottom:32px; }
 .lesson-intro h2 { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--navy); margin-bottom:10px; line-height:1.25; }
+/* Chapter colour themes */
+#ch-0 .lesson-intro h2 { color:var(--navy); }
+#ch-1 .lesson-intro h2 { color:#FB478E; }
+#ch-2 .lesson-intro h2 { color:var(--purple); }
+#ch-3 .lesson-intro h2 { color:#00A878; }
 .lesson-intro p { font-size:14px; font-weight:600; color:var(--muted); line-height:1.75; margin-bottom:12px; }
 .lesson-intro p strong { color:var(--navy); }
 
@@ -247,7 +252,7 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
   </nav>
 
   <div class="page-hero">
-    <div class="hero-eyebrow">Wedding Business Workspace</div>
+    <div class="hero-eyebrow" style="color:#FB478E;">Wedding Business Workspace</div>
     <h1>Get your Instagram<br><em>working for you.</em></h1>
     <p>A proven system from a wedding videographer with 20+ years in the industry. Three chapters. Set it up once, use it every week.</p>
   </div>
@@ -257,13 +262,13 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
       <span class="ch-num">Introduction</span>Start Here
     </div>
     <div class="ch-tab" id="chtab-1" onclick="goChapter(1)">
-      <span class="ch-num">Chapter 1</span>Your Bio
+      <span class="ch-num" style="color:#FB478E;">Chapter 1</span>Your Bio
     </div>
     <div class="ch-tab" id="chtab-2" onclick="goChapter(2)">
-      <span class="ch-num">Chapter 2</span>The 3-Post Formula
+      <span class="ch-num" style="color:#7C3AED;">Chapter 2</span>The 3-Post Formula
     </div>
     <div class="ch-tab" id="chtab-3" onclick="goChapter(3)">
-      <span class="ch-num">Chapter 3</span>The Daily Habit
+      <span class="ch-num" style="color:#00A878;">Chapter 3</span>The Daily Habit
     </div>
   </div>
 
@@ -291,17 +296,17 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
       <div class="post-cards">
         <div class="post-card" style="border-color:var(--pu-mid);">
           <div class="post-day" style="font-size:22px;margin-bottom:8px;">🎯</div>
-          <div class="post-title">Attract the right couples</div>
+          <div class="post-title" style="color:#FB478E;">Attract the right couples</div>
           <div class="post-desc">Use the right keywords so couples find you when they're searching for suppliers at their venue — putting your work in front of the people most likely to book you.</div>
         </div>
         <div class="post-card" style="border-color:var(--pu-mid);">
           <div class="post-day" style="font-size:22px;margin-bottom:8px;">🤝</div>
-          <div class="post-title">Build a referral community</div>
+          <div class="post-title" style="color:#7C3AED;">Build a referral community</div>
           <div class="post-desc">Connect with the suppliers you work alongside — photographers, florists, bands, planners — and turn them into a community of referral partners who send work your way.</div>
         </div>
         <div class="post-card" style="border-color:var(--pu-mid);">
           <div class="post-day" style="font-size:22px;margin-bottom:8px;">💕</div>
-          <div class="post-title">Hook them with emotion</div>
+          <div class="post-title" style="color:#00A878;">Hook them with emotion</div>
           <div class="post-desc">When a couple lands on your profile, they should feel something. Content that connects emotionally — that speaks to how they want to feel on their wedding day — is what turns a follower into an enquiry.</div>
         </div>
       </div>
@@ -558,46 +563,6 @@ Without You Even Knowing We Are There!</div>
         <p>You don't need to write a long caption. Open with the keyword line. Add one or two sentences about what's in the video. Add your hashtags. That's it. The video does the work — the keywords make sure the right people find it.</p>
       </div>
 
-      <!-- ICA BONUS SECTION -->
-      <div class="builder-card" style="border:2px solid var(--pu-mid);margin-top:28px;">
-        <div class="builder-title" style="display:flex;align-items:center;gap:8px;">
-          <span>✨</span> Bonus — Got More Time? Use Your ICA Profile
-        </div>
-        <div class="lesson-intro" style="margin-bottom:20px;">
-          <p>If you want to go deeper than the three weekly posts, your Ideal Client Profile is a powerful creative brief. Download your ICA profile from the <a href="ideal-client.html" style="color:var(--purple);font-weight:800;text-decoration:none;">Find Your Most Profitable Client tool</a> and upload it to any AI tool — ChatGPT, Claude, Gemini — with the prompt below.</p>
-          <p style="margin-top:10px;">It will generate a full week of content ideas tailored specifically to your ideal client, complete with visual ideas, carousel slides and captions with your keywords already in them.</p>
-        </div>
-
-        <div style="background:var(--navy);border-radius:14px;padding:22px 24px;position:relative;">
-          <div style="font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px;">AI Prompt — copy and paste this</div>
-          <div id="ica-prompt-text" style="font-size:13px;font-weight:600;color:rgba(255,255,255,.85);line-height:1.8;white-space:pre-line;">Act as a wedding marketing expert who specialises in Instagram content for wedding suppliers.
-
-I have attached my Ideal Client Profile. Using this profile, create the following content for my Instagram:
-
-1. One Reel idea — give me a visual concept using footage or images I might already have on my phone from a real wedding. Include the on-screen text hook and a full caption.
-
-2. One Carousel post — give me 5–10 slide ideas with text for each slide. The final slide should have a clear call to action. Include a full caption for the post.
-
-3. Three Story ideas — one for each of the next three days. Keep them simple and achievable with a phone.
-
-For every piece of content, use "weddings in [my location]" and "[venue name]" as the keywords — include them in the first line of every caption and as hashtags.
-
-Write in a warm, emotional tone that speaks directly to my ideal client.</div>
-          <button class="btn-copy" id="copy-prompt-btn" onclick="copyPrompt()" style="margin-top:16px;">Copy Prompt</button>
-        </div>
-
-        <div style="margin-top:16px;padding:14px 16px;background:var(--pu-light);border-radius:12px;">
-          <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:6px;">How to use this</div>
-          <div style="font-size:13px;font-weight:600;color:var(--navy);line-height:1.65;">
-            1. Go to your <a href="ideal-client.html" style="color:var(--purple);font-weight:800;text-decoration:none;">ICA tool</a> and download your profile as a PDF<br>
-            2. Open ChatGPT, Claude or Gemini<br>
-            3. Upload the PDF and paste in the prompt above<br>
-            4. Replace [my location] and [venue name] with your actual details<br>
-            5. Use the ideas it gives you to create your content that week
-          </div>
-        </div>
-      </div>
-
       <div class="chapter-footer">
         <button class="btn-prev" onclick="goChapter(1)">← Back</button>
         <div class="progress-dots">
@@ -830,16 +795,6 @@ function updateBioPreview() {
   document.getElementById('bio-output').classList.add('visible');
 
   queueSave();
-}
-
-function copyPrompt() {
-  const text = document.getElementById('ica-prompt-text').textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById('copy-prompt-btn');
-    btn.textContent = 'Copied ✓';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy Prompt'; btn.classList.remove('copied'); }, 2500);
-  });
 }
 
 function copyBio() {
