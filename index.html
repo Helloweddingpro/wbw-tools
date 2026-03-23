@@ -477,36 +477,41 @@ async function loadLeadData(userId) {
       var today = new Date().toISOString().slice(0, 10);
       var leads = result.data.map(function(r) { return r.data; }).filter(Boolean);
 
+      // Booked this year only — for year-on-year income goal tracking
       var bookedThisYear = leads.filter(function(l) {
         if (l.status !== "Booked" && l.status !== "Deposit Paid") return false;
         var wDate = l.wedding || '';
-        if (!wDate) return true;
+        if (!wDate) return true; // no date set — include it
         return new Date(wDate).getFullYear() === currentYear;
       });
 
+      // Follow-ups: any active lead with a nextFollowUp date set
       var followupsDue = leads.filter(function(l) {
         var st = l.status || '';
         if (st === "Booked" || st === "Lost" || st === "Deposit Paid") return false;
         return l.nextFollowUp;
       }).length;
 
-      snapData.bookedCount = bookedThisYear.length;
-      snapData.totalLeads = leads.length;
-      snapData.followupsDue = followupsDue;
+      snapData.bookedCount    = bookedThisYear.length;
+      snapData.totalLeads     = leads.length;
+      snapData.followupsDue   = followupsDue;
 
       renderFollowUpPrompt(followupsDue);
 
+      // Projected income = total quoted from this year's booked weddings
       snapData.projectedIncome = bookedThisYear.reduce(function(s, l) {
         return s + Number(l.priceQuoted || 0);
       }, 0);
 
+      // Income received = all deposits + instalments across all leads
       snapData.incomeReceived = leads.reduce(function(s, l) {
-        var deposit = Number(l.depositPaid || 0);
+        var deposit     = Number(l.depositPaid || 0);
         var instalments = (l.instalments || []).reduce(function(t, inst) {
           return t + Number(inst || 0);
         }, 0);
         return s + deposit + instalments;
       }, 0);
+
       if (snapData.weddingsNeeded) {
         snapData.stillNeeded = Math.max(0, snapData.weddingsNeeded - bookedThisYear.length);
       }
