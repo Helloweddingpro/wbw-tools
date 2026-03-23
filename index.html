@@ -288,12 +288,10 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       </div>
     </div>
 
-  </div>
-
-  <div class="category" id="yearly-section" style="display:none;">
-    <div class="category-header"><div class="cat-label">Bookings Pipeline — All Years</div><div class="cat-line"></div></div>
-    <div id="yearly-breakdown"></div>
-  </div>
+    <div class="category" id="yearly-section" style="display:none;padding:0 2px;">
+      <div class="category-header"><div class="cat-label">Bookings Pipeline — All Years</div><div class="cat-line"></div></div>
+      <div id="yearly-breakdown" style="padding:0 2px;"></div>
+    </div>
 
   </div>
 
@@ -554,7 +552,7 @@ function renderYearlyBreakdown(yearMap, currency) {
   var sub = document.getElementById('snapshot-sub');
   if (sub) sub.textContent = currentYear + ' — updates automatically as you use your tools';
 
-  var html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:16px;">';
+  var html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;width:100%;box-sizing:border-box;margin-bottom:16px;">';
   years.forEach(function(yr) {
     var d = yearMap[yr];
     var isCurrent = String(yr) === String(currentYear);
