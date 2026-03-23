@@ -112,7 +112,17 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .footer-logo span { color:var(--pink); }
 .footer-copy { font-size:12px; font-weight:600; color:var(--muted); }
 
-/* ── FOLLOWUP PROMPT CARD ─────────────────────────────── */
+/* ── WELCOME BANNER ───────────────────────────────────── */
+.welcome-banner { background:linear-gradient(135deg,var(--navy) 0%,#5B5C9D 100%); border-radius:20px; padding:28px 32px; margin-bottom:28px; display:none; position:relative; overflow:hidden; }
+.welcome-banner.show { display:block; }
+.welcome-banner::after { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; background:rgba(255,255,255,.05); border-radius:50%; pointer-events:none; }
+.welcome-banner::before { content:''; position:absolute; bottom:-40px; left:-40px; width:160px; height:160px; background:rgba(255,255,255,.04); border-radius:50%; pointer-events:none; }
+.wb-eyebrow { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:10px; }
+.wb-title { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:#fff; margin-bottom:10px; line-height:1.2; }
+.wb-body { font-size:13px; font-weight:600; color:rgba(255,255,255,.75); line-height:1.8; margin-bottom:20px; max-width:560px; }
+.wb-actions { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.wb-btn { padding:12px 24px; background:var(--pink); color:#fff; border:none; border-radius:13px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; cursor:pointer; text-decoration:none; display:inline-block; transition:opacity .2s; }
+.wb-btn:hover { opacity:.88; }
 .followup-card { background:linear-gradient(135deg,#FF6B1A 0%,#E8520A 100%); border-radius:20px; padding:24px 28px; margin-bottom:28px; display:none; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; position:relative; overflow:hidden; }
 .followup-card.visible { display:flex; }
 .followup-card::after { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; background:rgba(255,255,255,.06); border-radius:50%; pointer-events:none; }
@@ -181,6 +191,15 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       <div class="hero-greeting" id="hero-greeting">Good morning</div>
       <h1 class="hero-title">Welcome back to your wedding business control centre.</h1>
       <p class="hero-sub">Your snapshot updates as you use your tools. The more you use them, the clearer your picture becomes.</p>
+    </div>
+
+    <div class="welcome-banner" id="welcome-banner">
+      <div class="wb-eyebrow">👋 Welcome to the Wedding Business Workspace</div>
+      <div class="wb-title">Before you do anything else — start here.</div>
+      <div class="wb-body">The <strong style="color:#fff;">Where To Start assessment</strong> is the most important thing you can do right now. It takes 2 minutes, scores 5 key areas of your business, and tells you exactly where to focus first. Every tool in this workspace is connected to your results — the more honest you are, the more useful it becomes.</div>
+      <div class="wb-actions">
+        <a href="where-to-start.html" class="wb-btn">Take the assessment now →</a>
+      </div>
     </div>
 
     <div class="snapshot-card">
@@ -597,6 +616,7 @@ async function loadWTSResults(userId) {
 
 function showWTSEmpty() {
   document.getElementById("wts-results-area").innerHTML = '<div class="wts-empty"><p>Answer 10 quick questions across 5 areas of your business. We will score each area and show you exactly where to focus first for the fastest results.</p><a href="where-to-start.html" class="wts-start-btn">Take the assessment</a></div>';
+  document.getElementById('welcome-banner').classList.add('show');
 }
 
 function renderWTSResults(scores) {
