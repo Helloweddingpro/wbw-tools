@@ -38,6 +38,9 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
 .nav-user { font-size:12px; font-weight:700; color:var(--muted); }
 .nav-signout { padding:7px 16px; border-radius:10px; border:1.5px solid var(--border); background:transparent; color:var(--navy); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer; }
 .nav-signout:hover { background:var(--cream); }
+.save-pill { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:var(--muted); padding:5px 12px; background:var(--cream); border-radius:20px; border:1px solid var(--border); }
+.save-pill.saved { color:var(--green); }
+.save-pill.saving { color:var(--gold); }
 .main { max-width:900px; margin:0 auto; padding:40px 24px 80px; }
 .hero { margin-bottom:32px; }
 .hero-eyebrow { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
@@ -69,16 +72,12 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
 .hours-total-pill { background:var(--gold-light); border:1px solid var(--gold-mid); border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; margin-top:16px; }
 .hours-total-pill span:first-child { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
 .hours-total-val { font-size:22px; font-weight:900; color:var(--navy); }
-
-/* ── RESULTS ── */
 .result-strip { background:linear-gradient(135deg, var(--navy) 0%, #5B5C9D 100%); border-radius:20px; padding:28px; margin-bottom:20px; display:none; }
 .result-strip.show { display:block; }
 .result-main-price { text-align:center; margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid rgba(255,255,255,.15); }
 .result-main-price .rl { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.6); margin-bottom:8px; }
 .result-main-price .rv { font-family:'Cormorant Garamond',serif; font-size:72px; font-weight:700; color:#FFD34E; line-height:1; }
 .result-main-price .rsub { font-size:13px; font-weight:700; color:rgba(255,255,255,.6); margin-top:6px; }
-
-/* Current situation box */
 .situation-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
 .sit-card { border-radius:14px; padding:16px; }
 .sit-card.now { background:rgba(230,57,70,.2); border:1px solid rgba(230,57,70,.3); }
@@ -88,27 +87,19 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
 .sit-card.needed .sit-label { color:rgba(255,200,80,.9); }
 .sit-value { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:700; color:#fff; line-height:1; margin-bottom:4px; }
 .sit-note { font-size:11px; font-weight:700; color:rgba(255,255,255,.55); }
-
-/* Stats row */
 .stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
 .stat-cell { background:rgba(255,255,255,.1); border-radius:12px; padding:14px; text-align:center; }
 .stat-cell .sc-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.6); margin-bottom:6px; }
 .stat-cell .sc-value { font-size:18px; font-weight:900; color:#fff; }
-
-/* Insight banner */
 .insight-banner { border-radius:14px; padding:16px 18px; margin-bottom:20px; }
 .insight-banner.gap { background:rgba(230,57,70,.2); border:1px solid rgba(230,57,70,.3); }
 .insight-banner.ok { background:rgba(0,168,120,.2); border:1px solid rgba(0,168,120,.3); }
 .insight-banner p { font-size:13px; font-weight:700; color:#fff; line-height:1.6; }
 .insight-banner strong { color:#FFD34E; }
-
-/* Breakdown */
 .breakdown-rows { border-top:1px solid rgba(255,255,255,.15); padding-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px; }
 .brow { display:flex; justify-content:space-between; align-items:center; }
 .brow span { font-size:12px; font-weight:600; color:rgba(255,255,255,.7); }
 .brow strong { font-size:12px; font-weight:800; color:rgba(255,255,255,.88); }
-
-/* Package variations */
 .pkg-variations { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
 .pkg-var { border-radius:14px; padding:16px; text-align:center; }
 .pkg-var.basic { background:rgba(255,255,255,.12); border:1.5px solid rgba(255,255,255,.25); }
@@ -117,11 +108,9 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
 .pkg-var-name { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.9); margin-bottom:4px; }
 .pkg-var-mult { font-size:10px; font-weight:700; color:rgba(255,255,255,.55); margin-bottom:8px; }
 .pkg-var-price { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:#fff; }
-
 .reset-btn { width:100%; padding:16px; border-radius:14px; border:1.5px solid var(--border); background:transparent; color:var(--navy); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; cursor:pointer; margin-bottom:20px; }
 .reset-btn:hover { background:var(--gold-light); border-color:var(--gold); }
 .guidance-note { background:var(--surface); border:1px dashed var(--border); border-radius:14px; padding:16px 18px; margin-bottom:20px; font-size:13px; font-weight:600; color:var(--muted); line-height:1.7; }
-
 @media(max-width:720px){
   .topnav { padding:0 16px; } .main { padding:24px 16px 60px; }
   .form-grid, .form-grid.three { grid-template-columns:1fr; }
@@ -163,6 +152,7 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
     <div class="nav-logo">Price for Profit <span>✦</span></div>
     <div class="nav-right">
       <a href="index.html" style="font-size:12px;font-weight:800;color:var(--navy);text-decoration:none;padding:7px 16px;border-radius:10px;border:1.5px solid var(--border);">← Dashboard</a>
+      <div class="save-pill" id="save-pill">✦ Auto-saves</div>
       <div class="nav-user" id="nav-user"></div>
       <button class="nav-signout" id="signout-btn">Sign out</button>
     </div>
@@ -217,7 +207,6 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
     <!-- 3: BUSINESS COSTS -->
     <div class="card">
       <div class="card-title"><span class="icon">🏢</span> Your Business Costs</div>
-
       <div class="section-divider">Annual Costs</div>
       <div class="form-grid" style="margin-bottom:0;">
         <div class="form-group">
@@ -231,7 +220,6 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
           <div class="input-wrap has-pre"><span class="pre" id="sym-other">€</span><input type="number" id="otherExpenses"></div>
         </div>
       </div>
-
       <div class="section-divider">Monthly Costs <span style="font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted);">(× 12 automatically)</span></div>
       <div class="form-grid" style="margin-bottom:0;">
         <div class="form-group">
@@ -245,7 +233,6 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
           <div class="input-wrap has-pre"><span class="pre" id="sym-monthly">€</span><input type="number" id="monthlyOther"></div>
         </div>
       </div>
-
       <div class="section-divider">Per-Wedding Costs</div>
       <div class="form-grid three" style="margin-bottom:0;">
         <div class="form-group">
@@ -293,22 +280,17 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
       </div>
     </div>
 
-    <!-- GUIDANCE NOTE -->
     <div class="guidance-note">
       📊 <strong style="color:var(--navy);">These calculations are for guidance only.</strong> They do not account for tax, VAT, or personal financial circumstances. Always speak to an accountant for advice specific to your business.
     </div>
 
     <!-- RESULTS -->
     <div class="result-strip" id="result-strip">
-
-      <!-- What you need to charge -->
       <div class="result-main-price">
         <div class="rl">What you need to charge per wedding</div>
         <div class="rv" id="res-needed-price">€0</div>
         <div class="rsub" id="res-needed-sub">To hit your income goal after costs</div>
       </div>
-
-      <!-- Current vs needed -->
       <div class="situation-grid">
         <div class="sit-card now">
           <div class="sit-label">Your Current Hourly Rate</div>
@@ -321,8 +303,6 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
           <div class="sit-note" id="res-needed-note">At your goal price</div>
         </div>
       </div>
-
-      <!-- Key stats -->
       <div class="stats-row">
         <div class="stat-cell">
           <div class="sc-label">At current price you need</div>
@@ -337,13 +317,9 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
           <div class="sc-value" id="res-price-gap">€0</div>
         </div>
       </div>
-
-      <!-- Insight -->
       <div class="insight-banner" id="insight-banner">
         <p id="insight-text"></p>
       </div>
-
-      <!-- Breakdown -->
       <div class="breakdown-rows">
         <div class="brow"><span>Total cost per wedding</span><strong id="bd-cost-per-wedding">€0</strong></div>
         <div class="brow"><span>Pre-Tax Profit per wedding</span><strong id="bd-take-home">€0</strong></div>
@@ -352,8 +328,6 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
         <div class="brow"><span>Income goal</span><strong id="bd-income">€0</strong></div>
         <div class="brow"><span>Weddings per year</span><strong id="bd-weddings">0</strong></div>
       </div>
-
-      <!-- Package suggestions -->
       <div class="pkg-variations">
         <div class="pkg-var basic"><div class="pkg-var-name">Base Package</div><div class="pkg-var-mult">Reach income goal</div><div class="pkg-var-price" id="pv-basic">€0</div></div>
         <div class="pkg-var standard"><div class="pkg-var-name">Standard Package</div><div class="pkg-var-mult">× 1.25</div><div class="pkg-var-price" id="pv-standard">€0</div></div>
@@ -375,11 +349,16 @@ var sb = window._wbwSb;
 var user = null;
 var currency = 'EUR';
 var SYMS = { EUR:'€', GBP:'£', USD:'$', AUD:'A$', CAD:'C$' };
+var saveTimer = null;
+
+var FIELDS = ['incomeGoal','currentPrice','weddingCount','equipment','otherExpenses',
+              'monthlySubscriptions','monthlyOther','travelCosts','accommodation',
+              'extraCosts','coverageHours','editingHours','adminHours'];
 
 function sym() { return SYMS[currency] || '€'; }
 function fmt(n) { if (!n && n !== 0) return sym()+'0'; return sym() + Math.round(n).toLocaleString('en-IE'); }
 
-// ── AUTH ──
+// ── AUTH ──────────────────────────────────────────────────
 function switchTab(t) {
   document.getElementById('form-in').style.display = t==='in'?'':'none';
   document.getElementById('form-up').style.display = t==='up'?'':'none';
@@ -420,7 +399,7 @@ sb.auth.onAuthStateChange(function(event, session) {
   }
 });
 
-// ── CURRENCY ──
+// ── CURRENCY ──────────────────────────────────────────────
 function onCurrencyChange() {
   currency = document.getElementById('currency').value;
   var s = sym();
@@ -428,10 +407,11 @@ function onCurrencyChange() {
     var el = document.getElementById(id); if (el) el.textContent = s;
   });
   calc();
+  queueSave();
 }
 document.getElementById('currency').onchange = onCurrencyChange;
 
-// ── CALC ──
+// ── CALC ──────────────────────────────────────────────────
 function g(id) { return parseFloat(document.getElementById(id).value) || 0; }
 
 function calc() {
@@ -455,41 +435,30 @@ function calc() {
   var totalAnnual   = annualFixed + annualMonthly;
   var perWedding    = travelCosts + accommodation + extraCosts;
   var overheadPerWedding = totalAnnual / weddingCount;
-
-  // What they need to charge: (totalAnnualCosts + incomeGoal) / weddings + perWeddingCosts
-  var neededPrice = (totalAnnual + incomeGoal) / weddingCount + perWedding;
-
-  // Hourly rates
+  var neededPrice   = (totalAnnual + incomeGoal) / weddingCount + perWedding;
   var currentHourly = totalHours > 0 ? currentPrice / totalHours : 0;
   var neededHourly  = totalHours > 0 ? neededPrice  / totalHours : 0;
-
-  // Weddings needed at each price point (to cover costs + income goal)
   var totalRequired = totalAnnual + incomeGoal;
   var weddingsAtCurrent = currentPrice > perWedding ? Math.ceil(totalRequired / (currentPrice - perWedding)) : 999;
-  var weddingsAtGoal    = neededPrice  > perWedding ? Math.ceil(totalRequired / (neededPrice  - perWedding)) : weddingCount;
-
   var priceGap = neededPrice - currentPrice;
 
-  // Update hours pill
   document.getElementById('total-hours-display').textContent = totalHours + ' hrs';
 
-  // Show results if we have enough to calculate
   if (incomeGoal > 0 || currentPrice > 0) {
     document.getElementById('result-strip').classList.add('show');
     document.getElementById('reset-btn').style.display = 'block';
   }
 
-  document.getElementById('res-needed-price').textContent  = fmt(neededPrice);
-  document.getElementById('res-needed-sub').textContent    = 'Based on ' + weddingCount + ' weddings · ' + totalHours + ' hrs each';
-  document.getElementById('res-current-hourly').textContent = totalHours > 0 ? fmt(currentHourly)+'/hr' : '—';
-  document.getElementById('res-current-note').textContent  = 'At '+fmt(currentPrice)+' per wedding';
-  document.getElementById('res-needed-hourly').textContent  = totalHours > 0 ? fmt(neededHourly)+'/hr' : '—';
-  document.getElementById('res-needed-note').textContent   = 'At '+fmt(neededPrice)+' per wedding';
+  document.getElementById('res-needed-price').textContent   = fmt(neededPrice);
+  document.getElementById('res-needed-sub').textContent     = 'Based on ' + weddingCount + ' weddings · ' + totalHours + ' hrs each';
+  document.getElementById('res-current-hourly').textContent  = totalHours > 0 ? fmt(currentHourly)+'/hr' : '—';
+  document.getElementById('res-current-note').textContent   = 'At '+fmt(currentPrice)+' per wedding';
+  document.getElementById('res-needed-hourly').textContent   = totalHours > 0 ? fmt(neededHourly)+'/hr' : '—';
+  document.getElementById('res-needed-note').textContent    = 'At '+fmt(neededPrice)+' per wedding';
   document.getElementById('res-weddings-needed').textContent = weddingsAtCurrent < 500 ? weddingsAtCurrent + ' weddings' : '500+ weddings';
   document.getElementById('res-weddings-goal').textContent   = weddingCount + ' weddings';
   document.getElementById('res-price-gap').textContent      = priceGap >= 0 ? '+'+fmt(priceGap) : fmt(priceGap);
 
-  // Insight message
   var banner = document.getElementById('insight-banner');
   var text   = document.getElementById('insight-text');
   if (currentPrice > 0 && incomeGoal > 0) {
@@ -508,7 +477,7 @@ function calc() {
     text.innerHTML = 'Enter your income goal and current price above to see your full picture.';
   }
 
-  var takeHomePerWedding = incomeGoal / weddingCount;
+  var takeHomePerWedding  = incomeGoal / weddingCount;
   var totalCostPerWedding = overheadPerWedding + perWedding;
   document.getElementById('bd-cost-per-wedding').textContent = fmt(totalCostPerWedding);
   document.getElementById('bd-take-home').textContent        = fmt(takeHomePerWedding);
@@ -516,55 +485,115 @@ function calc() {
   document.getElementById('bd-hourly').textContent           = totalHours > 0 ? fmt(neededHourly) + '/hr' : '—';
   document.getElementById('bd-income').textContent           = fmt(incomeGoal);
   document.getElementById('bd-weddings').textContent         = weddingCount;
-  document.getElementById('pv-basic').textContent      = fmt(neededPrice);
-  document.getElementById('pv-standard').textContent   = fmt(neededPrice * 1.25);
-  document.getElementById('pv-premium').textContent    = fmt(neededPrice * 1.6);
+  document.getElementById('pv-basic').textContent            = fmt(neededPrice);
+  document.getElementById('pv-standard').textContent         = fmt(neededPrice * 1.25);
+  document.getElementById('pv-premium').textContent          = fmt(neededPrice * 1.6);
+}
 
-  // Save for Income Goals
-  if (user) {
+// ── INPUT LISTENERS ───────────────────────────────────────
+FIELDS.forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) el.oninput = function() { calc(); queueSave(); };
+});
+
+// ── SAVE TO SUPABASE ──────────────────────────────────────
+function queueSave() {
+  var pill = document.getElementById('save-pill');
+  pill.className = 'save-pill saving'; pill.textContent = '⏳ Saving…';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveData, 1500);
+}
+
+async function saveData() {
+  if (!user) return;
+  var pill = document.getElementById('save-pill');
+  var data = { currency: currency };
+  FIELDS.forEach(function(f) {
+    var el = document.getElementById(f);
+    data[f] = el ? (parseFloat(el.value) || null) : null;
+  });
+  try {
+    var result = await sb.from('price_for_profit').upsert({
+      user_id: user.id,
+      data: data,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id' });
+    if (result.error) throw result.error;
+    pill.className = 'save-pill saved'; pill.textContent = '✓ Saved';
+    setTimeout(function() { pill.className='save-pill'; pill.textContent='✦ Auto-saves'; }, 2500);
+
+    // Also keep localStorage in sync for Income Goals tool
     try {
+      var incomeGoal   = data.incomeGoal   || 0;
+      var currentPrice = data.currentPrice || 0;
+      var weddingCount = Math.max(1, data.weddingCount || 1);
+      var totalAnnual  = (data.equipment||0) + (data.otherExpenses||0) + ((data.monthlySubscriptions||0)+(data.monthlyOther||0))*12;
+      var perWedding   = (data.travelCosts||0) + (data.accommodation||0) + (data.extraCosts||0);
+      var neededPrice  = (totalAnnual + incomeGoal) / weddingCount + perWedding;
       localStorage.setItem('wbw-pfp-' + user.id, JSON.stringify({
         incomeGoal: incomeGoal, currentPrice: currentPrice, weddingCount: weddingCount,
-        totalHours: totalHours, totalAnnual: totalAnnual, perWedding: perWedding,
-        neededPrice: neededPrice, currentHourly: currentHourly, neededHourly: neededHourly,
-        minPrice: neededPrice, basic: neededPrice, standard: neededPrice*1.25, premium: neededPrice*1.6
+        currency: currency, neededPrice: neededPrice, minPrice: neededPrice,
+        basic: neededPrice, standard: neededPrice*1.25, premium: neededPrice*1.6
       }));
     } catch(e) {}
+  } catch(e) {
+    pill.className = 'save-pill'; pill.textContent = '⚠ Save failed';
+    console.log('Save error:', e);
   }
 }
 
-// ── INPUT LISTENERS ──
-['incomeGoal','currentPrice','weddingCount','equipment','otherExpenses','monthlySubscriptions','monthlyOther',
- 'travelCosts','accommodation','extraCosts','coverageHours','editingHours','adminHours'].forEach(function(id) {
-  var el = document.getElementById(id);
-  if (el) el.oninput = calc;
-});
-
-// ── SAVE / LOAD ──
-function loadSaved() {
+// ── LOAD FROM SUPABASE ────────────────────────────────────
+async function loadSaved() {
   if (!user) return;
   try {
-    var raw = localStorage.getItem('wbw-pfp-' + user.id);
-    if (!raw) return;
-    var d = JSON.parse(raw);
-    var fields = ['incomeGoal','currentPrice','weddingCount','equipment','otherExpenses','monthlySubscriptions','monthlyOther',
-                  'travelCosts','accommodation','extraCosts','coverageHours','editingHours','adminHours'];
-    fields.forEach(function(f) { var el=document.getElementById(f); if (el&&d[f]!==undefined) el.value=d[f]; });
-    if (d.currency) { currency=d.currency; document.getElementById('currency').value=d.currency; onCurrencyChange(); }
-    calc();
-  } catch(e) {}
+    var result = await sb.from('price_for_profit').select('data').eq('user_id', user.id).single();
+    if (result.data && result.data.data) {
+      var d = result.data.data;
+      if (d.currency) {
+        currency = d.currency;
+        document.getElementById('currency').value = d.currency;
+        var s = sym();
+        ['sym-goal','sym-price','sym-equip','sym-other','sym-subs','sym-monthly','sym-travel','sym-accomm','sym-extra'].forEach(function(id) {
+          var el = document.getElementById(id); if (el) el.textContent = s;
+        });
+      }
+      FIELDS.forEach(function(f) {
+        var el = document.getElementById(f);
+        if (el && d[f] != null) el.value = d[f];
+      });
+      calc();
+    }
+  } catch(e) {
+    // No saved data yet — that's fine
+    console.log('No saved data:', e);
+  }
 }
 
+// ── RESET ─────────────────────────────────────────────────
 function resetCalc() {
-  ['incomeGoal','currentPrice','weddingCount','equipment','otherExpenses','monthlySubscriptions','monthlyOther',
-   'travelCosts','accommodation','extraCosts','coverageHours','editingHours','adminHours'].forEach(function(id) {
+  FIELDS.forEach(function(id) {
     var el = document.getElementById(id); if (el) el.value = '';
   });
   document.getElementById('result-strip').classList.remove('show');
   document.getElementById('reset-btn').style.display = 'none';
   document.getElementById('total-hours-display').textContent = '0 hrs';
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  queueSave();
 }
 </script>
 </body>
 </html>
+
+<!--
+SUPABASE TABLE — run once in your SQL editor:
+
+CREATE TABLE IF NOT EXISTS price_for_profit (
+  id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id    UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL UNIQUE,
+  data       JSONB DEFAULT '{}',
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE price_for_profit ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users manage own price for profit" ON price_for_profit
+  FOR ALL USING (auth.uid() = user_id);
+-->
