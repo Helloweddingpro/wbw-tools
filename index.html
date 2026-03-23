@@ -112,7 +112,15 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .footer-logo span { color:var(--pink); }
 .footer-copy { font-size:12px; font-weight:600; color:var(--muted); }
 
-/* ── IG PROMPT CARD ───────────────────────────────────── */
+/* ── FOLLOWUP PROMPT CARD ─────────────────────────────── */
+.followup-card { background:linear-gradient(135deg,#FF6B1A 0%,#E8520A 100%); border-radius:20px; padding:24px 28px; margin-bottom:28px; display:none; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; position:relative; overflow:hidden; }
+.followup-card.visible { display:flex; }
+.followup-card::after { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; background:rgba(255,255,255,.06); border-radius:50%; pointer-events:none; }
+.followup-eyebrow { font-size:10px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.7); margin-bottom:6px; }
+.followup-title { font-size:17px; font-weight:800; color:#fff; margin-bottom:4px; }
+.followup-sub { font-size:13px; font-weight:600; color:rgba(255,255,255,.8); line-height:1.5; }
+.followup-btn { padding:12px 24px; background:#fff; color:#FF6B1A; border:none; border-radius:12px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; text-decoration:none; white-space:nowrap; flex-shrink:0; transition:opacity .2s; display:inline-block; }
+.followup-btn:hover { opacity:.9; }
 .ig-prompt-card { background:linear-gradient(135deg,#7C3AED 0%,#5B21B6 100%); border-radius:20px; padding:24px 28px; margin-bottom:28px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; position:relative; overflow:hidden; }
 .ig-prompt-card::after { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; background:rgba(255,255,255,.06); border-radius:50%; pointer-events:none; }
 .ig-prompt-left {}
@@ -198,6 +206,15 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       </div>
     </div>
 
+
+    <div class="followup-card" id="followup-card">
+      <div>
+        <div class="followup-eyebrow">📋 Lead Tracker — Action Required</div>
+        <div class="followup-title" id="followup-title">You have follow-ups due today</div>
+        <div class="followup-sub" id="followup-sub">Don't let a warm lead go cold — check your Lead Tracker now.</div>
+      </div>
+      <a href="lead-tracker.html" class="followup-btn">Open Lead Tracker →</a>
+    </div>
 
     <div class="ig-prompt-card" id="ig-prompt-card">
       <div class="ig-prompt-left">
@@ -469,13 +486,15 @@ async function loadLeadData(userId) {
 
       var followupsDue = leads.filter(function(l) {
         var st = l.status || '';
-        if (st === "Booked" || st === "Lost") return false;
-        return l.nextFollowUp && l.nextFollowUp <= today;
+        if (st === "Booked" || st === "Lost" || st === "Deposit Paid") return false;
+        return l.nextFollowUp;
       }).length;
 
       snapData.bookedCount = bookedThisYear.length;
       snapData.totalLeads = leads.length;
       snapData.followupsDue = followupsDue;
+
+      renderFollowUpPrompt(followupsDue);
 
       snapData.projectedIncome = bookedThisYear.reduce(function(s, l) {
         return s + Number(l.priceQuoted || 0);
@@ -562,6 +581,23 @@ function renderWTSResults(scores) {
       setTimeout(function() { el.style.width = pct + "%"; }, 100);
     });
   });
+}
+
+// ── FOLLOWUP PROMPT ───────────────────────────────────────────
+function renderFollowUpPrompt(count) {
+  if (!count || count < 1) return;
+  var card  = document.getElementById('followup-card');
+  var title = document.getElementById('followup-title');
+  var sub   = document.getElementById('followup-sub');
+
+  // Check how many are actually overdue vs upcoming
+  var today = new Date().toISOString().slice(0, 10);
+
+  title.textContent = count === 1
+    ? 'You have 1 lead with a follow-up pending'
+    : 'You have ' + count + ' leads with follow-ups pending';
+  sub.textContent = 'Don\'t let warm leads go cold — open your Lead Tracker and check your follow-up list now.';
+  card.classList.add('visible');
 }
 
 // ── IG DAILY PROMPT ───────────────────────────────────────────
