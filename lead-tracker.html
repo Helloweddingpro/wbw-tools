@@ -919,6 +919,7 @@ function renderCalendar() {
   document.getElementById('calendar-content').innerHTML = html;
 }
 
+function backup(){
   const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([JSON.stringify({leads,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"})); a.download="wbw-leads-backup.json"; a.click();
 }
 
