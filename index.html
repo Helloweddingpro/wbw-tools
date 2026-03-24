@@ -128,6 +128,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .pm-btn:disabled { opacity:.45; cursor:not-allowed; }
 
 /* ── WELCOME BANNER ───────────────────────────────────── */
+.welcome-banner { background:linear-gradient(135deg,var(--navy) 0%,#5B5C9D 100%); border-radius:20px; padding:28px 32px; margin-bottom:28px; display:none; position:relative; overflow:hidden; }
 .welcome-banner.show { display:block; }
 .welcome-banner::after { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; background:rgba(255,255,255,.05); border-radius:50%; pointer-events:none; }
 .welcome-banner::before { content:''; position:absolute; bottom:-40px; left:-40px; width:160px; height:160px; background:rgba(255,255,255,.04); border-radius:50%; pointer-events:none; }
@@ -640,6 +641,12 @@ var SCORE_META = {
 async function loadWTSResults(userId) {
   try {
     var result = await sb.from("where_to_start").select("*").eq("user_id", userId).order("updated_at", { ascending: false }).limit(1);
+    if (result.error) {
+      console.log("WTS load error:", result.error);
+      // Don't show empty state on error — just leave loading message
+      document.getElementById("wts-results-area").innerHTML = '<div style="padding:16px 0;font-size:13px;font-weight:700;color:var(--muted);">Unable to load results — please refresh the page.</div>';
+      return;
+    }
     if (result.data && result.data.length > 0) {
       var scores = result.data[0].data && result.data[0].data.scores;
       if (scores) {
@@ -647,7 +654,10 @@ async function loadWTSResults(userId) {
         document.getElementById("wts-action-link").textContent = "Retake assessment";
       } else { showWTSEmpty(); }
     } else { showWTSEmpty(); }
-  } catch(e) { showWTSEmpty(); }
+  } catch(e) {
+    console.log("WTS catch error:", e);
+    document.getElementById("wts-results-area").innerHTML = '<div style="padding:16px 0;font-size:13px;font-weight:700;color:var(--muted);">Unable to load results — please refresh the page.</div>';
+  }
 }
 
 function showWTSEmpty() {
