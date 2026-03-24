@@ -174,7 +174,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
     <div id="form-in">
       <div class="auth-field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com"></div>
       <div class="auth-field"><label>Password</label><input type="password" id="in-pass" placeholder="Your password"></div>
-      <button class="auth-submit" id="signin-btn" disabled>Sign In</button>
+      <button class="auth-submit" id="signin-btn">Sign In</button>
       <div class="auth-msg" id="in-msg"></div>
     </div>
     <div id="form-up" style="display:none;">
@@ -345,9 +345,6 @@ document.getElementById("tab-up").onclick = function() { switchTab("up"); };
 document.getElementById("signin-btn").onclick = signIn;
 document.getElementById("signup-btn").onclick = signUp;
 document.getElementById("signout-btn").onclick = signOut;
-
-// Enable sign in button now that Supabase and handlers are ready
-document.getElementById("signin-btn").disabled = false;
 
 function switchTab(t) {
   document.getElementById("form-in").style.display = t === "in" ? "" : "none";
@@ -740,7 +737,9 @@ async function loadProfileName(userId) {
   try {
     var result = await sb.from('profiles').select('first_name').eq('user_id', userId).single();
     if (result.data && result.data.first_name) return result.data.first_name;
-  } catch(e) {}
+  } catch(e) {
+    // profiles table may not exist yet — fail silently
+  }
   return null;
 }
 
