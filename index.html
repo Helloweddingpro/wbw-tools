@@ -195,6 +195,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
     <div class="nav-logo">Wedding Business <span>Workspace</span></div>
     <div class="nav-right">
       <div class="nav-user" id="nav-user"></div>
+      <button onclick="openEditProfile()" style="padding:8px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:rgba(255,255,255,.8);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">My Profile</button>
       <button class="nav-signout" id="signout-btn">Sign out</button>
     </div>
   </nav>
@@ -421,6 +422,8 @@ async function initApp(user) {
 
   // Load profile
   var profile = await loadProfile(user.id);
+  _currentUserId  = user.id;
+  _currentProfile = profile;
   if (profile && profile.first_name) {
     applyProfile(profile, user);
     if (profile.service) localStorage.setItem('wbw-service-type', profile.service);
@@ -804,13 +807,26 @@ function applyProfile(profile, user) {
 
 function showProfileModal(userId, existingProfile) {
   var overlay = document.getElementById('profile-overlay');
+  var isEdit  = !!(existingProfile && existingProfile.first_name);
+
+  // Update modal title for edit vs new
+  document.querySelector('.pm-eyebrow').textContent = isEdit ? '✏️ Edit Your Profile' : '👋 Welcome to Hello Wedding Pro';
+  document.querySelector('.pm-title').textContent   = isEdit ? 'Update your details' : 'Let\'s set up your profile';
+  document.querySelector('.pm-sub').textContent     = isEdit
+    ? 'Your name and service are used across all tools in your workspace.'
+    : 'This takes 30 seconds and personalises everything in your workspace — your greeting, your templates, your tools.';
+  document.getElementById('pm-save-btn').textContent = isEdit ? 'Save changes →' : 'Let\'s go →';
+
+  // Show close button only when editing (not on first login)
+  document.getElementById('pm-close-btn').style.display = isEdit ? 'block' : 'none';
+
   overlay.style.display = 'flex';
 
   // Pre-fill if editing existing
   if (existingProfile) {
-    document.getElementById('pm-name').value    = existingProfile.first_name || '';
-    document.getElementById('pm-service').value = existingProfile.service    || '';
-    document.getElementById('pm-location').value= existingProfile.location   || '';
+    document.getElementById('pm-name').value     = existingProfile.first_name || '';
+    document.getElementById('pm-service').value  = existingProfile.service    || '';
+    document.getElementById('pm-location').value = existingProfile.location   || '';
   }
 
   var btn = document.getElementById('pm-save-btn');
@@ -827,13 +843,22 @@ function showProfileModal(userId, existingProfile) {
     await saveProfile(userId, firstName, service, location);
     applyProfile({ first_name: firstName, service, location }, null);
     overlay.style.display = 'none';
-    btn.disabled = false; btn.textContent = 'Let\'s go →';
+    btn.disabled = false;
+    btn.textContent = isEdit ? 'Save changes →' : 'Let\'s go →';
   };
 
-  // Enter key submits
   document.getElementById('pm-name').onkeydown = function(e) {
     if (e.key === 'Enter') btn.click();
   };
+}
+
+var _currentProfile = null;
+var _currentUserId  = null;
+
+function openEditProfile() {
+  if (_currentUserId) {
+    showProfileModal(_currentUserId, _currentProfile);
+  }
 }
 
 
@@ -841,7 +866,10 @@ function showProfileModal(userId, existingProfile) {
 
 <div id="profile-overlay" class="profile-overlay" style="display:none;">
   <div class="profile-modal">
-    <div class="pm-eyebrow">👋 Welcome to Hello Wedding Pro</div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
+      <div class="pm-eyebrow">👋 Welcome to Hello Wedding Pro</div>
+      <button id="pm-close-btn" onclick="document.getElementById('profile-overlay').style.display='none'" style="display:none;background:var(--cream);border:none;border-radius:9px;padding:6px 11px;font-size:14px;cursor:pointer;color:var(--muted);">✕</button>
+    </div>
     <div class="pm-title">Let's set up your profile</div>
     <div class="pm-sub">This takes 30 seconds and personalises everything in your workspace — your greeting, your templates, your tools.</div>
     <div class="pm-fields">
