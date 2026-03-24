@@ -114,7 +114,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 
 /* ── NAME CAPTURE MODAL ───────────────────────────────── */
 .name-modal-overlay { position:fixed; inset:0; background:rgba(20,20,50,.7); display:flex; align-items:center; justify-content:center; padding:24px; z-index:9999; backdrop-filter:blur(4px); }
-.name-modal { background:var(--white); border-radius:24px; padding:40px; width:100%; max-width:420px; box-shadow:0 24px 60px rgba(0,0,0,.25); text-align:center; }
+.name-modal { background:var(--white); border-radius:24px; padding:40px; width:100%; max-width:460px; box-shadow:0 24px 60px rgba(0,0,0,.25); text-align:center; }
 .name-modal-eyebrow { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--pink); margin-bottom:12px; }
 .name-modal-title { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:700; color:var(--navy); margin-bottom:10px; line-height:1.2; }
 .name-modal-sub { font-size:13px; font-weight:600; color:var(--muted); line-height:1.7; margin-bottom:24px; }
@@ -174,7 +174,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
     <div id="form-in">
       <div class="auth-field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com"></div>
       <div class="auth-field"><label>Password</label><input type="password" id="in-pass" placeholder="Your password"></div>
-      <button class="auth-submit" id="signin-btn">Sign In</button>
+      <button class="auth-submit" id="signin-btn" disabled>Sign In</button>
       <div class="auth-msg" id="in-msg"></div>
     </div>
     <div id="form-up" style="display:none;">
@@ -345,6 +345,9 @@ document.getElementById("tab-up").onclick = function() { switchTab("up"); };
 document.getElementById("signin-btn").onclick = signIn;
 document.getElementById("signup-btn").onclick = signUp;
 document.getElementById("signout-btn").onclick = signOut;
+
+// Enable sign in button now that Supabase and handlers are ready
+document.getElementById("signin-btn").disabled = false;
 
 function switchTab(t) {
   document.getElementById("form-in").style.display = t === "in" ? "" : "none";
