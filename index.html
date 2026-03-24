@@ -112,18 +112,22 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .footer-logo span { color:var(--pink); }
 .footer-copy { font-size:12px; font-weight:600; color:var(--muted); }
 
-/* ── NAME CAPTURE MODAL ───────────────────────────────── */
-.name-modal-overlay { position:fixed; inset:0; background:rgba(20,20,50,.7); display:flex; align-items:center; justify-content:center; padding:24px; z-index:9999; backdrop-filter:blur(4px); }
-.name-modal { background:var(--white); border-radius:24px; padding:40px; width:100%; max-width:460px; box-shadow:0 24px 60px rgba(0,0,0,.25); text-align:center; }
-.name-modal-eyebrow { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--pink); margin-bottom:12px; }
-.name-modal-title { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:700; color:var(--navy); margin-bottom:10px; line-height:1.2; }
-.name-modal-sub { font-size:13px; font-weight:600; color:var(--muted); line-height:1.7; margin-bottom:24px; }
-.name-modal-input { width:100%; padding:14px 16px; border:1.5px solid var(--border); border-radius:14px; font-family:'Montserrat',sans-serif; font-size:16px; font-weight:700; color:var(--navy); background:var(--cream); text-align:center; margin-bottom:14px; transition:border-color .2s; }
-.name-modal-input:focus { outline:none; border-color:var(--pink); }
-.name-modal-btn { width:100%; padding:14px; background:var(--navy); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:opacity .2s; }
-.name-modal-btn:hover { opacity:.88; }
-.name-modal-btn:disabled { opacity:.5; cursor:not-allowed; }
-.welcome-banner { background:linear-gradient(135deg,var(--navy) 0%,#5B5C9D 100%); border-radius:20px; padding:28px 32px; margin-bottom:28px; display:none; position:relative; overflow:hidden; }
+
+/* ── PROFILE MODAL ────────────────────────────────────── */
+.profile-overlay { position:fixed; inset:0; background:rgba(20,20,50,.75); display:flex; align-items:center; justify-content:center; padding:24px; z-index:9999; backdrop-filter:blur(4px); }
+.profile-modal { background:var(--white); border-radius:24px; padding:40px; width:100%; max-width:460px; box-shadow:0 24px 60px rgba(0,0,0,.25); }
+.pm-eyebrow { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--pink); margin-bottom:10px; }
+.pm-title { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--navy); margin-bottom:8px; line-height:1.2; }
+.pm-sub { font-size:13px; font-weight:600; color:var(--muted); line-height:1.7; margin-bottom:24px; }
+.pm-fields { display:flex; flex-direction:column; gap:14px; margin-bottom:24px; }
+.pm-field label { display:block; font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.pm-field input, .pm-field select { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; color:var(--text); background:var(--cream); transition:border-color .2s; }
+.pm-field input:focus, .pm-field select:focus { outline:none; border-color:var(--pink); background:var(--white); }
+.pm-btn { width:100%; padding:14px; background:var(--navy); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:opacity .2s; }
+.pm-btn:hover { opacity:.88; }
+.pm-btn:disabled { opacity:.45; cursor:not-allowed; }
+
+/* ── WELCOME BANNER ───────────────────────────────────── */
 .welcome-banner.show { display:block; }
 .welcome-banner::after { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; background:rgba(255,255,255,.05); border-radius:50%; pointer-events:none; }
 .welcome-banner::before { content:''; position:absolute; bottom:-40px; left:-40px; width:160px; height:160px; background:rgba(255,255,255,.04); border-radius:50%; pointer-events:none; }
@@ -403,17 +407,26 @@ async function initApp(user) {
   document.getElementById("app-screen").style.display = "block";
   document.getElementById("nav-user").textContent = user.email;
 
-  // Load profile name first
-  var firstName = await loadProfileName(user.id);
   var h = new Date().getHours();
-  var timeGreeting = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
-  var greeting = firstName ? timeGreeting + ", " + firstName : timeGreeting;
+  var greeting = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
   document.getElementById("hero-greeting").textContent = greeting + " ✨";
-  document.getElementById("nav-user").textContent = firstName || user.email;
 
-  // Show name modal if no name saved yet
-  if (!firstName) {
-    showNameModal(user.id);
+  // Populate service dropdown
+  var sel = document.getElementById('pm-service');
+  SERVICES.forEach(function(s) {
+    var opt = document.createElement('option');
+    opt.value = s; opt.textContent = s;
+    sel.appendChild(opt);
+  });
+
+  // Load profile
+  var profile = await loadProfile(user.id);
+  if (profile && profile.first_name) {
+    applyProfile(profile, user);
+    if (profile.service) localStorage.setItem('wbw-service-type', profile.service);
+  } else {
+    // First login — show profile modal
+    showProfileModal(user.id, null);
   }
   renderIGPrompt();
   document.getElementById("wts-results-area").innerHTML = '<div style="padding:16px 0; font-size:13px; font-weight:700; color:var(--muted);">Loading your results...</div>';
@@ -732,56 +745,122 @@ function renderIGPrompt() {
   title.textContent = p.title;
   sub.innerHTML = p.sub;
 }
-// ── PROFILE NAME ──────────────────────────────────────────────
-async function loadProfileName(userId) {
+
+// ── PROFILE ───────────────────────────────────────────────────
+var SERVICES = [
+  "Photographer",
+  "Videographer",
+  "Content Creator",
+  "Florist",
+  "Wedding Planner / Coordinator",
+  "Hair Stylist",
+  "Makeup Artist",
+  "Band",
+  "DJ",
+  "Ceremony Musician",
+  "Cake Designer",
+  "Stationer",
+  "Celebrant",
+  "Venue Stylist / Decorator",
+  "Photobooth",
+  "Selfie Mirror",
+  "Audio Guest Book",
+  "Wedding Cars & Coaches",
+  "Other"
+];
+
+async function loadProfile(userId) {
   try {
-    var result = await sb.from('profiles').select('first_name').eq('user_id', userId).single();
-    if (result.data && result.data.first_name) return result.data.first_name;
-  } catch(e) {
-    // profiles table may not exist yet — fail silently
-  }
+    var result = await sb.from('profiles').select('*').eq('user_id', userId).single();
+    if (result.data) return result.data;
+  } catch(e) {}
   return null;
 }
 
-function showNameModal(userId) {
-  var overlay = document.getElementById('name-modal-overlay');
-  var input   = document.getElementById('name-modal-input');
-  var btn     = document.getElementById('name-modal-btn');
-  overlay.style.display = 'flex';
-  setTimeout(function() { input.focus(); }, 300);
+async function saveProfile(userId, firstName, service, location) {
+  try {
+    await sb.from('profiles').upsert({
+      user_id: userId,
+      first_name: firstName,
+      service: service,
+      location: location,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id' });
+    // Also sync service to localStorage for other tools
+    if (service) localStorage.setItem('wbw-service-type', service);
+  } catch(e) { console.log('Profile save error:', e); }
+}
 
-  // Allow pressing Enter
-  input.onkeydown = function(e) { if (e.key === 'Enter') btn.click(); };
-
-  btn.onclick = async function() {
-    var name = input.value.trim();
-    if (!name) { input.style.borderColor = 'var(--pink)'; input.focus(); return; }
-    btn.disabled = true; btn.textContent = 'Saving…';
-    try {
-      await sb.from('profiles').upsert({
-        user_id: userId,
-        first_name: name,
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'user_id' });
-    } catch(e) { console.log('Profile save error:', e); }
-    // Update greeting with name
-    var h = new Date().getHours();
-    var timeGreeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+function applyProfile(profile, user) {
+  if (!profile) return;
+  var name = profile.first_name || '';
+  var h = new Date().getHours();
+  var timeGreeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  if (name) {
     document.getElementById('hero-greeting').textContent = timeGreeting + ', ' + name + ' ✨';
     document.getElementById('nav-user').textContent = name;
+  }
+}
+
+function showProfileModal(userId, existingProfile) {
+  var overlay = document.getElementById('profile-overlay');
+  overlay.style.display = 'flex';
+
+  // Pre-fill if editing existing
+  if (existingProfile) {
+    document.getElementById('pm-name').value    = existingProfile.first_name || '';
+    document.getElementById('pm-service').value = existingProfile.service    || '';
+    document.getElementById('pm-location').value= existingProfile.location   || '';
+  }
+
+  var btn = document.getElementById('pm-save-btn');
+  btn.onclick = async function() {
+    var firstName = document.getElementById('pm-name').value.trim();
+    var service   = document.getElementById('pm-service').value;
+    var location  = document.getElementById('pm-location').value.trim();
+    if (!firstName) {
+      document.getElementById('pm-name').style.borderColor = 'var(--pink)';
+      document.getElementById('pm-name').focus();
+      return;
+    }
+    btn.disabled = true; btn.textContent = 'Saving…';
+    await saveProfile(userId, firstName, service, location);
+    applyProfile({ first_name: firstName, service, location }, null);
     overlay.style.display = 'none';
+    btn.disabled = false; btn.textContent = 'Let\'s go →';
+  };
+
+  // Enter key submits
+  document.getElementById('pm-name').onkeydown = function(e) {
+    if (e.key === 'Enter') btn.click();
   };
 }
 
 
+</script>
 
-<div id="name-modal-overlay" class="name-modal-overlay" style="display:none;">
-  <div class="name-modal">
-    <div class="name-modal-eyebrow">Welcome to Hello Wedding Pro</div>
-    <div class="name-modal-title">What's your first name?</div>
-    <div class="name-modal-sub">We'd love to make this feel a little more personal. Just your first name is all we need.</div>
-    <input type="text" id="name-modal-input" class="name-modal-input" placeholder="e.g. Darina" maxlength="50" autocomplete="given-name">
-    <button class="name-modal-btn" id="name-modal-btn">Let's go →</button>
+<div id="profile-overlay" class="profile-overlay" style="display:none;">
+  <div class="profile-modal">
+    <div class="pm-eyebrow">👋 Welcome to Hello Wedding Pro</div>
+    <div class="pm-title">Let's set up your profile</div>
+    <div class="pm-sub">This takes 30 seconds and personalises everything in your workspace — your greeting, your templates, your tools.</div>
+    <div class="pm-fields">
+      <div class="pm-field">
+        <label>Your first name *</label>
+        <input type="text" id="pm-name" placeholder="e.g. Darina" maxlength="50" autocomplete="given-name">
+      </div>
+      <div class="pm-field">
+        <label>Your service</label>
+        <select id="pm-service">
+          <option value="">Select your service…</option>
+        </select>
+      </div>
+      <div class="pm-field">
+        <label>Your location</label>
+        <input type="text" id="pm-location" placeholder="e.g. Waterford & Kilkenny" maxlength="100">
+      </div>
+    </div>
+    <button class="pm-btn" id="pm-save-btn">Let's go →</button>
   </div>
 </div>
 
