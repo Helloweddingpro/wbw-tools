@@ -613,7 +613,8 @@ function renderYearlyBreakdown(yearMap, currency) {
   years.forEach(function(yr) {
     var d = yearMap[yr];
     var isCurrent = String(yr) === String(currentYear);
-    html += '<div style="background:var(--white);border:1px solid var(--border);border-radius:16px;padding:20px 22px;position:relative;overflow:hidden;">';
+    html += '<a href="lead-tracker.html#calendar=' + yr + '" style="text-decoration:none;">';
+    html += '<div style="background:var(--white);border:1px solid var(--border);border-radius:16px;padding:20px 22px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform=\'translateY(-2px)\';this.style.boxShadow=\'0 8px 24px rgba(59,60,109,.12)\'" onmouseout="this.style.transform=\'\';this.style.boxShadow=\'\'">';
     if (isCurrent) {
       html += '<div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--pink),var(--navy));border-radius:16px 16px 0 0;"></div>';
     }
@@ -622,7 +623,8 @@ function renderYearlyBreakdown(yearMap, currency) {
     html += '<div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;">' + (d.count === 1 ? 'wedding booked' : 'weddings booked') + '</div>';
     html += '<div style="font-size:16px;font-weight:800;color:' + (isCurrent ? 'var(--navy)' : 'var(--muted)') + ';">' + sym + Math.round(d.income).toLocaleString('en-IE') + '</div>';
     html += '<div style="font-size:11px;font-weight:600;color:var(--muted);margin-top:2px;">projected income</div>';
-    html += '</div>';
+    html += '<div style="font-size:11px;font-weight:700;color:var(--pink);margin-top:10px;">View calendar →</div>';
+    html += '</div></a>';
   });
   html += '</div>';
   html += '<div style="text-align:right;margin-top:8px;"><a href="lead-tracker.html" style="font-size:12px;font-weight:800;color:var(--muted);text-decoration:none;border:1px solid var(--border);padding:7px 14px;border-radius:10px;">View Lead Tracker →</a></div>';
