@@ -251,7 +251,7 @@ td { padding:11px 12px; border-top:1px solid var(--border); vertical-align:middl
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
           <div class="view-toggle">
             <button class="view-btn active" id="view-list-btn" onclick="switchView('list')">☰ List</button>
-            <button class="view-btn" id="view-cal-btn" onclick="switchView('calendar')">📅 Calendar</button>
+            <button class="view-btn" id="view-cal-btn" onclick="switchView('calendar')" style="background:var(--pink);color:#fff;border-color:var(--pink);">📅 Calendar</button>
           </div>
           <button id="export-btn" style="padding:8px 14px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer;">Export CSV</button>
           <button id="backup-btn" style="padding:8px 14px;background:var(--white);color:var(--navy);border:1px solid var(--border);border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer;">Backup</button>
@@ -407,6 +407,15 @@ async function initApp(user) {
   document.getElementById("restore-input").onchange = restore;
   await loadLeads();
   render();
+
+  // Check if URL hash requests calendar view for a specific year
+  // e.g. lead-tracker.html#calendar=2027
+  var hash = window.location.hash;
+  if (hash && hash.startsWith('#calendar')) {
+    var targetYear = hash.includes('=') ? parseInt(hash.split('=')[1]) : null;
+    switchView('calendar');
+    if (targetYear) renderCalendar(targetYear);
+  }
 }
 
 sb.auth.getSession().then(({ data: { session } }) => {
@@ -497,19 +506,23 @@ function setAddMsg(text,ok) {
 function render() { renderStats(); renderFollowups(); renderTable(); renderSources(); }
 
 function renderStats() {
+  const currentYear = new Date().getFullYear();
   const booked  = leads.filter(l=>l.status==="Booked"||l.status==="Deposit Paid");
+  const bookedThisYear = booked.filter(l => {
+    if (!l.wedding) return true; // no date — include
+    return new Date(l.wedding).getFullYear() === currentYear;
+  });
   const active  = leads.filter(l=>l.status!=="Lost");
-  const revenue = booked.reduce((s,l)=>s+Number(l.priceQuoted||0),0);
+  const revenue = bookedThisYear.reduce((s,l)=>s+Number(l.priceQuoted||0),0);
   const received= leads.reduce((s,l)=>s+totalPaid(l),0);
-  // Count ALL pending follow-ups — not just today's
   const due = leads.filter(l=>l.nextFollowUp&&l.status!=="Booked"&&l.status!=="Lost"&&l.status!=="Deposit Paid").length;
   document.getElementById("stats-row").innerHTML = [
-    {label:"Total Leads",          value:leads.length,     cls:""},
-    {label:"Active",               value:active.length,    cls:""},
-    {label:"Booked",               value:booked.length,    cls:"green"},
-    {label:"Follow-ups Due",       value:due,              cls:due>0?"orange":"green"},
-    {label:"Total Projected Income",value:fmtEuro(revenue),cls:"green"},
-    {label:"Total Received",       value:fmtEuro(received),cls:""},
+    {label:"Total Leads",                        value:leads.length,     cls:""},
+    {label:"Active",                             value:active.length,    cls:""},
+    {label:"Booked",                             value:booked.length,    cls:"green"},
+    {label:"Follow-ups Due",                     value:due,              cls:due>0?"orange":"green"},
+    {label:"Projected Income "+currentYear,      value:fmtEuro(revenue), cls:"green"},
+    {label:"Total Received",                     value:fmtEuro(received),cls:""},
   ].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value ${s.cls}">${s.value}</div></div>`).join("");
 }
 
@@ -823,17 +836,20 @@ function switchView(view) {
     listView.style.display = 'none';
     calView.classList.add('show');
     listBtn.classList.remove('active');
+    listBtn.style.cssText = '';
     calBtn.classList.add('active');
+    calBtn.style.cssText = 'background:var(--pink);color:#fff;border-color:var(--pink);';
     renderCalendar();
   } else {
     listView.style.display = 'block';
     calView.classList.remove('show');
     listBtn.classList.add('active');
     calBtn.classList.remove('active');
+    calBtn.style.cssText = 'background:var(--pink);color:#fff;border-color:var(--pink);opacity:.7;';
   }
 }
 
-function renderCalendar() {
+function renderCalendar(targetYear) {
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const todayStr = todayISO();
   const currentYear = new Date().getFullYear();
@@ -916,6 +932,19 @@ function renderCalendar() {
   });
 
   document.getElementById('calendar-content').innerHTML = html;
+
+  // Scroll to target year if specified
+  if (targetYear) {
+    setTimeout(function() {
+      var yearEls = document.querySelectorAll('.cal-year');
+      yearEls.forEach(function(el) {
+        if (el.querySelector('.cal-year-title') &&
+            el.querySelector('.cal-year-title').textContent.trim().startsWith(String(targetYear))) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }, 100);
+  }
 }
 
 function backup(){
