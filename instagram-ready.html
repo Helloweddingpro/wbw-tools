@@ -495,8 +495,8 @@ Without You Even Knowing We Are There!</div>
           <div class="keyword-strip">
             <div class="keyword-strip-label">Where to use your keywords</div>
             <div class="keyword-row" id="kw-post1">
-              <div class="keyword-item">On-screen text: <em style="color:var(--purple);margin-left:4px;" id="kw1-screen">Venue + Location</em></div>
-              <div class="keyword-item">First line of caption: <em style="color:var(--purple);margin-left:4px;" id="kw1-caption">Venue + Location + wedding</em></div>
+              <div class="keyword-item">On-screen text: <em style="color:var(--purple);margin-left:4px;" id="kw1-screen">Wedding at Venue, Location</em></div>
+              <div class="keyword-item">First line of caption: <em style="color:var(--purple);margin-left:4px;" id="kw1-caption">Wedding at Venue, Location</em></div>
               <div class="keyword-item">Hashtags: <em style="color:var(--purple);margin-left:4px;" id="kw1-hash">#Venue #Location #Locationwedding</em></div>
             </div>
             <div class="tag-note">Tag: <strong>the venue's Instagram account</strong></div>
@@ -518,8 +518,8 @@ Without You Even Knowing We Are There!</div>
           <div class="keyword-strip">
             <div class="keyword-strip-label">Where to use your keywords</div>
             <div class="keyword-row">
-              <div class="keyword-item">On-screen text: <em style="color:var(--purple);margin-left:4px;" id="kw2-screen">Venue + Location</em></div>
-              <div class="keyword-item">First line of caption: <em style="color:var(--purple);margin-left:4px;" id="kw2-caption">Venue + Location + wedding</em></div>
+              <div class="keyword-item">On-screen text: <em style="color:var(--purple);margin-left:4px;" id="kw2-screen">Wedding at Venue, Location</em></div>
+              <div class="keyword-item">First line of caption: <em style="color:var(--purple);margin-left:4px;" id="kw2-caption">Wedding at Venue, Location</em></div>
               <div class="keyword-item">Hashtags: <em style="color:var(--purple);margin-left:4px;" id="kw2-hash">#Venue #Location #Locationwedding</em></div>
             </div>
             <div class="tag-note">Tag: <strong>the supplier you're featuring</strong> — they will reshare it to their audience. If featuring the venue, tag the venue account instead.</div>
@@ -541,8 +541,8 @@ Without You Even Knowing We Are There!</div>
           <div class="keyword-strip">
             <div class="keyword-strip-label">Where to use your keywords</div>
             <div class="keyword-row">
-              <div class="keyword-item">On-screen text: <em style="color:var(--purple);margin-left:4px;" id="kw3-screen">Venue + Location</em></div>
-              <div class="keyword-item">First line of caption: <em style="color:var(--purple);margin-left:4px;" id="kw3-caption">Venue + Location + wedding</em></div>
+              <div class="keyword-item">On-screen text: <em style="color:var(--purple);margin-left:4px;" id="kw3-screen">Wedding at Venue, Location</em></div>
+              <div class="keyword-item">First line of caption: <em style="color:var(--purple);margin-left:4px;" id="kw3-caption">Wedding at Venue, Location</em></div>
               <div class="keyword-item">Hashtags: <em style="color:var(--purple);margin-left:4px;" id="kw3-hash">#Venue #Location #Locationwedding</em></div>
             </div>
             <div class="tag-note">Tag: <strong>the couple</strong> if they are happy to be tagged</div>
@@ -820,8 +820,8 @@ function updatePostCards() {
   const vSlug     = venue.replace(/\s+/g,'') || 'VenueName';
   const lSlug     = loc.replace(/\s+/g,'')   || 'Location';
 
-  const screenKw  = `${vDisplay} | ${lDisplay}`;
-  const captionKw = `${vDisplay}, ${lDisplay} wedding`;
+  const screenKw  = `Wedding at ${vDisplay}, ${lDisplay}`;
+  const captionKw = `Wedding at ${vDisplay}, ${lDisplay}`;
   const hashKw    = `#${vSlug} #${lSlug} #${lSlug}wedding`;
 
   ['kw1','kw2','kw3'].forEach(prefix => {
