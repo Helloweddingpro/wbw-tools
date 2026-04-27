@@ -17,24 +17,22 @@
 }
 body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
 
-/* AUTH */
 #auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
 .auth-card { background:var(--white); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; box-shadow:0 8px 40px rgba(59,60,109,.1); }
 .auth-logo { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:var(--navy); margin-bottom:4px; }
 .auth-tagline { font-size:12px; font-weight:600; color:var(--muted); margin-bottom:28px; }
 .auth-tabs { display:flex; gap:6px; background:var(--cream); border-radius:14px; padding:5px; margin-bottom:22px; }
-.auth-tab { flex:1; padding:9px; border-radius:10px; border:none; background:transparent; color:var(--muted); font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+.auth-tab { flex:1; padding:9px; border-radius:10px; border:none; background:transparent; color:var(--muted); font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; cursor:pointer; }
 .auth-tab.active { background:var(--white); color:var(--navy); box-shadow:0 2px 8px rgba(59,60,109,.1); }
 .auth-field { margin-bottom:14px; }
 .auth-field label { display:block; font-size:11px; font-weight:800; color:var(--navy); margin-bottom:6px; text-transform:uppercase; letter-spacing:.06em; }
-.auth-field input { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; color:var(--text); background:var(--white); transition:border-color .2s; }
+.auth-field input { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:600; color:var(--text); background:var(--white); }
 .auth-field input:focus { outline:none; border-color:var(--gold); }
-.auth-submit { width:100%; padding:14px; background:var(--navy); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; margin-top:6px; transition:opacity .2s; }
+.auth-submit { width:100%; padding:14px; background:var(--navy); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; margin-top:6px; }
 .auth-submit:hover { opacity:.88; }
 .auth-msg { font-size:12px; font-weight:600; margin-top:10px; min-height:18px; }
 .auth-msg.error { color:var(--red); } .auth-msg.success { color:var(--green); }
 
-/* APP */
 #app-screen { display:none; }
 .topnav { background:var(--white); border-bottom:1px solid var(--border); padding:0 32px; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
 .nav-logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:700; color:var(--navy); }
@@ -54,20 +52,18 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
 .hero-title em { color:var(--gold); font-style:italic; }
 .hero-sub { font-size:14px; font-weight:600; color:var(--muted); line-height:1.6; max-width:600px; }
 
-/* CARDS */
 .card { background:var(--white); border-radius:20px; padding:28px; margin-bottom:20px; box-shadow:0 2px 16px rgba(59,60,109,.06); }
-.card.quote-card { background:linear-gradient(135deg, var(--white) 0%, #FFF9E6 100%); border:1.5px solid var(--gold-mid); }
-.card-title { font-size:13px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:var(--navy); margin-bottom:6px; display:flex; align-items:center; gap:10px; }
-.card-title .icon { font-size:18px; }
-.card-sub { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:22px; line-height:1.5; }
+.card.foundation-card { border-top:4px solid var(--gold); }
+.card.quote-card { border-top:4px solid var(--pink); }
+.card-title { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:700; color:var(--navy); margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+.card-title .icon { font-size:22px; }
+.card-intro { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:22px; line-height:1.6; }
 
-/* CURRENCY BAR */
 .currency-bar { background:var(--white); border-radius:14px; padding:14px 20px; margin-bottom:20px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 12px rgba(59,60,109,.06); flex-wrap:wrap; }
 .currency-bar label { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--navy); white-space:nowrap; }
 .currency-bar select { padding:8px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:var(--text); background:var(--white); cursor:pointer; }
 .currency-bar select:focus { outline:none; border-color:var(--gold); }
 
-/* FORMS */
 .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .form-grid.three { grid-template-columns:1fr 1fr 1fr; }
 .form-group { display:flex; flex-direction:column; gap:6px; }
@@ -80,27 +76,54 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
 .input-wrap input { width:100%; }
 .input-wrap.has-pre input { padding-left:26px; }
 .input-wrap.has-suf input { padding-right:52px; }
-input[type=number], input[type=text], input[type=date], select { padding:11px 13px; border:1.5px solid var(--border); border-radius:12px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:700; color:var(--text); background:var(--white); width:100%; transition:border-color .2s; }
+input[type=number], input[type=text], input[type=date], select { padding:11px 13px; border:1.5px solid var(--border); border-radius:12px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:700; color:var(--text); background:var(--white); width:100%; }
 input:focus, select:focus { outline:none; border-color:var(--gold); }
 
 .section-divider { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; color:var(--navy); padding-bottom:10px; border-bottom:1px solid var(--border); margin-bottom:14px; margin-top:22px; }
 .section-divider:first-child { margin-top:0; }
 
-/* HOURS ROW WITH RATE TOGGLE */
-.hours-row { display:grid; grid-template-columns:1fr 110px 130px; gap:10px; align-items:end; margin-bottom:10px; }
-.hours-row .form-group { gap:6px; }
+.hours-row { display:grid; grid-template-columns:1fr 200px 130px; gap:10px; align-items:end; margin-bottom:10px; }
 .rate-toggle { display:flex; gap:0; border:1.5px solid var(--border); border-radius:12px; overflow:hidden; height:42px; }
-.rate-toggle button { flex:1; border:none; background:var(--white); color:var(--muted); font-family:'Montserrat',sans-serif; font-size:11px; font-weight:800; cursor:pointer; transition:all .2s; padding:0 4px; }
+.rate-toggle button { flex:1; border:none; background:var(--white); color:var(--muted); font-family:'Montserrat',sans-serif; font-size:11px; font-weight:800; cursor:pointer; padding:0 4px; }
 .rate-toggle button.active { background:var(--gold); color:var(--white); }
 .rate-toggle button:hover:not(.active) { background:var(--cream); }
+.subtotal-cell { padding:11px 13px; background:var(--cream); border-radius:12px; font-size:14px; font-weight:800; color:var(--navy); text-align:right; height:42px; display:flex; align-items:center; justify-content:flex-end; }
 
-/* TRAVEL TOGGLE */
-.travel-toggle { display:flex; gap:8px; margin-bottom:12px; }
-.travel-toggle button { flex:1; padding:10px; border-radius:11px; border:1.5px solid var(--border); background:var(--white); color:var(--muted); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer; transition:all .2s; }
+.travel-toggle { display:flex; gap:8px; margin-bottom:10px; }
+.travel-toggle button { flex:1; padding:10px; border-radius:11px; border:1.5px solid var(--border); background:var(--white); color:var(--muted); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer; }
 .travel-toggle button.active { background:var(--navy); color:var(--white); border-color:var(--navy); }
-.travel-distance-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.fuel-distance-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 
-/* QUOTE TOTAL */
+.dynamic-insight { background:linear-gradient(135deg, var(--gold-light), rgba(255,184,0,.18)); border:1.5px solid var(--gold-mid); border-radius:14px; padding:16px 20px; margin-bottom:18px; font-size:13px; font-weight:700; color:var(--navy); line-height:1.6; display:none; }
+.dynamic-insight.show { display:block; }
+.dynamic-insight strong { color:var(--gold); font-size:15px; }
+
+.foundation-result { background:linear-gradient(135deg, var(--navy) 0%, #5B5C9D 100%); border-radius:18px; padding:24px; margin-top:18px; display:none; }
+.foundation-result.show { display:block; }
+.fr-headline { text-align:center; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.15); margin-bottom:18px; }
+.fr-headline-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.6); margin-bottom:8px; }
+.fr-headline-value { font-family:'Cormorant Garamond',serif; font-size:54px; font-weight:700; color:#FFD34E; line-height:1; }
+.fr-headline-sub { font-size:12px; font-weight:700; color:rgba(255,255,255,.6); margin-top:6px; }
+.rates-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.rate-card { background:rgba(255,255,255,.1); border-radius:12px; padding:14px 16px; }
+.rate-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.6); margin-bottom:4px; }
+.rate-value { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:700; color:#fff; line-height:1; }
+.rate-note { font-size:11px; font-weight:600; color:rgba(255,255,255,.6); margin-top:4px; line-height:1.5; }
+.gap-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.gap-card { border-radius:12px; padding:14px 16px; }
+.gap-card.now { background:rgba(230,57,70,.2); border:1px solid rgba(230,57,70,.3); }
+.gap-card.needed { background:rgba(255,184,0,.15); border:1px solid rgba(255,184,0,.3); }
+.gap-label { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px; }
+.gap-card.now .gap-label { color:rgba(255,150,150,.9); }
+.gap-card.needed .gap-label { color:rgba(255,200,80,.9); }
+.gap-value { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:#fff; line-height:1; margin-bottom:4px; }
+.gap-note { font-size:11px; font-weight:600; color:rgba(255,255,255,.55); }
+.insight-banner { border-radius:12px; padding:14px 16px; }
+.insight-banner.warn { background:rgba(230,57,70,.2); border:1px solid rgba(230,57,70,.3); }
+.insight-banner.ok { background:rgba(0,168,120,.2); border:1px solid rgba(0,168,120,.3); }
+.insight-banner p { font-size:13px; font-weight:700; color:#fff; line-height:1.6; }
+.insight-banner strong { color:#FFD34E; }
+
 .quote-total-block { background:linear-gradient(135deg, var(--navy) 0%, #5B5C9D 100%); border-radius:18px; padding:24px 26px; margin-top:20px; }
 .quote-total-label { font-size:11px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.6); margin-bottom:6px; }
 .quote-total-value { font-family:'Cormorant Garamond',serif; font-size:54px; font-weight:700; color:#FFD34E; line-height:1; }
@@ -110,9 +133,8 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
 .quote-bd-row span { font-size:12px; font-weight:600; color:rgba(255,255,255,.7); }
 .quote-bd-row strong { font-size:12px; font-weight:800; color:rgba(255,255,255,.92); }
 
-/* QUOTE ACTIONS */
 .quote-actions { display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; }
-.quote-actions button { padding:13px 18px; border-radius:13px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; border:none; transition:opacity .2s; }
+.quote-actions button { padding:13px 18px; border-radius:13px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; border:none; }
 .qa-save { background:var(--gold); color:var(--navy); flex:1; min-width:140px; }
 .qa-send { background:var(--pink); color:var(--white); flex:1; min-width:170px; }
 .qa-clear { background:transparent; color:var(--muted); border:1.5px solid var(--border) !important; }
@@ -121,7 +143,6 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
 .quote-msg.ok { color:var(--green); }
 .quote-msg.err { color:var(--red); }
 
-/* SAVED QUOTES LIST */
 .saved-quotes-section { margin-bottom:18px; }
 .saved-quotes-toggle { background:var(--cream); border:1.5px solid var(--border); border-radius:13px; padding:12px 18px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; color:var(--navy); width:100%; }
 .saved-quotes-toggle:hover { background:var(--gold-light); border-color:var(--gold-mid); }
@@ -140,36 +161,8 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
 .sqi-actions button:hover { opacity:.85; }
 .sqi-linked { display:inline-block; background:var(--green-light); color:var(--green); padding:1px 7px; border-radius:6px; font-size:9px; font-weight:900; letter-spacing:.05em; text-transform:uppercase; margin-left:6px; }
 
-/* GAP ANALYSIS RESULT */
-.result-strip { background:linear-gradient(135deg, var(--navy) 0%, #5B5C9D 100%); border-radius:20px; padding:28px; margin-bottom:20px; display:none; }
-.result-strip.show { display:block; }
-.result-headline { text-align:center; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.15); }
-.result-headline .rl { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.6); margin-bottom:8px; }
-.result-headline .rv { font-family:'Cormorant Garamond',serif; font-size:54px; font-weight:700; color:#FFD34E; line-height:1; }
-.result-headline .rsub { font-size:13px; font-weight:700; color:rgba(255,255,255,.6); margin-top:6px; }
-.gap-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
-.gap-card { border-radius:14px; padding:16px; }
-.gap-card.now { background:rgba(230,57,70,.2); border:1px solid rgba(230,57,70,.3); }
-.gap-card.needed { background:rgba(255,184,0,.15); border:1px solid rgba(255,184,0,.3); }
-.gap-label { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px; }
-.gap-card.now .gap-label { color:rgba(255,150,150,.9); }
-.gap-card.needed .gap-label { color:rgba(255,200,80,.9); }
-.gap-value { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:700; color:#fff; line-height:1; margin-bottom:4px; }
-.gap-note { font-size:11px; font-weight:700; color:rgba(255,255,255,.55); }
-.insight-banner { border-radius:14px; padding:16px 18px; margin-bottom:18px; }
-.insight-banner.gap { background:rgba(230,57,70,.2); border:1px solid rgba(230,57,70,.3); }
-.insight-banner.ok  { background:rgba(0,168,120,.2); border:1px solid rgba(0,168,120,.3); }
-.insight-banner p { font-size:13px; font-weight:700; color:#fff; line-height:1.6; }
-.insight-banner strong { color:#FFD34E; }
-.foundation-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-.foundation-stat { background:rgba(255,255,255,.1); border-radius:12px; padding:14px; text-align:center; }
-.foundation-stat .fs-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.6); margin-bottom:6px; }
-.foundation-stat .fs-value { font-size:18px; font-weight:900; color:#fff; }
-
-/* GUIDANCE */
 .guidance-note { background:var(--surface); border:1px dashed var(--border); border-radius:14px; padding:14px 18px; margin-bottom:20px; font-size:12px; font-weight:600; color:var(--muted); line-height:1.7; }
 
-/* MODAL */
 .overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; padding:20px; z-index:9999; }
 .modal { background:var(--white); border-radius:20px; padding:28px; width:min(480px,100%); max-height:90vh; overflow-y:auto; box-shadow:0 24px 60px rgba(0,0,0,.2); }
 .modal-title { font-size:17px; font-weight:900; color:var(--navy); margin-bottom:14px; }
@@ -184,19 +177,17 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
 @media(max-width:720px){
   .topnav { padding:0 16px; }
   .main { padding:24px 16px 60px; }
-  .form-grid, .form-grid.three, .travel-distance-row { grid-template-columns:1fr; }
-  .gap-grid { grid-template-columns:1fr; }
-  .foundation-stats { grid-template-columns:1fr 1fr; }
+  .form-grid, .form-grid.three, .fuel-distance-row { grid-template-columns:1fr; }
+  .gap-grid, .rates-grid { grid-template-columns:1fr; }
   .quote-breakdown { grid-template-columns:1fr; }
   .hero-title { font-size:30px; }
   .hours-row { grid-template-columns:1fr; }
-  .quote-total-value, .result-headline .rv { font-size:42px; }
+  .quote-total-value, .fr-headline-value { font-size:42px; }
 }
 </style>
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">Price for Profit</div>
@@ -220,7 +211,6 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
   </div>
 </div>
 
-<!-- APP SCREEN -->
 <div id="app-screen">
   <nav class="topnav">
     <div class="nav-logo">Price for Profit <span>✦</span></div>
@@ -234,14 +224,12 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
 
   <div class="main">
 
-    <!-- HERO -->
     <div class="hero">
       <div class="hero-eyebrow">Know Your Numbers</div>
-      <h1 class="hero-title">Quote in minutes.<br>Charge what you're <em>worth.</em></h1>
-      <p class="hero-sub">Build a price for any wedding in seconds — using rates that come from your real costs and income goals. Your quotes save automatically and feed straight into your Lead Tracker.</p>
+      <h1 class="hero-title">Charge what you're <em>worth.</em><br>Quote in minutes.</h1>
+      <p class="hero-sub">Set your foundation once — your real costs and goals — and the tool calculates your minimum package price and hourly rates. Then quote any wedding in seconds, right into your Lead Tracker.</p>
     </div>
 
-    <!-- CURRENCY -->
     <div class="currency-bar">
       <label>Currency</label>
       <select id="currency">
@@ -254,179 +242,13 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
       <span style="font-size:12px;font-weight:600;color:var(--muted);">Updates everything live as you type</span>
     </div>
 
-    <!-- ─────────────────────────── QUICK QUOTE ─────────────────────────── -->
-    <div class="card quote-card">
-      <div class="card-title"><span class="icon">⚡</span> Quick Quote</div>
-      <div class="card-sub">Got an enquiry? Build a price in 30 seconds — using your saved hourly rates.</div>
+    <!-- SECTION 1: MINIMUM PACKAGE PRICE -->
+    <div class="card foundation-card">
+      <div class="card-title"><span class="icon">🎯</span> Your Minimum Package Price</div>
+      <p class="card-intro">Your minimum package price is what one wedding needs to bring in to cover your costs and hit your income goal. We calculate it from your real numbers — your annual goal, your business expenses, and the hours you put into a typical wedding.</p>
 
-      <!-- SAVED QUOTES -->
-      <div class="saved-quotes-section">
-        <button class="saved-quotes-toggle" id="saved-quotes-toggle">
-          <span>📂 Saved Quotes <span class="saved-quotes-count" id="saved-quotes-count">0</span></span>
-          <span id="saved-quotes-arrow">▾</span>
-        </button>
-        <div class="saved-quotes-list" id="saved-quotes-list"></div>
-      </div>
+      <div class="dynamic-insight" id="dynamic-insight"></div>
 
-      <!-- COUPLE DETAILS -->
-      <div class="section-divider">Who's the quote for?</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Couple's Name</label>
-          <input type="text" id="q-name" placeholder="e.g. Sarah & Ben">
-        </div>
-        <div class="form-group">
-          <label>Wedding Date</label>
-          <input type="date" id="q-wedding-date">
-        </div>
-      </div>
-
-      <!-- HOURS -->
-      <div class="section-divider">Hours for this wedding</div>
-      <div id="hours-no-rate-warning" style="background:var(--red-light);border:1px solid rgba(230,57,70,.25);border-radius:11px;padding:11px 14px;margin-bottom:12px;font-size:12px;font-weight:700;color:var(--red);display:none;line-height:1.5;">
-        ⚠️ Set your hourly rates in <strong>Your Pricing Foundation</strong> below first — Quick Quote needs them to calculate.
-      </div>
-
-      <div class="hours-row">
-        <div class="form-group">
-          <label>Pre-wedding prep</label>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="q-pre-hours" placeholder="0" min="0" step="0.5"></div>
-        </div>
-        <div class="form-group">
-          <label>Rate</label>
-          <div class="rate-toggle" data-rate-for="q-pre-rate">
-            <button type="button" data-rate="full" class="active">Full</button>
-            <button type="button" data-rate="reduced">Reduced</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Subtotal</label>
-          <div style="padding:11px 13px;background:var(--cream);border-radius:12px;font-size:14px;font-weight:800;color:var(--navy);text-align:right;" id="q-pre-subtotal">—</div>
-        </div>
-      </div>
-
-      <div class="hours-row">
-        <div class="form-group">
-          <label>Wedding day</label>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="q-day-hours" placeholder="0" min="0" step="0.5"></div>
-        </div>
-        <div class="form-group">
-          <label>Rate</label>
-          <div class="rate-toggle" data-rate-for="q-day-rate">
-            <button type="button" data-rate="full" class="active">Full</button>
-            <button type="button" data-rate="reduced">Reduced</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Subtotal</label>
-          <div style="padding:11px 13px;background:var(--cream);border-radius:12px;font-size:14px;font-weight:800;color:var(--navy);text-align:right;" id="q-day-subtotal">—</div>
-        </div>
-      </div>
-
-      <div class="hours-row">
-        <div class="form-group">
-          <label>Post-wedding prep</label>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="q-post-hours" placeholder="0" min="0" step="0.5"></div>
-        </div>
-        <div class="form-group">
-          <label>Rate</label>
-          <div class="rate-toggle" data-rate-for="q-post-rate">
-            <button type="button" data-rate="full" class="active">Full</button>
-            <button type="button" data-rate="reduced">Reduced</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Subtotal</label>
-          <div style="padding:11px 13px;background:var(--cream);border-radius:12px;font-size:14px;font-weight:800;color:var(--navy);text-align:right;" id="q-post-subtotal">—</div>
-        </div>
-      </div>
-
-      <div class="hours-row">
-        <div class="form-group">
-          <label>Admin time</label>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="q-admin-hours" placeholder="0" min="0" step="0.5"></div>
-        </div>
-        <div class="form-group">
-          <label>Rate</label>
-          <div class="rate-toggle" data-rate-for="q-admin-rate">
-            <button type="button" data-rate="full">Full</button>
-            <button type="button" data-rate="reduced" class="active">Reduced</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Subtotal</label>
-          <div style="padding:11px 13px;background:var(--cream);border-radius:12px;font-size:14px;font-weight:800;color:var(--navy);text-align:right;" id="q-admin-subtotal">—</div>
-        </div>
-      </div>
-
-      <!-- TRAVEL -->
-      <div class="section-divider">Travel</div>
-      <div class="travel-toggle">
-        <button type="button" id="travel-set" class="active">Set price</button>
-        <button type="button" id="travel-distance">Distance × per-km</button>
-      </div>
-      <div id="travel-set-row">
-        <div class="form-group">
-          <label>Travel cost</label>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-travel-set">€</span><input type="number" id="q-travel-set" placeholder="0" min="0"></div>
-        </div>
-      </div>
-      <div id="travel-distance-row" style="display:none;">
-        <div class="travel-distance-row">
-          <div class="form-group">
-            <label>Distance</label>
-            <div class="input-wrap has-suf"><span class="suf">km</span><input type="number" id="q-travel-km" placeholder="0" min="0"></div>
-          </div>
-          <div class="form-group">
-            <label>Rate per km</label>
-            <div class="input-wrap has-pre"><span class="pre" id="sym-travel-rate">€</span><input type="number" id="q-travel-rate" placeholder="0.50" min="0" step="0.01"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- EXTRAS -->
-      <div class="section-divider">Extras</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Extra materials</label>
-          <div class="hint">Flowers, props, supplies — anything used up for this wedding.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-materials">€</span><input type="number" id="q-materials" placeholder="0" min="0"></div>
-        </div>
-        <div class="form-group">
-          <label>Assistant cost</label>
-          <div class="hint">Second shooter, helper, runner.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-assistant">€</span><input type="number" id="q-assistant" placeholder="0" min="0"></div>
-        </div>
-        <div class="form-group full">
-          <label>Other costs</label>
-          <div class="hint">Childcare, accommodation, parking, anything else specific to this wedding.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-other-q">€</span><input type="number" id="q-other-costs" placeholder="0" min="0"></div>
-        </div>
-      </div>
-
-      <!-- TOTAL -->
-      <div class="quote-total-block">
-        <div class="quote-total-label">Quote Total</div>
-        <div class="quote-total-value" id="q-total">€0</div>
-        <div class="quote-total-sub" id="q-total-sub">Add hours and extras above to build your quote</div>
-        <div class="quote-breakdown" id="q-breakdown" style="display:none;"></div>
-      </div>
-
-      <!-- ACTIONS -->
-      <div class="quote-actions">
-        <button class="qa-save" id="q-save-btn">💾 Save Quote</button>
-        <button class="qa-send" id="q-send-btn">📤 Save + Send to Lead Tracker</button>
-        <button class="qa-clear" id="q-clear-btn">Clear</button>
-      </div>
-      <div class="quote-msg" id="q-msg"></div>
-    </div>
-
-    <!-- ─────────────────────────── PRICING FOUNDATION ─────────────────────────── -->
-    <div class="card">
-      <div class="card-title"><span class="icon">🎯</span> Your Pricing Foundation</div>
-      <div class="card-sub">Set this once. Quick Quote uses these numbers every time you build a quote.</div>
-
-      <!-- GOALS -->
       <div class="section-divider">Your goals</div>
       <div class="form-grid">
         <div class="form-group">
@@ -441,7 +263,6 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
         </div>
       </div>
 
-      <!-- COSTS -->
       <div class="section-divider">Your costs</div>
       <div class="form-group" style="margin-bottom:14px;">
         <label>Annual expenses</label>
@@ -450,99 +271,302 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
       </div>
       <div class="form-group" style="margin-bottom:14px;">
         <label>Monthly expenses</label>
-        <div class="hint">Recurring costs — web hosting, subscriptions, phone bill. (We'll multiply by 12.)</div>
+        <div class="hint">Recurring costs — web hosting, software, phone bill. (We'll multiply by 12.)</div>
         <div class="input-wrap has-pre"><span class="pre" id="sym-monthly">€</span><input type="number" id="monthlyExpenses" placeholder="0"></div>
       </div>
       <div class="form-group">
-        <label>Per-wedding extras</label>
-        <div class="hint">Average cost per wedding — marketing share, fuel, materials.</div>
+        <label>Extras</label>
+        <div class="hint">Per-wedding extras — marketing, fuel, materials.</div>
         <div class="input-wrap has-pre"><span class="pre" id="sym-extra">€</span><input type="number" id="extraExpenses" placeholder="0"></div>
       </div>
 
-      <!-- HOURS -->
       <div class="section-divider">Your typical hours per wedding</div>
-      <p style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:14px;line-height:1.6;">For an average wedding — Quick Quote uses different numbers per wedding, but this sets your baseline rate.</p>
-      <div class="form-grid three">
+      <p style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:14px;line-height:1.6;">For an average wedding. Set each block of hours to <strong>Full rate</strong> (creative work) or <strong>Half rate</strong> (admin or simpler tasks).</p>
+
+      <div class="hours-row">
         <div class="form-group">
           <label>Pre-wedding prep</label>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="prepHours" placeholder="0"></div>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="f-prepHours" placeholder="0" min="0" step="0.5"></div>
         </div>
+        <div class="form-group">
+          <label>Rate</label>
+          <div class="rate-toggle" data-rate-key="f-prep">
+            <button type="button" data-rate="full" class="active">Full rate</button>
+            <button type="button" data-rate="half">Half rate</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subtotal</label>
+          <div class="subtotal-cell" id="f-prep-subtotal">—</div>
+        </div>
+      </div>
+
+      <div class="hours-row">
         <div class="form-group">
           <label>Wedding day</label>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="dayHours" placeholder="0"></div>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="f-dayHours" placeholder="0" min="0" step="0.5"></div>
         </div>
+        <div class="form-group">
+          <label>Rate</label>
+          <div class="rate-toggle" data-rate-key="f-day">
+            <button type="button" data-rate="full" class="active">Full rate</button>
+            <button type="button" data-rate="half">Half rate</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subtotal</label>
+          <div class="subtotal-cell" id="f-day-subtotal">—</div>
+        </div>
+      </div>
+
+      <div class="hours-row">
         <div class="form-group">
           <label>Post + admin</label>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="postHours" placeholder="0"></div>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="f-postHours" placeholder="0" min="0" step="0.5"></div>
+        </div>
+        <div class="form-group">
+          <label>Rate</label>
+          <div class="rate-toggle" data-rate-key="f-post">
+            <button type="button" data-rate="full">Full rate</button>
+            <button type="button" data-rate="half" class="active">Half rate</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subtotal</label>
+          <div class="subtotal-cell" id="f-post-subtotal">—</div>
         </div>
       </div>
 
-      <!-- RATES -->
-      <div class="section-divider">Your rates</div>
+      <div class="section-divider">For comparison</div>
+      <div class="form-group">
+        <label>What you currently charge per wedding</label>
+        <div class="hint">Your typical package price right now — for the gap analysis.</div>
+        <div class="input-wrap has-pre"><span class="pre" id="sym-current">€</span><input type="number" id="currentPrice" placeholder="e.g. 1200"></div>
+      </div>
+
+      <div class="foundation-result" id="foundation-result">
+        <div class="fr-headline">
+          <div class="fr-headline-label">Your minimum package price</div>
+          <div class="fr-headline-value" id="res-min-price">€0</div>
+          <div class="fr-headline-sub" id="res-min-sub">Based on your costs, hours and income goal</div>
+        </div>
+        <div class="rates-grid">
+          <div class="rate-card">
+            <div class="rate-label">Full hourly rate</div>
+            <div class="rate-value" id="res-full-rate">€0/hr</div>
+            <div class="rate-note">For wedding day work and creative tasks</div>
+          </div>
+          <div class="rate-card">
+            <div class="rate-label">Half hourly rate</div>
+            <div class="rate-value" id="res-half-rate">€0/hr</div>
+            <div class="rate-note">Use this for admin or simpler work</div>
+          </div>
+        </div>
+        <div class="gap-grid">
+          <div class="gap-card now">
+            <div class="gap-label">You currently charge</div>
+            <div class="gap-value" id="res-current-price">€0</div>
+            <div class="gap-note" id="res-current-hourly">— per hour</div>
+          </div>
+          <div class="gap-card needed">
+            <div class="gap-label">You should be charging</div>
+            <div class="gap-value" id="res-needed-price">€0</div>
+            <div class="gap-note" id="res-needed-hourly">— per hour</div>
+          </div>
+        </div>
+        <div class="insight-banner" id="insight-banner">
+          <p id="insight-text"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: QUOTE FOR A BESPOKE WEDDING -->
+    <div class="card quote-card">
+      <div class="card-title"><span class="icon">⚡</span> Quote for a Bespoke Wedding</div>
+      <p class="card-intro">Not every couple wants your standard package. Some weddings need more hours, some need travel and accommodation, some need extras. Build a custom quote here — using the rates from your minimum package price above.</p>
+
+      <div class="saved-quotes-section">
+        <button class="saved-quotes-toggle" id="saved-quotes-toggle">
+          <span>📂 Saved Quotes <span class="saved-quotes-count" id="saved-quotes-count">0</span></span>
+          <span id="saved-quotes-arrow">▾</span>
+        </button>
+        <div class="saved-quotes-list" id="saved-quotes-list"></div>
+      </div>
+
+      <div class="section-divider">Who's the quote for?</div>
       <div class="form-grid">
         <div class="form-group">
-          <label>Reduced rate</label>
-          <div class="hint">Your call — what you'd charge for admin or simpler work. The Full rate is calculated from your numbers above.</div>
-          <div class="input-wrap has-pre has-suf"><span class="pre" id="sym-reduced">€</span><span class="suf">/hr</span><input type="number" id="reducedRate" placeholder="0"></div>
+          <label>Couple's Name</label>
+          <input type="text" id="q-name" placeholder="e.g. Sarah & Ben">
         </div>
         <div class="form-group">
-          <label>What you currently charge per wedding</label>
-          <div class="hint">Your typical package price right now — for the gap analysis below.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-current">€</span><input type="number" id="currentPrice" placeholder="e.g. 1200"></div>
+          <label>Wedding Date</label>
+          <input type="date" id="q-wedding-date">
         </div>
       </div>
+
+      <div class="section-divider">Hours for this wedding</div>
+      <div id="hours-no-rate-warning" style="background:var(--red-light);border:1px solid rgba(230,57,70,.25);border-radius:11px;padding:11px 14px;margin-bottom:12px;font-size:12px;font-weight:700;color:var(--red);display:none;line-height:1.5;">
+        ⚠️ Set up your <strong>Minimum Package Price</strong> above first — the quote needs your hourly rate.
+      </div>
+
+      <div class="hours-row">
+        <div class="form-group">
+          <label>Pre-wedding prep</label>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="q-pre-hours" placeholder="0" min="0" step="0.5"></div>
+        </div>
+        <div class="form-group">
+          <label>Rate</label>
+          <div class="rate-toggle" data-rate-key="q-pre">
+            <button type="button" data-rate="full" class="active">Full rate</button>
+            <button type="button" data-rate="half">Half rate</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subtotal</label>
+          <div class="subtotal-cell" id="q-pre-subtotal">—</div>
+        </div>
+      </div>
+
+      <div class="hours-row">
+        <div class="form-group">
+          <label>Wedding day</label>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="q-day-hours" placeholder="0" min="0" step="0.5"></div>
+        </div>
+        <div class="form-group">
+          <label>Rate</label>
+          <div class="rate-toggle" data-rate-key="q-day">
+            <button type="button" data-rate="full" class="active">Full rate</button>
+            <button type="button" data-rate="half">Half rate</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subtotal</label>
+          <div class="subtotal-cell" id="q-day-subtotal">—</div>
+        </div>
+      </div>
+
+      <div class="hours-row">
+        <div class="form-group">
+          <label>Post-wedding prep</label>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="q-post-hours" placeholder="0" min="0" step="0.5"></div>
+        </div>
+        <div class="form-group">
+          <label>Rate</label>
+          <div class="rate-toggle" data-rate-key="q-post">
+            <button type="button" data-rate="full" class="active">Full rate</button>
+            <button type="button" data-rate="half">Half rate</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subtotal</label>
+          <div class="subtotal-cell" id="q-post-subtotal">—</div>
+        </div>
+      </div>
+
+      <div class="hours-row">
+        <div class="form-group">
+          <label>Admin time</label>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="q-admin-hours" placeholder="0" min="0" step="0.5"></div>
+        </div>
+        <div class="form-group">
+          <label>Rate</label>
+          <div class="rate-toggle" data-rate-key="q-admin">
+            <button type="button" data-rate="full">Full rate</button>
+            <button type="button" data-rate="half" class="active">Half rate</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subtotal</label>
+          <div class="subtotal-cell" id="q-admin-subtotal">—</div>
+        </div>
+      </div>
+
+      <div class="section-divider">Average travel costs</div>
+
+      <div class="form-group" style="margin-bottom:14px;">
+        <label>Fuel</label>
+        <div class="travel-toggle">
+          <button type="button" id="fuel-set" class="active">Set price</button>
+          <button type="button" id="fuel-distance">Distance × per-km</button>
+        </div>
+        <div id="fuel-set-row">
+          <div class="input-wrap has-pre"><span class="pre" id="sym-fuel-set">€</span><input type="number" id="q-fuel-set" placeholder="0" min="0"></div>
+        </div>
+        <div id="fuel-distance-row" style="display:none;">
+          <div class="fuel-distance-row">
+            <div class="form-group">
+              <label style="font-size:10px;">Distance</label>
+              <div class="input-wrap has-suf"><span class="suf">km</span><input type="number" id="q-fuel-km" placeholder="0" min="0"></div>
+            </div>
+            <div class="form-group">
+              <label style="font-size:10px;">Rate per km</label>
+              <div class="input-wrap has-pre"><span class="pre" id="sym-fuel-rate">€</span><input type="number" id="q-fuel-rate" placeholder="0.50" min="0" step="0.01"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Transport or flights</label>
+          <div class="hint">Train, taxi, flights — whatever else gets you there.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-transport">€</span><input type="number" id="q-transport" placeholder="0" min="0"></div>
+        </div>
+        <div class="form-group">
+          <label>Accommodation</label>
+          <div class="hint">Hotel or other overnight costs.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-accomm">€</span><input type="number" id="q-accommodation" placeholder="0" min="0"></div>
+        </div>
+        <div class="form-group full">
+          <label>Travel extras</label>
+          <div class="hint">Hire car, parking, tolls.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-travel-extras">€</span><input type="number" id="q-travel-extras" placeholder="0" min="0"></div>
+        </div>
+      </div>
+
+      <div class="section-divider">Other extras</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Materials</label>
+          <div class="hint">Flowers, props, supplies — anything used up for this wedding.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-materials">€</span><input type="number" id="q-materials" placeholder="0" min="0"></div>
+        </div>
+        <div class="form-group">
+          <label>Assistant</label>
+          <div class="hint">Second shooter, helper, runner.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-assistant">€</span><input type="number" id="q-assistant" placeholder="0" min="0"></div>
+        </div>
+        <div class="form-group full">
+          <label>Other costs</label>
+          <div class="hint">Childcare, anything else specific to this wedding.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-other-q">€</span><input type="number" id="q-other-costs" placeholder="0" min="0"></div>
+        </div>
+      </div>
+
+      <div class="quote-total-block">
+        <div class="quote-total-label">Quote Total</div>
+        <div class="quote-total-value" id="q-total">€0</div>
+        <div class="quote-total-sub" id="q-total-sub">Add hours and extras above to build your quote</div>
+        <div class="quote-breakdown" id="q-breakdown" style="display:none;"></div>
+      </div>
+
+      <div class="quote-actions">
+        <button class="qa-save" id="q-save-btn">💾 Save Quote</button>
+        <button class="qa-send" id="q-send-btn">📤 Save + Send to Lead Tracker</button>
+        <button class="qa-clear" id="q-clear-btn">Clear</button>
+      </div>
+      <div class="quote-msg" id="q-msg"></div>
     </div>
 
-    <!-- GUIDANCE -->
     <div class="guidance-note">
       📊 <strong style="color:var(--navy);">These calculations are for guidance only.</strong> They don't account for tax, VAT, or personal financial circumstances. Speak to your accountant for advice specific to your business.
-    </div>
-
-    <!-- GAP ANALYSIS RESULT -->
-    <div class="result-strip" id="result-strip">
-      <div class="result-headline">
-        <div class="rl">What you need to charge per wedding</div>
-        <div class="rv" id="res-needed-price">€0</div>
-        <div class="rsub" id="res-needed-sub">To hit your income goal after costs</div>
-      </div>
-      <div class="gap-grid">
-        <div class="gap-card now">
-          <div class="gap-label">Your Current Hourly Rate</div>
-          <div class="gap-value" id="res-current-hourly">€0/hr</div>
-          <div class="gap-note" id="res-current-note">At your current price</div>
-        </div>
-        <div class="gap-card needed">
-          <div class="gap-label">Needed Full Hourly Rate</div>
-          <div class="gap-value" id="res-needed-hourly">€0/hr</div>
-          <div class="gap-note" id="res-needed-note">To hit your goal</div>
-        </div>
-      </div>
-      <div class="insight-banner" id="insight-banner">
-        <p id="insight-text"></p>
-      </div>
-      <div class="foundation-stats">
-        <div class="foundation-stat">
-          <div class="fs-label">Total annual costs</div>
-          <div class="fs-value" id="fs-annual">€0</div>
-        </div>
-        <div class="foundation-stat">
-          <div class="fs-label">Total hours per wedding</div>
-          <div class="fs-value" id="fs-hours">0 hrs</div>
-        </div>
-        <div class="foundation-stat">
-          <div class="fs-label">Take-home per wedding</div>
-          <div class="fs-value" id="fs-takehome">€0</div>
-        </div>
-      </div>
     </div>
 
   </div>
 </div>
 
 <script>
-// ════════════════════════════════════════════════════════════════════
-// SUPABASE SETUP
-// ════════════════════════════════════════════════════════════════════
 var SB_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
 var SB_KEY = "sb_publishable_CS3XLLfWaZNA-B2oE37N-g_z2FMWCzq";
 if (!window._wbwSb) {
@@ -554,30 +578,19 @@ var currency = 'EUR';
 var SYMS = { EUR:'€', GBP:'£', USD:'$', AUD:'A$', CAD:'C$' };
 var saveTimer = null;
 var savedQuotes = [];
-var loadedQuoteId = null; // Track which saved quote is being edited
-var currentRates = { full: 0, reduced: 0 };
+var loadedQuoteId = null;
+var fRates = { prep: 'full', day: 'full', post: 'half' };
+var qRates = { pre: 'full', day: 'full', post: 'full', admin: 'half' };
+var fuelMode = 'set';
+var fullRate = 0;
+var halfRate = 0;
+var minimumPrice = 0;
 
-// Foundation fields (the strategic calculator)
 var FOUNDATION_FIELDS = ['incomeGoal','weddingCount','annualExpenses','monthlyExpenses','extraExpenses',
-                         'prepHours','dayHours','postHours','reducedRate','currentPrice'];
+                         'f-prepHours','f-dayHours','f-postHours','currentPrice'];
 
-// Quote rate selections (default state)
-var quoteRates = {
-  pre: 'full',
-  day: 'full',
-  post: 'full',
-  admin: 'reduced'
-};
-
-// Travel mode
-var travelMode = 'set'; // or 'distance'
-
-// ────────────────────────────────────────────────────────────────────
-// HELPERS
-// ────────────────────────────────────────────────────────────────────
 function sym() { return SYMS[currency] || '€'; }
 function fmt(n) { if (!n && n !== 0) return sym()+'0'; return sym() + Math.round(n).toLocaleString('en-IE'); }
-function fmtPrecise(n) { if (!n && n !== 0) return sym()+'0'; return sym() + n.toFixed(2).replace(/\.00$/, ''); }
 function g(id) { return parseFloat(document.getElementById(id).value) || 0; }
 function gStr(id) { return (document.getElementById(id).value || '').trim(); }
 function todayISO() { return new Date().toISOString().slice(0,10); }
@@ -585,9 +598,6 @@ function genId() { return Date.now().toString(16) + Math.random().toString(16).s
 function esc(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function fmtDate(iso) { if (!iso) return "—"; var p=iso.split("-"); return p[2]+"/"+p[1]+"/"+p[0]; }
 
-// ────────────────────────────────────────────────────────────────────
-// AUTH
-// ────────────────────────────────────────────────────────────────────
 function switchTab(t) {
   document.getElementById('form-in').style.display = t==='in'?'':'none';
   document.getElementById('form-up').style.display = t==='up'?'':'none';
@@ -628,13 +638,11 @@ sb.auth.onAuthStateChange(function(event, session) {
   }
 });
 
-// ────────────────────────────────────────────────────────────────────
-// CURRENCY
-// ────────────────────────────────────────────────────────────────────
 function updateCurrencySymbols() {
   var s = sym();
-  ['sym-goal','sym-annual','sym-monthly','sym-extra','sym-reduced','sym-current',
-   'sym-travel-set','sym-travel-rate','sym-materials','sym-assistant','sym-other-q'].forEach(function(id) {
+  ['sym-goal','sym-annual','sym-monthly','sym-extra','sym-current',
+   'sym-fuel-set','sym-fuel-rate','sym-transport','sym-accomm','sym-travel-extras',
+   'sym-materials','sym-assistant','sym-other-q'].forEach(function(id) {
     var el = document.getElementById(id); if (el) el.textContent = s;
   });
 }
@@ -646,76 +654,88 @@ document.getElementById('currency').onchange = function() {
   queueSave();
 };
 
-// ────────────────────────────────────────────────────────────────────
-// FOUNDATION CALCULATION (strategic calculator)
-// ────────────────────────────────────────────────────────────────────
 function calcFoundation() {
   var incomeGoal      = g('incomeGoal');
   var weddingCount    = Math.max(1, g('weddingCount') || 1);
   var annualExpenses  = g('annualExpenses');
   var monthlyExpenses = g('monthlyExpenses');
   var extraExpenses   = g('extraExpenses');
-  var prepHours       = g('prepHours');
-  var dayHours        = g('dayHours');
-  var postHours       = g('postHours');
-  var reducedRate     = g('reducedRate');
+  var prepHours       = g('f-prepHours');
+  var dayHours        = g('f-dayHours');
+  var postHours       = g('f-postHours');
   var currentPrice    = g('currentPrice');
 
-  var totalHours      = prepHours + dayHours + postHours;
-  var totalAnnual     = annualExpenses + (monthlyExpenses * 12);
-  var perWedding      = extraExpenses;
-  var overheadPerWed  = totalAnnual / weddingCount;
-  var neededPrice     = (totalAnnual + incomeGoal) / weddingCount + perWedding;
-  var fullHourlyRate  = totalHours > 0 ? (neededPrice - perWedding) / totalHours : 0;
-  var currentHourly   = totalHours > 0 ? currentPrice / totalHours : 0;
-  var takeHome        = incomeGoal / weddingCount;
-  var priceGap        = neededPrice - currentPrice;
+  var totalAnnual    = annualExpenses + (monthlyExpenses * 12);
+  var perWedding     = extraExpenses;
+  var neededPrice    = (totalAnnual + incomeGoal) / weddingCount + perWedding;
 
-  // Update current rates for Quick Quote
-  currentRates.full = fullHourlyRate;
-  currentRates.reduced = reducedRate;
+  var fullRateHours = (fRates.prep === 'full' ? prepHours : 0) +
+                      (fRates.day  === 'full' ? dayHours  : 0) +
+                      (fRates.post === 'full' ? postHours : 0);
+  var halfRateHours = (fRates.prep === 'half' ? prepHours : 0) +
+                      (fRates.day  === 'half' ? dayHours  : 0) +
+                      (fRates.post === 'half' ? postHours : 0);
+  var weightedHours = fullRateHours + (halfRateHours / 2);
 
-  // Show/hide warning if no rates
-  document.getElementById('hours-no-rate-warning').style.display =
-    (currentRates.full <= 0 && currentRates.reduced <= 0) ? 'block' : 'none';
+  fullRate = weightedHours > 0 ? (neededPrice - perWedding) / weightedHours : 0;
+  halfRate = fullRate / 2;
+  minimumPrice = neededPrice;
 
-  // Show result strip if income goal set
-  if (incomeGoal > 0 && weddingCount > 0 && totalHours > 0) {
-    document.getElementById('result-strip').classList.add('show');
+  function getRate(side) { return side === 'full' ? fullRate : halfRate; }
+  var fPrepSub = prepHours * getRate(fRates.prep);
+  var fDaySub  = dayHours  * getRate(fRates.day);
+  var fPostSub = postHours * getRate(fRates.post);
+  document.getElementById('f-prep-subtotal').textContent = fPrepSub > 0 ? fmt(fPrepSub) : '—';
+  document.getElementById('f-day-subtotal').textContent  = fDaySub  > 0 ? fmt(fDaySub)  : '—';
+  document.getElementById('f-post-subtotal').textContent = fPostSub > 0 ? fmt(fPostSub) : '—';
+
+  var totalHours = prepHours + dayHours + postHours;
+  var hasEnoughData = (incomeGoal > 0 && totalHours > 0 && weddingCount > 0);
+
+  if (hasEnoughData) {
+    document.getElementById('foundation-result').classList.add('show');
   }
 
-  // Populate gap analysis
-  document.getElementById('res-needed-price').textContent = fmt(neededPrice);
-  document.getElementById('res-needed-sub').textContent = 'Based on ' + weddingCount + ' weddings · ' + totalHours + ' hrs each';
-  document.getElementById('res-current-hourly').textContent = totalHours > 0 ? fmt(currentHourly) + '/hr' : '—';
-  document.getElementById('res-current-note').textContent = 'At ' + fmt(currentPrice) + ' per wedding';
-  document.getElementById('res-needed-hourly').textContent = totalHours > 0 ? fmt(fullHourlyRate) + '/hr' : '—';
-  document.getElementById('res-needed-note').textContent = 'At ' + fmt(neededPrice) + ' per wedding';
+  document.getElementById('res-min-price').textContent = fmt(neededPrice);
+  document.getElementById('res-min-sub').textContent = 'Based on ' + weddingCount + ' weddings · ' + totalHours + ' hrs each';
+  document.getElementById('res-full-rate').textContent = fmt(fullRate) + '/hr';
+  document.getElementById('res-half-rate').textContent = fmt(halfRate) + '/hr';
 
-  // Insight banner
+  var currentHourly = totalHours > 0 ? currentPrice / totalHours : 0;
+  document.getElementById('res-current-price').textContent = fmt(currentPrice);
+  document.getElementById('res-current-hourly').textContent = totalHours > 0 ? fmt(currentHourly) + ' per hour' : '— per hour';
+  document.getElementById('res-needed-price').textContent = fmt(neededPrice);
+  document.getElementById('res-needed-hourly').textContent = totalHours > 0 ? fmt(fullRate) + ' per hour (full rate)' : '— per hour';
+
+  var priceGap = neededPrice - currentPrice;
   var banner = document.getElementById('insight-banner');
-  var text = document.getElementById('insight-text');
-  if (currentPrice > 0 && incomeGoal > 0) {
+  var text   = document.getElementById('insight-text');
+  if (currentPrice > 0 && incomeGoal > 0 && totalHours > 0) {
     if (priceGap > 0) {
-      banner.className = 'insight-banner gap';
-      text.innerHTML = 'There\'s a <strong>' + fmt(priceGap) + ' gap</strong> per wedding between what you charge and what you need to charge to hit your goal. That\'s ' + fmt(priceGap * weddingCount) + ' across ' + weddingCount + ' weddings — money you\'re leaving on the table every year.';
+      banner.className = 'insight-banner warn';
+      text.innerHTML = "There's a <strong>" + fmt(priceGap) + " gap</strong> per wedding between what you charge and what you need to charge to hit your goal. Across " + weddingCount + " weddings, that's <strong>" + fmt(priceGap * weddingCount) + "</strong> a year you're leaving on the table.";
     } else if (priceGap < 0) {
       banner.className = 'insight-banner ok';
-      text.innerHTML = 'Your current price of <strong>' + fmt(currentPrice) + '</strong> already covers your goal at <strong>' + weddingCount + ' weddings</strong>. Keep it there — or raise it if you want to grow.';
+      text.innerHTML = "Your current price of <strong>" + fmt(currentPrice) + "</strong> already covers your goal. Keep it there — or raise it if you want to grow.";
     } else {
       banner.className = 'insight-banner ok';
-      text.innerHTML = 'Your current price is exactly at your minimum — covering costs and hitting your goal.';
+      text.innerHTML = "Your current price is exactly at your minimum — covering costs and hitting your goal.";
     }
   } else {
-    banner.className = 'insight-banner gap';
-    text.innerHTML = 'Enter your annual income goal and current price to see your full picture.';
+    banner.className = 'insight-banner warn';
+    text.innerHTML = "Enter your annual income goal, hours and current price to see your full picture.";
   }
 
-  document.getElementById('fs-annual').textContent = fmt(totalAnnual);
-  document.getElementById('fs-hours').textContent = totalHours + ' hrs';
-  document.getElementById('fs-takehome').textContent = fmt(takeHome);
+  var insight = document.getElementById('dynamic-insight');
+  if (hasEnoughData) {
+    insight.classList.add('show');
+    insight.innerHTML = "With your current costs and hours worked, the minimum you should charge per wedding is <strong>" + fmt(neededPrice) + "</strong>. If that feels too high, you can reduce your costs or increase the number of weddings per year.";
+  } else {
+    insight.classList.remove('show');
+  }
 
-  // Sync to localStorage for Income Goal tool
+  document.getElementById('hours-no-rate-warning').style.display = (fullRate <= 0) ? 'block' : 'none';
+
   if (user) {
     try {
       localStorage.setItem('wbw-pfp-' + user.id, JSON.stringify({
@@ -725,51 +745,41 @@ function calcFoundation() {
         currency: currency,
         neededPrice: neededPrice,
         minPrice: neededPrice,
-        fullHourlyRate: fullHourlyRate,
-        reducedRate: reducedRate
+        fullHourlyRate: fullRate,
+        reducedRate: halfRate
       }));
     } catch(e) {}
   }
 }
 
-// ────────────────────────────────────────────────────────────────────
-// QUOTE CALCULATION
-// ────────────────────────────────────────────────────────────────────
-function getRate(which) {
-  return which === 'full' ? currentRates.full : currentRates.reduced;
-}
+function getQuoteRate(which) { return which === 'full' ? fullRate : halfRate; }
 
 function calcQuote() {
-  var preHours    = g('q-pre-hours');
-  var dayHours    = g('q-day-hours');
-  var postHours   = g('q-post-hours');
-  var adminHours  = g('q-admin-hours');
+  var preH = g('q-pre-hours');
+  var dayH = g('q-day-hours');
+  var postH = g('q-post-hours');
+  var adminH = g('q-admin-hours');
 
-  var preSubtotal   = preHours   * getRate(quoteRates.pre);
-  var daySubtotal   = dayHours   * getRate(quoteRates.day);
-  var postSubtotal  = postHours  * getRate(quoteRates.post);
-  var adminSubtotal = adminHours * getRate(quoteRates.admin);
+  var preSub   = preH   * getQuoteRate(qRates.pre);
+  var daySub   = dayH   * getQuoteRate(qRates.day);
+  var postSub  = postH  * getQuoteRate(qRates.post);
+  var adminSub = adminH * getQuoteRate(qRates.admin);
 
-  document.getElementById('q-pre-subtotal').textContent   = preSubtotal > 0 ? fmt(preSubtotal) : '—';
-  document.getElementById('q-day-subtotal').textContent   = daySubtotal > 0 ? fmt(daySubtotal) : '—';
-  document.getElementById('q-post-subtotal').textContent  = postSubtotal > 0 ? fmt(postSubtotal) : '—';
-  document.getElementById('q-admin-subtotal').textContent = adminSubtotal > 0 ? fmt(adminSubtotal) : '—';
+  document.getElementById('q-pre-subtotal').textContent   = preSub   > 0 ? fmt(preSub)   : '—';
+  document.getElementById('q-day-subtotal').textContent   = daySub   > 0 ? fmt(daySub)   : '—';
+  document.getElementById('q-post-subtotal').textContent  = postSub  > 0 ? fmt(postSub)  : '—';
+  document.getElementById('q-admin-subtotal').textContent = adminSub > 0 ? fmt(adminSub) : '—';
 
-  var hoursTotal = preSubtotal + daySubtotal + postSubtotal + adminSubtotal;
-
-  // Travel
-  var travel = 0;
-  if (travelMode === 'set') {
-    travel = g('q-travel-set');
-  } else {
-    travel = g('q-travel-km') * g('q-travel-rate');
-  }
-
+  var hoursTotal = preSub + daySub + postSub + adminSub;
+  var fuel = (fuelMode === 'set') ? g('q-fuel-set') : (g('q-fuel-km') * g('q-fuel-rate'));
+  var transport = g('q-transport');
+  var accommodation = g('q-accommodation');
+  var travelExtras = g('q-travel-extras');
+  var travelTotal = fuel + transport + accommodation + travelExtras;
   var materials = g('q-materials');
   var assistant = g('q-assistant');
-  var other     = g('q-other-costs');
-
-  var grandTotal = hoursTotal + travel + materials + assistant + other;
+  var other = g('q-other-costs');
+  var grandTotal = hoursTotal + travelTotal + materials + assistant + other;
 
   document.getElementById('q-total').textContent = fmt(grandTotal);
 
@@ -777,11 +787,14 @@ function calcQuote() {
     document.getElementById('q-total-sub').textContent = 'Quote built from your saved rates';
     var bd = document.getElementById('q-breakdown');
     var rows = [];
-    if (preSubtotal > 0)   rows.push(['Pre-wedding prep ('+preHours+'h × '+quoteRates.pre+')',   fmt(preSubtotal)]);
-    if (daySubtotal > 0)   rows.push(['Wedding day ('+dayHours+'h × '+quoteRates.day+')',         fmt(daySubtotal)]);
-    if (postSubtotal > 0)  rows.push(['Post-wedding prep ('+postHours+'h × '+quoteRates.post+')', fmt(postSubtotal)]);
-    if (adminSubtotal > 0) rows.push(['Admin ('+adminHours+'h × '+quoteRates.admin+')',           fmt(adminSubtotal)]);
-    if (travel > 0)        rows.push(['Travel', fmt(travel)]);
+    if (preSub > 0)   rows.push(['Pre-wedding prep ('+preH+'h × '+qRates.pre+')',   fmt(preSub)]);
+    if (daySub > 0)   rows.push(['Wedding day ('+dayH+'h × '+qRates.day+')',         fmt(daySub)]);
+    if (postSub > 0)  rows.push(['Post-wedding prep ('+postH+'h × '+qRates.post+')', fmt(postSub)]);
+    if (adminSub > 0) rows.push(['Admin ('+adminH+'h × '+qRates.admin+')',           fmt(adminSub)]);
+    if (fuel > 0)          rows.push(['Fuel', fmt(fuel)]);
+    if (transport > 0)     rows.push(['Transport / flights', fmt(transport)]);
+    if (accommodation > 0) rows.push(['Accommodation', fmt(accommodation)]);
+    if (travelExtras > 0)  rows.push(['Travel extras', fmt(travelExtras)]);
     if (materials > 0)     rows.push(['Materials', fmt(materials)]);
     if (assistant > 0)     rows.push(['Assistant', fmt(assistant)]);
     if (other > 0)         rows.push(['Other costs', fmt(other)]);
@@ -793,55 +806,56 @@ function calcQuote() {
   }
 }
 
-// ────────────────────────────────────────────────────────────────────
-// FIELD LISTENERS
-// ────────────────────────────────────────────────────────────────────
 FOUNDATION_FIELDS.forEach(function(id) {
   var el = document.getElementById(id);
   if (el) el.oninput = function() { calcFoundation(); calcQuote(); queueSave(); };
 });
 
-// Quote inputs
 ['q-name','q-wedding-date','q-pre-hours','q-day-hours','q-post-hours','q-admin-hours',
- 'q-travel-set','q-travel-km','q-travel-rate','q-materials','q-assistant','q-other-costs'].forEach(function(id) {
+ 'q-fuel-set','q-fuel-km','q-fuel-rate','q-transport','q-accommodation','q-travel-extras',
+ 'q-materials','q-assistant','q-other-costs'].forEach(function(id) {
   var el = document.getElementById(id);
   if (el) el.oninput = calcQuote;
 });
 
-// Rate toggle buttons
 document.querySelectorAll('.rate-toggle').forEach(function(toggle) {
-  var key = toggle.getAttribute('data-rate-for').replace('q-','').replace('-rate','');
+  var key = toggle.getAttribute('data-rate-key');
   toggle.querySelectorAll('button').forEach(function(btn) {
     btn.onclick = function() {
       toggle.querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
-      quoteRates[key] = btn.getAttribute('data-rate');
-      calcQuote();
+      var rate = btn.getAttribute('data-rate');
+      var parts = key.split('-');
+      if (parts[0] === 'f') {
+        fRates[parts[1]] = rate;
+        calcFoundation();
+        calcQuote();
+        queueSave();
+      } else if (parts[0] === 'q') {
+        qRates[parts[1]] = rate;
+        calcQuote();
+      }
     };
   });
 });
 
-// Travel toggle
-document.getElementById('travel-set').onclick = function() {
-  travelMode = 'set';
+document.getElementById('fuel-set').onclick = function() {
+  fuelMode = 'set';
   this.classList.add('active');
-  document.getElementById('travel-distance').classList.remove('active');
-  document.getElementById('travel-set-row').style.display = '';
-  document.getElementById('travel-distance-row').style.display = 'none';
+  document.getElementById('fuel-distance').classList.remove('active');
+  document.getElementById('fuel-set-row').style.display = '';
+  document.getElementById('fuel-distance-row').style.display = 'none';
   calcQuote();
 };
-document.getElementById('travel-distance').onclick = function() {
-  travelMode = 'distance';
+document.getElementById('fuel-distance').onclick = function() {
+  fuelMode = 'distance';
   this.classList.add('active');
-  document.getElementById('travel-set').classList.remove('active');
-  document.getElementById('travel-set-row').style.display = 'none';
-  document.getElementById('travel-distance-row').style.display = '';
+  document.getElementById('fuel-set').classList.remove('active');
+  document.getElementById('fuel-set-row').style.display = 'none';
+  document.getElementById('fuel-distance-row').style.display = '';
   calcQuote();
 };
 
-// ────────────────────────────────────────────────────────────────────
-// SAVE FOUNDATION (auto-save)
-// ────────────────────────────────────────────────────────────────────
 function queueSave() {
   var pill = document.getElementById('save-pill');
   pill.className = 'save-pill saving'; pill.textContent = '⏳ Saving…';
@@ -852,7 +866,7 @@ function queueSave() {
 async function saveFoundation() {
   if (!user) return;
   var pill = document.getElementById('save-pill');
-  var data = { currency: currency };
+  var data = { currency: currency, fRates: fRates };
   FOUNDATION_FIELDS.forEach(function(f) {
     var el = document.getElementById(f);
     data[f] = el ? (parseFloat(el.value) || null) : null;
@@ -872,9 +886,6 @@ async function saveFoundation() {
   }
 }
 
-// ────────────────────────────────────────────────────────────────────
-// LOAD FOUNDATION
-// ────────────────────────────────────────────────────────────────────
 async function loadFoundation() {
   if (!user) return;
   try {
@@ -884,6 +895,17 @@ async function loadFoundation() {
       if (d.currency) {
         currency = d.currency;
         document.getElementById('currency').value = d.currency;
+      }
+      if (d.fRates) {
+        fRates = Object.assign({ prep:'full', day:'full', post:'half' }, d.fRates);
+        ['prep','day','post'].forEach(function(k) {
+          var toggle = document.querySelector('[data-rate-key="f-'+k+'"]');
+          if (toggle) {
+            toggle.querySelectorAll('button').forEach(function(b) {
+              b.classList.toggle('active', b.getAttribute('data-rate') === fRates[k]);
+            });
+          }
+        });
       }
       FOUNDATION_FIELDS.forEach(function(f) {
         var el = document.getElementById(f);
@@ -898,9 +920,6 @@ async function loadFoundation() {
   }
 }
 
-// ────────────────────────────────────────────────────────────────────
-// SAVED QUOTES
-// ────────────────────────────────────────────────────────────────────
 async function loadSavedQuotes() {
   if (!user) return;
   try {
@@ -948,40 +967,46 @@ document.getElementById('saved-quotes-toggle').onclick = function() {
 };
 
 function buildQuoteData() {
-  var preHours    = g('q-pre-hours');
-  var dayHours    = g('q-day-hours');
-  var postHours   = g('q-post-hours');
-  var adminHours  = g('q-admin-hours');
-  var preSubtotal   = preHours   * getRate(quoteRates.pre);
-  var daySubtotal   = dayHours   * getRate(quoteRates.day);
-  var postSubtotal  = postHours  * getRate(quoteRates.post);
-  var adminSubtotal = adminHours * getRate(quoteRates.admin);
-  var travel = travelMode === 'set' ? g('q-travel-set') : g('q-travel-km') * g('q-travel-rate');
+  var preH = g('q-pre-hours');
+  var dayH = g('q-day-hours');
+  var postH = g('q-post-hours');
+  var adminH = g('q-admin-hours');
+  var preSub   = preH   * getQuoteRate(qRates.pre);
+  var daySub   = dayH   * getQuoteRate(qRates.day);
+  var postSub  = postH  * getQuoteRate(qRates.post);
+  var adminSub = adminH * getQuoteRate(qRates.admin);
+  var fuel = (fuelMode === 'set') ? g('q-fuel-set') : (g('q-fuel-km') * g('q-fuel-rate'));
+  var transport = g('q-transport');
+  var accommodation = g('q-accommodation');
+  var travelExtras = g('q-travel-extras');
   var materials = g('q-materials');
   var assistant = g('q-assistant');
   var other = g('q-other-costs');
-  var total = preSubtotal + daySubtotal + postSubtotal + adminSubtotal + travel + materials + assistant + other;
+  var total = preSub + daySub + postSub + adminSub + fuel + transport + accommodation + travelExtras + materials + assistant + other;
 
   return {
     coupleName: gStr('q-name'),
     weddingDate: gStr('q-wedding-date'),
-    preHours: preHours, preRate: quoteRates.pre, preSubtotal: preSubtotal,
-    dayHours: dayHours, dayRate: quoteRates.day, daySubtotal: daySubtotal,
-    postHours: postHours, postRate: quoteRates.post, postSubtotal: postSubtotal,
-    adminHours: adminHours, adminRate: quoteRates.admin, adminSubtotal: adminSubtotal,
-    travelMode: travelMode,
-    travelSet: g('q-travel-set'),
-    travelKm: g('q-travel-km'),
-    travelRate: g('q-travel-rate'),
-    travelTotal: travel,
+    preHours: preH, preRate: qRates.pre, preSubtotal: preSub,
+    dayHours: dayH, dayRate: qRates.day, daySubtotal: daySub,
+    postHours: postH, postRate: qRates.post, postSubtotal: postSub,
+    adminHours: adminH, adminRate: qRates.admin, adminSubtotal: adminSub,
+    fuelMode: fuelMode,
+    fuelSet: g('q-fuel-set'),
+    fuelKm: g('q-fuel-km'),
+    fuelRate: g('q-fuel-rate'),
+    fuelTotal: fuel,
+    transport: transport,
+    accommodation: accommodation,
+    travelExtras: travelExtras,
     materials: materials,
     assistant: assistant,
     other: other,
     total: total,
     currency: currency,
     savedDate: todayISO(),
-    fullRate: currentRates.full,
-    reducedRate: currentRates.reduced
+    fullRate: fullRate,
+    halfRate: halfRate
   };
 }
 
@@ -1001,7 +1026,6 @@ async function saveQuote() {
 
   try {
     if (loadedQuoteId) {
-      // Update existing
       var result = await sb.from('quotes').update({
         data: data,
         updated_at: new Date().toISOString()
@@ -1009,7 +1033,6 @@ async function saveQuote() {
       if (result.error) throw result.error;
       setQuoteMsg('✓ Quote updated', 'ok');
     } else {
-      // Create new
       var result = await sb.from('quotes').insert({
         user_id: user.id,
         data: data
@@ -1050,11 +1073,10 @@ function loadQuoteIntoForm(rowId) {
   document.getElementById('q-post-hours').value = q.postHours || '';
   document.getElementById('q-admin-hours').value = q.adminHours || '';
 
-  // Restore rate selections
   ['pre','day','post','admin'].forEach(function(key) {
-    var rate = q[key+'Rate'] || (key === 'admin' ? 'reduced' : 'full');
-    quoteRates[key] = rate;
-    var toggle = document.querySelector('[data-rate-for="q-'+key+'-rate"]');
+    var rate = q[key+'Rate'] || (key === 'admin' ? 'half' : 'full');
+    qRates[key] = rate;
+    var toggle = document.querySelector('[data-rate-key="q-'+key+'"]');
     if (toggle) {
       toggle.querySelectorAll('button').forEach(function(b) {
         b.classList.toggle('active', b.getAttribute('data-rate') === rate);
@@ -1062,16 +1084,16 @@ function loadQuoteIntoForm(rowId) {
     }
   });
 
-  // Travel
-  travelMode = q.travelMode || 'set';
-  if (travelMode === 'set') {
-    document.getElementById('travel-set').click();
-  } else {
-    document.getElementById('travel-distance').click();
-  }
-  document.getElementById('q-travel-set').value = q.travelSet || '';
-  document.getElementById('q-travel-km').value = q.travelKm || '';
-  document.getElementById('q-travel-rate').value = q.travelRate || '';
+  fuelMode = q.fuelMode || 'set';
+  if (fuelMode === 'set') document.getElementById('fuel-set').click();
+  else document.getElementById('fuel-distance').click();
+
+  document.getElementById('q-fuel-set').value = q.fuelSet || '';
+  document.getElementById('q-fuel-km').value = q.fuelKm || '';
+  document.getElementById('q-fuel-rate').value = q.fuelRate || '';
+  document.getElementById('q-transport').value = q.transport || '';
+  document.getElementById('q-accommodation').value = q.accommodation || '';
+  document.getElementById('q-travel-extras').value = q.travelExtras || '';
   document.getElementById('q-materials').value = q.materials || '';
   document.getElementById('q-assistant').value = q.assistant || '';
   document.getElementById('q-other-costs').value = q.other || '';
@@ -1079,39 +1101,36 @@ function loadQuoteIntoForm(rowId) {
   loadedQuoteId = rowId;
   calcQuote();
 
-  // Scroll to top of quote card
   document.querySelector('.quote-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
   setQuoteMsg('Quote loaded — make changes and save again to update.', 'ok');
 }
 
 function clearQuoteForm() {
   ['q-name','q-wedding-date','q-pre-hours','q-day-hours','q-post-hours','q-admin-hours',
-   'q-travel-set','q-travel-km','q-travel-rate','q-materials','q-assistant','q-other-costs'].forEach(function(id) {
+   'q-fuel-set','q-fuel-km','q-fuel-rate','q-transport','q-accommodation','q-travel-extras',
+   'q-materials','q-assistant','q-other-costs'].forEach(function(id) {
     var el = document.getElementById(id); if (el) el.value = '';
   });
-  // Reset rates to defaults
-  quoteRates = { pre:'full', day:'full', post:'full', admin:'reduced' };
+  qRates = { pre:'full', day:'full', post:'full', admin:'half' };
   document.querySelectorAll('.rate-toggle').forEach(function(toggle) {
-    var key = toggle.getAttribute('data-rate-for').replace('q-','').replace('-rate','');
-    toggle.querySelectorAll('button').forEach(function(b) {
-      b.classList.toggle('active', b.getAttribute('data-rate') === quoteRates[key]);
-    });
+    var key = toggle.getAttribute('data-rate-key');
+    if (key.indexOf('q-') === 0) {
+      var k = key.replace('q-','');
+      toggle.querySelectorAll('button').forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-rate') === qRates[k]);
+      });
+    }
   });
-  // Reset travel mode
-  travelMode = 'set';
-  document.getElementById('travel-set').click();
-
+  fuelMode = 'set';
+  document.getElementById('fuel-set').click();
   loadedQuoteId = null;
   calcQuote();
   setQuoteMsg('', '');
 }
 
-// ────────────────────────────────────────────────────────────────────
-// SEND TO LEAD TRACKER
-// ────────────────────────────────────────────────────────────────────
 function getFirstFollowUpDate(enquiryDate) {
   var d = new Date(enquiryDate || todayISO());
-  d.setDate(d.getDate() + 2); // 2 days from enquiry, matching Lead Tracker
+  d.setDate(d.getDate() + 2);
   return d.toISOString().slice(0,10);
 }
 
@@ -1139,16 +1158,12 @@ async function sendToLeadTracker() {
   var data = buildQuoteData();
   if (data.total <= 0) { setQuoteMsg("Build a quote total before sending.", 'err'); return; }
 
-  // First save the quote
   await saveQuote();
 
-  // Then check if a matching lead exists
   var existing = await findExistingLead(name);
-
   if (existing) {
     showLeadConfirmModal(existing, data);
   } else {
-    // Create new lead
     await createNewLead(data);
   }
 }
@@ -1181,7 +1196,6 @@ async function createNewLead(quoteData) {
       updated_at: new Date().toISOString()
     }, { onConflict: 'id' });
 
-    // Link this quote to the lead
     if (loadedQuoteId) {
       await sb.from('quotes').update({ lead_id: leadId }).eq('id', loadedQuoteId).eq('user_id', user.id);
     }
@@ -1190,7 +1204,7 @@ async function createNewLead(quoteData) {
     await loadSavedQuotes();
   } catch(e) {
     console.log('Create lead error:', e);
-    setQuoteMsg('Quote saved, but couldn\'t create lead: ' + (e.message || 'unknown'), 'err');
+    setQuoteMsg("Quote saved, but couldn't create lead: " + (e.message || 'unknown'), 'err');
   }
 }
 
@@ -1251,16 +1265,12 @@ function showLeadConfirmModal(existingLead, quoteData) {
   };
 }
 
-// ────────────────────────────────────────────────────────────────────
-// QUOTE BUTTONS
-// ────────────────────────────────────────────────────────────────────
 document.getElementById('q-save-btn').onclick = saveQuote;
 document.getElementById('q-send-btn').onclick = sendToLeadTracker;
 document.getElementById('q-clear-btn').onclick = function() {
   if (loadedQuoteId && !confirm('Clear the form? Your saved quote will stay safe in the list.')) return;
   clearQuoteForm();
 };
-
 </script>
 </body>
 </html>
