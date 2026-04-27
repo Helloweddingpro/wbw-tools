@@ -598,6 +598,63 @@ function genId() { return Date.now().toString(16) + Math.random().toString(16).s
 function esc(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function fmtDate(iso) { if (!iso) return "—"; var p=iso.split("-"); return p[2]+"/"+p[1]+"/"+p[0]; }
 
+// ────────────────────────────────────────────────────────────────────
+// IN-PROGRESS QUOTE DRAFT (localStorage, per user)
+// ────────────────────────────────────────────────────────────────────
+var DRAFT_FIELDS = ['q-name','q-wedding-date','q-pre-hours','q-day-hours','q-post-hours','q-admin-hours',
+                    'q-fuel-set','q-fuel-km','q-fuel-rate','q-transport','q-accommodation','q-travel-extras',
+                    'q-materials','q-assistant','q-other-costs'];
+var draftSaveTimer = null;
+function draftKey() { return user ? 'wbw-pfp-quote-draft-' + user.id : null; }
+function saveDraft() {
+  if (!user) return;
+  var draft = { qRates: qRates, fuelMode: fuelMode, loadedQuoteId: loadedQuoteId };
+  DRAFT_FIELDS.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) draft[id] = el.value;
+  });
+  try { localStorage.setItem(draftKey(), JSON.stringify(draft)); } catch(e) {}
+}
+function queueDraftSave() {
+  clearTimeout(draftSaveTimer);
+  draftSaveTimer = setTimeout(saveDraft, 400);
+}
+function clearDraft() {
+  if (!user) return;
+  try { localStorage.removeItem(draftKey()); } catch(e) {}
+}
+function restoreDraft() {
+  if (!user) return;
+  try {
+    var raw = localStorage.getItem(draftKey());
+    if (!raw) return;
+    var d = JSON.parse(raw);
+    if (!d) return;
+    DRAFT_FIELDS.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && d[id] != null) el.value = d[id];
+    });
+    if (d.qRates) {
+      qRates = Object.assign({ pre:'full', day:'full', post:'full', admin:'half' }, d.qRates);
+      ['pre','day','post','admin'].forEach(function(k) {
+        var toggle = document.querySelector('[data-rate-key="q-'+k+'"]');
+        if (toggle) toggle.querySelectorAll('button').forEach(function(b) {
+          b.classList.toggle('active', b.getAttribute('data-rate') === qRates[k]);
+        });
+      });
+    }
+    if (d.fuelMode === 'distance') {
+      fuelMode = 'distance';
+      document.getElementById('fuel-set').classList.remove('active');
+      document.getElementById('fuel-distance').classList.add('active');
+      document.getElementById('fuel-set-row').style.display = 'none';
+      document.getElementById('fuel-distance-row').style.display = '';
+    }
+    if (d.loadedQuoteId) loadedQuoteId = d.loadedQuoteId;
+    calcQuote();
+  } catch(e) { console.log('Restore draft error:', e); }
+}
+
 function switchTab(t) {
   document.getElementById('form-in').style.display = t==='in'?'':'none';
   document.getElementById('form-up').style.display = t==='up'?'':'none';
@@ -628,6 +685,8 @@ function boot(u) {
   document.getElementById('nav-user').textContent = u.email;
   loadFoundation();
   loadSavedQuotes();
+  // Restore in-progress quote draft (after a beat to let foundation load first)
+  setTimeout(restoreDraft, 200);
 }
 sb.auth.getSession().then(function(r) { if (r.data&&r.data.session&&r.data.session.user) boot(r.data.session.user); });
 sb.auth.onAuthStateChange(function(event, session) {
@@ -815,7 +874,7 @@ FOUNDATION_FIELDS.forEach(function(id) {
  'q-fuel-set','q-fuel-km','q-fuel-rate','q-transport','q-accommodation','q-travel-extras',
  'q-materials','q-assistant','q-other-costs'].forEach(function(id) {
   var el = document.getElementById(id);
-  if (el) el.oninput = calcQuote;
+  if (el) el.oninput = function() { calcQuote(); queueDraftSave(); };
 });
 
 document.querySelectorAll('.rate-toggle').forEach(function(toggle) {
@@ -834,6 +893,7 @@ document.querySelectorAll('.rate-toggle').forEach(function(toggle) {
       } else if (parts[0] === 'q') {
         qRates[parts[1]] = rate;
         calcQuote();
+        queueDraftSave();
       }
     };
   });
@@ -846,6 +906,7 @@ document.getElementById('fuel-set').onclick = function() {
   document.getElementById('fuel-set-row').style.display = '';
   document.getElementById('fuel-distance-row').style.display = 'none';
   calcQuote();
+  queueDraftSave();
 };
 document.getElementById('fuel-distance').onclick = function() {
   fuelMode = 'distance';
@@ -854,6 +915,7 @@ document.getElementById('fuel-distance').onclick = function() {
   document.getElementById('fuel-set-row').style.display = 'none';
   document.getElementById('fuel-distance-row').style.display = '';
   calcQuote();
+  queueDraftSave();
 };
 
 function queueSave() {
@@ -1041,6 +1103,7 @@ async function saveQuote() {
       loadedQuoteId = result.data.id;
       setQuoteMsg('✓ Quote saved', 'ok');
     }
+    saveDraft(); // sync draft so loadedQuoteId is persisted
     await loadSavedQuotes();
   } catch(e) {
     console.log('Save quote error:', e);
@@ -1100,6 +1163,7 @@ function loadQuoteIntoForm(rowId) {
 
   loadedQuoteId = rowId;
   calcQuote();
+  saveDraft();
 
   document.querySelector('.quote-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
   setQuoteMsg('Quote loaded — make changes and save again to update.', 'ok');
@@ -1125,6 +1189,8 @@ function clearQuoteForm() {
   document.getElementById('fuel-set').click();
   loadedQuoteId = null;
   calcQuote();
+  clearTimeout(draftSaveTimer);
+  clearDraft();
   setQuoteMsg('', '');
 }
 
