@@ -10,11 +10,14 @@
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 :root {
   --navy:#3B3C6D; --gold:#FFB800; --gold-light:rgba(255,184,0,.1); --gold-mid:rgba(255,184,0,.25);
+  --pink:#FB478E; --pink-light:rgba(251,71,142,.08); --pink-mid:rgba(251,71,142,.2);
   --cream:#FFFDF0; --white:#FFFFFF; --border:rgba(59,60,109,.13); --muted:rgba(59,60,109,.5);
   --text:#2A2B4A; --green:#00A878; --green-light:rgba(0,168,120,.1); --red:#e63946;
   --red-light:rgba(230,57,70,.1); --surface:rgba(59,60,109,.04);
 }
 body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
+
+/* AUTH */
 #auth-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
 .auth-card { background:var(--white); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; box-shadow:0 8px 40px rgba(59,60,109,.1); }
 .auth-logo { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:var(--navy); margin-bottom:4px; }
@@ -30,6 +33,8 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
 .auth-submit:hover { opacity:.88; }
 .auth-msg { font-size:12px; font-weight:600; margin-top:10px; min-height:18px; }
 .auth-msg.error { color:var(--red); } .auth-msg.success { color:var(--green); }
+
+/* APP */
 #app-screen { display:none; }
 .topnav { background:var(--white); border-bottom:1px solid var(--border); padding:0 32px; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
 .nav-logo { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:700; color:var(--navy); }
@@ -41,89 +46,157 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
 .save-pill { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:var(--muted); padding:5px 12px; background:var(--cream); border-radius:20px; border:1px solid var(--border); }
 .save-pill.saved { color:var(--green); }
 .save-pill.saving { color:var(--gold); }
-.main { max-width:900px; margin:0 auto; padding:40px 24px 80px; }
-.hero { margin-bottom:32px; }
+
+.main { max-width:1000px; margin:0 auto; padding:36px 24px 80px; }
+.hero { margin-bottom:28px; }
 .hero-eyebrow { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
-.hero-title { font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:700; color:var(--navy); line-height:1.1; margin-bottom:10px; }
+.hero-title { font-family:'Cormorant Garamond',serif; font-size:38px; font-weight:700; color:var(--navy); line-height:1.1; margin-bottom:10px; }
 .hero-title em { color:var(--gold); font-style:italic; }
-.hero-sub { font-size:14px; font-weight:600; color:var(--muted); line-height:1.6; max-width:560px; }
-.currency-bar { background:var(--white); border-radius:14px; padding:14px 20px; margin-bottom:24px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 12px rgba(59,60,109,.06); }
+.hero-sub { font-size:14px; font-weight:600; color:var(--muted); line-height:1.6; max-width:600px; }
+
+/* CARDS */
+.card { background:var(--white); border-radius:20px; padding:28px; margin-bottom:20px; box-shadow:0 2px 16px rgba(59,60,109,.06); }
+.card.quote-card { background:linear-gradient(135deg, var(--white) 0%, #FFF9E6 100%); border:1.5px solid var(--gold-mid); }
+.card-title { font-size:13px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:var(--navy); margin-bottom:6px; display:flex; align-items:center; gap:10px; }
+.card-title .icon { font-size:18px; }
+.card-sub { font-size:13px; font-weight:600; color:var(--muted); margin-bottom:22px; line-height:1.5; }
+
+/* CURRENCY BAR */
+.currency-bar { background:var(--white); border-radius:14px; padding:14px 20px; margin-bottom:20px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 12px rgba(59,60,109,.06); flex-wrap:wrap; }
 .currency-bar label { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--navy); white-space:nowrap; }
 .currency-bar select { padding:8px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:var(--text); background:var(--white); cursor:pointer; }
 .currency-bar select:focus { outline:none; border-color:var(--gold); }
-.card { background:var(--white); border-radius:20px; padding:28px; margin-bottom:20px; box-shadow:0 2px 16px rgba(59,60,109,.06); }
-.card-title { font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:var(--navy); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
-.card-title .icon { font-size:18px; }
-.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+/* FORMS */
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .form-grid.three { grid-template-columns:1fr 1fr 1fr; }
-.form-group { display:flex; flex-direction:column; gap:7px; }
+.form-group { display:flex; flex-direction:column; gap:6px; }
+.form-group.full { grid-column:1/-1; }
 .form-group label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--navy); }
-.form-group .hint { font-size:11px; font-weight:600; color:var(--muted); margin-top:-4px; line-height:1.5; }
+.form-group .hint { font-size:11px; font-weight:600; color:var(--muted); margin-top:-3px; line-height:1.5; }
 .input-wrap { position:relative; }
 .input-wrap .pre { position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:14px; font-weight:800; color:var(--muted); pointer-events:none; }
 .input-wrap .suf { position:absolute; right:13px; top:50%; transform:translateY(-50%); font-size:13px; font-weight:700; color:var(--muted); pointer-events:none; }
 .input-wrap input { width:100%; }
 .input-wrap.has-pre input { padding-left:26px; }
 .input-wrap.has-suf input { padding-right:52px; }
-input[type=number], select { padding:11px 13px; border:1.5px solid var(--border); border-radius:12px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:700; color:var(--text); background:var(--white); width:100%; transition:border-color .2s; }
-input[type=number]:focus, select:focus { outline:none; border-color:var(--gold); }
-.section-divider { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; color:var(--navy); padding-bottom:10px; border-bottom:1px solid var(--border); margin-bottom:16px; margin-top:24px; }
+input[type=number], input[type=text], input[type=date], select { padding:11px 13px; border:1.5px solid var(--border); border-radius:12px; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:700; color:var(--text); background:var(--white); width:100%; transition:border-color .2s; }
+input:focus, select:focus { outline:none; border-color:var(--gold); }
+
+.section-divider { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; color:var(--navy); padding-bottom:10px; border-bottom:1px solid var(--border); margin-bottom:14px; margin-top:22px; }
 .section-divider:first-child { margin-top:0; }
-.hours-total-pill { background:var(--gold-light); border:1px solid var(--gold-mid); border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; margin-top:16px; }
-.hours-total-pill span:first-child { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
-.hours-total-val { font-size:22px; font-weight:900; color:var(--navy); }
+
+/* HOURS ROW WITH RATE TOGGLE */
+.hours-row { display:grid; grid-template-columns:1fr 110px 130px; gap:10px; align-items:end; margin-bottom:10px; }
+.hours-row .form-group { gap:6px; }
+.rate-toggle { display:flex; gap:0; border:1.5px solid var(--border); border-radius:12px; overflow:hidden; height:42px; }
+.rate-toggle button { flex:1; border:none; background:var(--white); color:var(--muted); font-family:'Montserrat',sans-serif; font-size:11px; font-weight:800; cursor:pointer; transition:all .2s; padding:0 4px; }
+.rate-toggle button.active { background:var(--gold); color:var(--white); }
+.rate-toggle button:hover:not(.active) { background:var(--cream); }
+
+/* TRAVEL TOGGLE */
+.travel-toggle { display:flex; gap:8px; margin-bottom:12px; }
+.travel-toggle button { flex:1; padding:10px; border-radius:11px; border:1.5px solid var(--border); background:var(--white); color:var(--muted); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; cursor:pointer; transition:all .2s; }
+.travel-toggle button.active { background:var(--navy); color:var(--white); border-color:var(--navy); }
+.travel-distance-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+/* QUOTE TOTAL */
+.quote-total-block { background:linear-gradient(135deg, var(--navy) 0%, #5B5C9D 100%); border-radius:18px; padding:24px 26px; margin-top:20px; }
+.quote-total-label { font-size:11px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.6); margin-bottom:6px; }
+.quote-total-value { font-family:'Cormorant Garamond',serif; font-size:54px; font-weight:700; color:#FFD34E; line-height:1; }
+.quote-total-sub { font-size:12px; font-weight:700; color:rgba(255,255,255,.6); margin-top:6px; }
+.quote-breakdown { margin-top:18px; padding-top:18px; border-top:1px solid rgba(255,255,255,.15); display:grid; grid-template-columns:1fr 1fr; gap:8px 16px; }
+.quote-bd-row { display:flex; justify-content:space-between; align-items:center; }
+.quote-bd-row span { font-size:12px; font-weight:600; color:rgba(255,255,255,.7); }
+.quote-bd-row strong { font-size:12px; font-weight:800; color:rgba(255,255,255,.92); }
+
+/* QUOTE ACTIONS */
+.quote-actions { display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; }
+.quote-actions button { padding:13px 18px; border-radius:13px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; border:none; transition:opacity .2s; }
+.qa-save { background:var(--gold); color:var(--navy); flex:1; min-width:140px; }
+.qa-send { background:var(--pink); color:var(--white); flex:1; min-width:170px; }
+.qa-clear { background:transparent; color:var(--muted); border:1.5px solid var(--border) !important; }
+.quote-actions button:hover { opacity:.88; }
+.quote-msg { font-size:13px; font-weight:700; margin-top:10px; min-height:18px; }
+.quote-msg.ok { color:var(--green); }
+.quote-msg.err { color:var(--red); }
+
+/* SAVED QUOTES LIST */
+.saved-quotes-section { margin-bottom:18px; }
+.saved-quotes-toggle { background:var(--cream); border:1.5px solid var(--border); border-radius:13px; padding:12px 18px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; color:var(--navy); width:100%; }
+.saved-quotes-toggle:hover { background:var(--gold-light); border-color:var(--gold-mid); }
+.saved-quotes-count { background:var(--gold); color:var(--white); padding:2px 9px; border-radius:999px; font-size:11px; font-weight:900; }
+.saved-quotes-list { display:none; margin-top:10px; max-height:300px; overflow-y:auto; padding-right:4px; }
+.saved-quotes-list.show { display:block; }
+.saved-quote-item { background:var(--white); border:1px solid var(--border); border-radius:11px; padding:12px 14px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.sqi-info { flex:1; min-width:0; }
+.sqi-name { font-size:14px; font-weight:800; color:var(--navy); }
+.sqi-meta { font-size:11px; font-weight:600; color:var(--muted); margin-top:2px; }
+.sqi-price { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:var(--gold); white-space:nowrap; }
+.sqi-actions { display:flex; gap:6px; flex-shrink:0; }
+.sqi-actions button { padding:6px 10px; border-radius:8px; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:800; cursor:pointer; border:none; }
+.sqi-load { background:var(--navy); color:#fff; }
+.sqi-del { background:var(--red-light); color:var(--red); }
+.sqi-actions button:hover { opacity:.85; }
+.sqi-linked { display:inline-block; background:var(--green-light); color:var(--green); padding:1px 7px; border-radius:6px; font-size:9px; font-weight:900; letter-spacing:.05em; text-transform:uppercase; margin-left:6px; }
+
+/* GAP ANALYSIS RESULT */
 .result-strip { background:linear-gradient(135deg, var(--navy) 0%, #5B5C9D 100%); border-radius:20px; padding:28px; margin-bottom:20px; display:none; }
 .result-strip.show { display:block; }
-.result-main-price { text-align:center; margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid rgba(255,255,255,.15); }
-.result-main-price .rl { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.6); margin-bottom:8px; }
-.result-main-price .rv { font-family:'Cormorant Garamond',serif; font-size:72px; font-weight:700; color:#FFD34E; line-height:1; }
-.result-main-price .rsub { font-size:13px; font-weight:700; color:rgba(255,255,255,.6); margin-top:6px; }
-.situation-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
-.sit-card { border-radius:14px; padding:16px; }
-.sit-card.now { background:rgba(230,57,70,.2); border:1px solid rgba(230,57,70,.3); }
-.sit-card.needed { background:rgba(255,184,0,.15); border:1px solid rgba(255,184,0,.3); }
-.sit-label { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px; }
-.sit-card.now .sit-label { color:rgba(255,150,150,.9); }
-.sit-card.needed .sit-label { color:rgba(255,200,80,.9); }
-.sit-value { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:700; color:#fff; line-height:1; margin-bottom:4px; }
-.sit-note { font-size:11px; font-weight:700; color:rgba(255,255,255,.55); }
-.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
-.stat-cell { background:rgba(255,255,255,.1); border-radius:12px; padding:14px; text-align:center; }
-.stat-cell .sc-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.6); margin-bottom:6px; }
-.stat-cell .sc-value { font-size:18px; font-weight:900; color:#fff; }
-.insight-banner { border-radius:14px; padding:16px 18px; margin-bottom:20px; }
+.result-headline { text-align:center; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.15); }
+.result-headline .rl { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.6); margin-bottom:8px; }
+.result-headline .rv { font-family:'Cormorant Garamond',serif; font-size:54px; font-weight:700; color:#FFD34E; line-height:1; }
+.result-headline .rsub { font-size:13px; font-weight:700; color:rgba(255,255,255,.6); margin-top:6px; }
+.gap-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+.gap-card { border-radius:14px; padding:16px; }
+.gap-card.now { background:rgba(230,57,70,.2); border:1px solid rgba(230,57,70,.3); }
+.gap-card.needed { background:rgba(255,184,0,.15); border:1px solid rgba(255,184,0,.3); }
+.gap-label { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px; }
+.gap-card.now .gap-label { color:rgba(255,150,150,.9); }
+.gap-card.needed .gap-label { color:rgba(255,200,80,.9); }
+.gap-value { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:700; color:#fff; line-height:1; margin-bottom:4px; }
+.gap-note { font-size:11px; font-weight:700; color:rgba(255,255,255,.55); }
+.insight-banner { border-radius:14px; padding:16px 18px; margin-bottom:18px; }
 .insight-banner.gap { background:rgba(230,57,70,.2); border:1px solid rgba(230,57,70,.3); }
-.insight-banner.ok { background:rgba(0,168,120,.2); border:1px solid rgba(0,168,120,.3); }
+.insight-banner.ok  { background:rgba(0,168,120,.2); border:1px solid rgba(0,168,120,.3); }
 .insight-banner p { font-size:13px; font-weight:700; color:#fff; line-height:1.6; }
 .insight-banner strong { color:#FFD34E; }
-.breakdown-rows { border-top:1px solid rgba(255,255,255,.15); padding-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px; }
-.brow { display:flex; justify-content:space-between; align-items:center; }
-.brow span { font-size:12px; font-weight:600; color:rgba(255,255,255,.7); }
-.brow strong { font-size:12px; font-weight:800; color:rgba(255,255,255,.88); }
-.pkg-variations { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
-.pkg-var { border-radius:14px; padding:16px; text-align:center; }
-.pkg-var.basic { background:rgba(255,255,255,.12); border:1.5px solid rgba(255,255,255,.25); }
-.pkg-var.standard { background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.15); }
-.pkg-var.premium { background:rgba(255,184,0,.15); border:1.5px solid rgba(255,184,0,.35); }
-.pkg-var-name { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.9); margin-bottom:4px; }
-.pkg-var-mult { font-size:10px; font-weight:700; color:rgba(255,255,255,.55); margin-bottom:8px; }
-.pkg-var-price { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:#fff; }
-.reset-btn { width:100%; padding:16px; border-radius:14px; border:1.5px solid var(--border); background:transparent; color:var(--navy); font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; cursor:pointer; margin-bottom:20px; }
-.reset-btn:hover { background:var(--gold-light); border-color:var(--gold); }
-.guidance-note { background:var(--surface); border:1px dashed var(--border); border-radius:14px; padding:16px 18px; margin-bottom:20px; font-size:13px; font-weight:600; color:var(--muted); line-height:1.7; }
+.foundation-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.foundation-stat { background:rgba(255,255,255,.1); border-radius:12px; padding:14px; text-align:center; }
+.foundation-stat .fs-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.6); margin-bottom:6px; }
+.foundation-stat .fs-value { font-size:18px; font-weight:900; color:#fff; }
+
+/* GUIDANCE */
+.guidance-note { background:var(--surface); border:1px dashed var(--border); border-radius:14px; padding:14px 18px; margin-bottom:20px; font-size:12px; font-weight:600; color:var(--muted); line-height:1.7; }
+
+/* MODAL */
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; padding:20px; z-index:9999; }
+.modal { background:var(--white); border-radius:20px; padding:28px; width:min(480px,100%); max-height:90vh; overflow-y:auto; box-shadow:0 24px 60px rgba(0,0,0,.2); }
+.modal-title { font-size:17px; font-weight:900; color:var(--navy); margin-bottom:14px; }
+.modal-body { font-size:14px; font-weight:600; color:var(--text); line-height:1.6; margin-bottom:20px; }
+.modal-body strong { color:var(--navy); }
+.modal-btns { display:flex; gap:10px; flex-wrap:wrap; }
+.modal-btns button { flex:1; min-width:120px; padding:12px; border-radius:12px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; border:none; }
+.mbtn-primary { background:var(--navy); color:#fff; }
+.mbtn-secondary { background:var(--gold); color:var(--navy); }
+.mbtn-ghost { background:var(--cream); color:var(--text); border:1.5px solid var(--border) !important; }
+
 @media(max-width:720px){
-  .topnav { padding:0 16px; } .main { padding:24px 16px 60px; }
-  .form-grid, .form-grid.three { grid-template-columns:1fr; }
-  .situation-grid { grid-template-columns:1fr; }
-  .stats-row { grid-template-columns:1fr 1fr; }
-  .breakdown-rows { grid-template-columns:1fr; }
-  .pkg-variations { grid-template-columns:1fr; }
-  .hero-title { font-size:32px; }
+  .topnav { padding:0 16px; }
+  .main { padding:24px 16px 60px; }
+  .form-grid, .form-grid.three, .travel-distance-row { grid-template-columns:1fr; }
+  .gap-grid { grid-template-columns:1fr; }
+  .foundation-stats { grid-template-columns:1fr 1fr; }
+  .quote-breakdown { grid-template-columns:1fr; }
+  .hero-title { font-size:30px; }
+  .hours-row { grid-template-columns:1fr; }
+  .quote-total-value, .result-headline .rv { font-size:42px; }
 }
 </style>
 </head>
 <body>
 
+<!-- AUTH SCREEN -->
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">Price for Profit</div>
@@ -147,6 +220,7 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
   </div>
 </div>
 
+<!-- APP SCREEN -->
 <div id="app-screen">
   <nav class="topnav">
     <div class="nav-logo">Price for Profit <span>✦</span></div>
@@ -159,12 +233,15 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
   </nav>
 
   <div class="main">
+
+    <!-- HERO -->
     <div class="hero">
       <div class="hero-eyebrow">Know Your Numbers</div>
-      <h1 class="hero-title">Are you charging<br><em>enough?</em></h1>
-      <p class="hero-sub">Enter your income goal and current price. We will show you exactly what you are earning per hour right now — and what you actually need to charge.</p>
+      <h1 class="hero-title">Quote in minutes.<br>Charge what you're <em>worth.</em></h1>
+      <p class="hero-sub">Build a price for any wedding in seconds — using rates that come from your real costs and income goals. Your quotes save automatically and feed straight into your Lead Tracker.</p>
     </div>
 
+    <!-- CURRENCY -->
     <div class="currency-bar">
       <label>Currency</label>
       <select id="currency">
@@ -174,172 +251,298 @@ input[type=number]:focus, select:focus { outline:none; border-color:var(--gold);
         <option value="AUD">Australian Dollar (A$)</option>
         <option value="CAD">Canadian Dollar (C$)</option>
       </select>
-      <span style="font-size:12px;font-weight:600;color:var(--muted);">Results update live as you type</span>
+      <span style="font-size:12px;font-weight:600;color:var(--muted);">Updates everything live as you type</span>
     </div>
 
-    <!-- 1: INCOME GOAL -->
-    <div class="card">
-      <div class="card-title"><span class="icon">🎯</span> Your Income Goal</div>
-      <div class="form-group">
-        <label>What do you want to earn from weddings this year?</label>
-        <div class="hint">Your target gross income — before tax and expenses.</div>
-        <div class="input-wrap has-pre"><span class="pre" id="sym-goal">€</span><input type="number" id="incomeGoal" placeholder="e.g. 40000"></div>
+    <!-- ─────────────────────────── QUICK QUOTE ─────────────────────────── -->
+    <div class="card quote-card">
+      <div class="card-title"><span class="icon">⚡</span> Quick Quote</div>
+      <div class="card-sub">Got an enquiry? Build a price in 30 seconds — using your saved hourly rates.</div>
+
+      <!-- SAVED QUOTES -->
+      <div class="saved-quotes-section">
+        <button class="saved-quotes-toggle" id="saved-quotes-toggle">
+          <span>📂 Saved Quotes <span class="saved-quotes-count" id="saved-quotes-count">0</span></span>
+          <span id="saved-quotes-arrow">▾</span>
+        </button>
+        <div class="saved-quotes-list" id="saved-quotes-list"></div>
       </div>
-    </div>
 
-    <!-- 2: CURRENT PRICING -->
-    <div class="card">
-      <div class="card-title"><span class="icon">💰</span> Your Current Pricing</div>
+      <!-- COUPLE DETAILS -->
+      <div class="section-divider">Who's the quote for?</div>
       <div class="form-grid">
         <div class="form-group">
-          <label>What do you currently charge per wedding?</label>
-          <div class="hint">Your standard package price right now.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-price">€</span><input type="number" id="currentPrice" placeholder="e.g. 1200"></div>
+          <label>Couple's Name</label>
+          <input type="text" id="q-name" placeholder="e.g. Sarah & Ben">
         </div>
         <div class="form-group">
-          <label>How many weddings do you want to do per year?</label>
-          <div class="hint">Your current or planned number of weddings.</div>
+          <label>Wedding Date</label>
+          <input type="date" id="q-wedding-date">
+        </div>
+      </div>
+
+      <!-- HOURS -->
+      <div class="section-divider">Hours for this wedding</div>
+      <div id="hours-no-rate-warning" style="background:var(--red-light);border:1px solid rgba(230,57,70,.25);border-radius:11px;padding:11px 14px;margin-bottom:12px;font-size:12px;font-weight:700;color:var(--red);display:none;line-height:1.5;">
+        ⚠️ Set your hourly rates in <strong>Your Pricing Foundation</strong> below first — Quick Quote needs them to calculate.
+      </div>
+
+      <div class="hours-row">
+        <div class="form-group">
+          <label>Pre-wedding prep</label>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="q-pre-hours" placeholder="0" min="0" step="0.5"></div>
+        </div>
+        <div class="form-group">
+          <label>Rate</label>
+          <div class="rate-toggle" data-rate-for="q-pre-rate">
+            <button type="button" data-rate="full" class="active">Full</button>
+            <button type="button" data-rate="reduced">Reduced</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subtotal</label>
+          <div style="padding:11px 13px;background:var(--cream);border-radius:12px;font-size:14px;font-weight:800;color:var(--navy);text-align:right;" id="q-pre-subtotal">—</div>
+        </div>
+      </div>
+
+      <div class="hours-row">
+        <div class="form-group">
+          <label>Wedding day</label>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="q-day-hours" placeholder="0" min="0" step="0.5"></div>
+        </div>
+        <div class="form-group">
+          <label>Rate</label>
+          <div class="rate-toggle" data-rate-for="q-day-rate">
+            <button type="button" data-rate="full" class="active">Full</button>
+            <button type="button" data-rate="reduced">Reduced</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subtotal</label>
+          <div style="padding:11px 13px;background:var(--cream);border-radius:12px;font-size:14px;font-weight:800;color:var(--navy);text-align:right;" id="q-day-subtotal">—</div>
+        </div>
+      </div>
+
+      <div class="hours-row">
+        <div class="form-group">
+          <label>Post-wedding prep</label>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="q-post-hours" placeholder="0" min="0" step="0.5"></div>
+        </div>
+        <div class="form-group">
+          <label>Rate</label>
+          <div class="rate-toggle" data-rate-for="q-post-rate">
+            <button type="button" data-rate="full" class="active">Full</button>
+            <button type="button" data-rate="reduced">Reduced</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subtotal</label>
+          <div style="padding:11px 13px;background:var(--cream);border-radius:12px;font-size:14px;font-weight:800;color:var(--navy);text-align:right;" id="q-post-subtotal">—</div>
+        </div>
+      </div>
+
+      <div class="hours-row">
+        <div class="form-group">
+          <label>Admin time</label>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="q-admin-hours" placeholder="0" min="0" step="0.5"></div>
+        </div>
+        <div class="form-group">
+          <label>Rate</label>
+          <div class="rate-toggle" data-rate-for="q-admin-rate">
+            <button type="button" data-rate="full">Full</button>
+            <button type="button" data-rate="reduced" class="active">Reduced</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subtotal</label>
+          <div style="padding:11px 13px;background:var(--cream);border-radius:12px;font-size:14px;font-weight:800;color:var(--navy);text-align:right;" id="q-admin-subtotal">—</div>
+        </div>
+      </div>
+
+      <!-- TRAVEL -->
+      <div class="section-divider">Travel</div>
+      <div class="travel-toggle">
+        <button type="button" id="travel-set" class="active">Set price</button>
+        <button type="button" id="travel-distance">Distance × per-km</button>
+      </div>
+      <div id="travel-set-row">
+        <div class="form-group">
+          <label>Travel cost</label>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-travel-set">€</span><input type="number" id="q-travel-set" placeholder="0" min="0"></div>
+        </div>
+      </div>
+      <div id="travel-distance-row" style="display:none;">
+        <div class="travel-distance-row">
+          <div class="form-group">
+            <label>Distance</label>
+            <div class="input-wrap has-suf"><span class="suf">km</span><input type="number" id="q-travel-km" placeholder="0" min="0"></div>
+          </div>
+          <div class="form-group">
+            <label>Rate per km</label>
+            <div class="input-wrap has-pre"><span class="pre" id="sym-travel-rate">€</span><input type="number" id="q-travel-rate" placeholder="0.50" min="0" step="0.01"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXTRAS -->
+      <div class="section-divider">Extras</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Extra materials</label>
+          <div class="hint">Flowers, props, supplies — anything used up for this wedding.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-materials">€</span><input type="number" id="q-materials" placeholder="0" min="0"></div>
+        </div>
+        <div class="form-group">
+          <label>Assistant cost</label>
+          <div class="hint">Second shooter, helper, runner.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-assistant">€</span><input type="number" id="q-assistant" placeholder="0" min="0"></div>
+        </div>
+        <div class="form-group full">
+          <label>Other costs</label>
+          <div class="hint">Childcare, accommodation, parking, anything else specific to this wedding.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-other-q">€</span><input type="number" id="q-other-costs" placeholder="0" min="0"></div>
+        </div>
+      </div>
+
+      <!-- TOTAL -->
+      <div class="quote-total-block">
+        <div class="quote-total-label">Quote Total</div>
+        <div class="quote-total-value" id="q-total">€0</div>
+        <div class="quote-total-sub" id="q-total-sub">Add hours and extras above to build your quote</div>
+        <div class="quote-breakdown" id="q-breakdown" style="display:none;"></div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="quote-actions">
+        <button class="qa-save" id="q-save-btn">💾 Save Quote</button>
+        <button class="qa-send" id="q-send-btn">📤 Save + Send to Lead Tracker</button>
+        <button class="qa-clear" id="q-clear-btn">Clear</button>
+      </div>
+      <div class="quote-msg" id="q-msg"></div>
+    </div>
+
+    <!-- ─────────────────────────── PRICING FOUNDATION ─────────────────────────── -->
+    <div class="card">
+      <div class="card-title"><span class="icon">🎯</span> Your Pricing Foundation</div>
+      <div class="card-sub">Set this once. Quick Quote uses these numbers every time you build a quote.</div>
+
+      <!-- GOALS -->
+      <div class="section-divider">Your goals</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Annual income goal</label>
+          <div class="hint">What you want to earn from weddings this year — gross, before tax.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-goal">€</span><input type="number" id="incomeGoal" placeholder="e.g. 40000"></div>
+        </div>
+        <div class="form-group">
+          <label>Weddings per year</label>
+          <div class="hint">How many weddings you realistically want to take on.</div>
           <input type="number" id="weddingCount" placeholder="e.g. 25">
         </div>
       </div>
-    </div>
 
-    <!-- 3: BUSINESS COSTS -->
-    <div class="card">
-      <div class="card-title"><span class="icon">🏢</span> Your Business Costs</div>
-      <div class="section-divider">Annual Costs</div>
-      <div class="form-grid" style="margin-bottom:0;">
-        <div class="form-group">
-          <label>Equipment &amp; purchases per year</label>
-          <div class="hint">Gear, raw materials, marketing materials.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-equip">€</span><input type="number" id="equipment"></div>
-        </div>
-        <div class="form-group">
-          <label>Other yearly expenses</label>
-          <div class="hint">Insurance, accounting, website, domain.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-other">€</span><input type="number" id="otherExpenses"></div>
-        </div>
+      <!-- COSTS -->
+      <div class="section-divider">Your costs</div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label>Annual expenses</label>
+        <div class="hint">One-off or yearly costs — insurance, website domain, accountant, equipment.</div>
+        <div class="input-wrap has-pre"><span class="pre" id="sym-annual">€</span><input type="number" id="annualExpenses" placeholder="0"></div>
       </div>
-      <div class="section-divider">Monthly Costs <span style="font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted);">(× 12 automatically)</span></div>
-      <div class="form-grid" style="margin-bottom:0;">
-        <div class="form-group">
-          <label>Subscriptions &amp; software</label>
-          <div class="hint">Adobe, editing tools, cloud storage, CRM.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-subs">€</span><input type="number" id="monthlySubscriptions"></div>
-        </div>
-        <div class="form-group">
-          <label>Phone &amp; other monthly</label>
-          <div class="hint">Phone bill, ads, any other regular costs.</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-monthly">€</span><input type="number" id="monthlyOther"></div>
-        </div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label>Monthly expenses</label>
+        <div class="hint">Recurring costs — web hosting, subscriptions, phone bill. (We'll multiply by 12.)</div>
+        <div class="input-wrap has-pre"><span class="pre" id="sym-monthly">€</span><input type="number" id="monthlyExpenses" placeholder="0"></div>
       </div>
-      <div class="section-divider">Per-Wedding Costs</div>
-      <div class="form-grid three" style="margin-bottom:0;">
-        <div class="form-group">
-          <label>Travel per wedding</label>
-          <div class="hint">Petrol, parking, tolls, flights</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-travel">€</span><input type="number" id="travelCosts"></div>
-        </div>
-        <div class="form-group">
-          <label>Accommodation</label>
-          <div class="hint">Hotel if needed (average)</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-accomm">€</span><input type="number" id="accommodation"></div>
-        </div>
-        <div class="form-group">
-          <label>Extra costs per wedding</label>
-          <div class="hint">Assistant, equipment hire, materials</div>
-          <div class="input-wrap has-pre"><span class="pre" id="sym-extra">€</span><input type="number" id="extraCosts"></div>
-        </div>
+      <div class="form-group">
+        <label>Per-wedding extras</label>
+        <div class="hint">Average cost per wedding — marketing share, fuel, materials.</div>
+        <div class="input-wrap has-pre"><span class="pre" id="sym-extra">€</span><input type="number" id="extraExpenses" placeholder="0"></div>
       </div>
-    </div>
 
-    <!-- 4: TIME PER WEDDING -->
-    <div class="card">
-      <div class="card-title"><span class="icon">⏱</span> Your Time Per Wedding</div>
-      <p style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:18px;line-height:1.6;">Include all the time you spend — not just the wedding day itself. Most suppliers underestimate this significantly.</p>
-      <div class="form-grid three" style="margin-bottom:0;">
+      <!-- HOURS -->
+      <div class="section-divider">Your typical hours per wedding</div>
+      <p style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:14px;line-height:1.6;">For an average wedding — Quick Quote uses different numbers per wedding, but this sets your baseline rate.</p>
+      <div class="form-grid three">
         <div class="form-group">
-          <label>Hours on the day</label>
-          <div class="hint">Travel, setup, the wedding itself</div>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="coverageHours"></div>
+          <label>Pre-wedding prep</label>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="prepHours" placeholder="0"></div>
         </div>
         <div class="form-group">
-          <label>Preparation hours</label>
-          <div class="hint">Consultations, planning, prep work</div>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="editingHours"></div>
+          <label>Wedding day</label>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="dayHours" placeholder="0"></div>
         </div>
         <div class="form-group">
-          <label>Admin &amp; follow-up</label>
-          <div class="hint">Emails, invoices, delivery</div>
-          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="adminHours"></div>
+          <label>Post + admin</label>
+          <div class="input-wrap has-suf"><span class="suf">hrs</span><input type="number" id="postHours" placeholder="0"></div>
         </div>
       </div>
-      <div class="hours-total-pill">
-        <span>Total hours per wedding</span>
-        <span class="hours-total-val" id="total-hours-display">0 hrs</span>
+
+      <!-- RATES -->
+      <div class="section-divider">Your rates</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Reduced rate</label>
+          <div class="hint">Your call — what you'd charge for admin or simpler work. The Full rate is calculated from your numbers above.</div>
+          <div class="input-wrap has-pre has-suf"><span class="pre" id="sym-reduced">€</span><span class="suf">/hr</span><input type="number" id="reducedRate" placeholder="0"></div>
+        </div>
+        <div class="form-group">
+          <label>What you currently charge per wedding</label>
+          <div class="hint">Your typical package price right now — for the gap analysis below.</div>
+          <div class="input-wrap has-pre"><span class="pre" id="sym-current">€</span><input type="number" id="currentPrice" placeholder="e.g. 1200"></div>
+        </div>
       </div>
     </div>
 
+    <!-- GUIDANCE -->
     <div class="guidance-note">
-      📊 <strong style="color:var(--navy);">These calculations are for guidance only.</strong> They do not account for tax, VAT, or personal financial circumstances. Always speak to an accountant for advice specific to your business.
+      📊 <strong style="color:var(--navy);">These calculations are for guidance only.</strong> They don't account for tax, VAT, or personal financial circumstances. Speak to your accountant for advice specific to your business.
     </div>
 
-    <!-- RESULTS -->
+    <!-- GAP ANALYSIS RESULT -->
     <div class="result-strip" id="result-strip">
-      <div class="result-main-price">
+      <div class="result-headline">
         <div class="rl">What you need to charge per wedding</div>
         <div class="rv" id="res-needed-price">€0</div>
         <div class="rsub" id="res-needed-sub">To hit your income goal after costs</div>
       </div>
-      <div class="situation-grid">
-        <div class="sit-card now">
-          <div class="sit-label">Your Current Hourly Rate</div>
-          <div class="sit-value" id="res-current-hourly">€0/hr</div>
-          <div class="sit-note" id="res-current-note">At your current price</div>
+      <div class="gap-grid">
+        <div class="gap-card now">
+          <div class="gap-label">Your Current Hourly Rate</div>
+          <div class="gap-value" id="res-current-hourly">€0/hr</div>
+          <div class="gap-note" id="res-current-note">At your current price</div>
         </div>
-        <div class="sit-card needed">
-          <div class="sit-label">Needed Hourly Rate</div>
-          <div class="sit-value" id="res-needed-hourly">€0/hr</div>
-          <div class="sit-note" id="res-needed-note">At your goal price</div>
-        </div>
-      </div>
-      <div class="stats-row">
-        <div class="stat-cell">
-          <div class="sc-label">At current price you need</div>
-          <div class="sc-value" id="res-weddings-needed">0 weddings</div>
-        </div>
-        <div class="stat-cell">
-          <div class="sc-label">At goal price you need</div>
-          <div class="sc-value" id="res-weddings-goal">0 weddings</div>
-        </div>
-        <div class="stat-cell">
-          <div class="sc-label">Price gap</div>
-          <div class="sc-value" id="res-price-gap">€0</div>
+        <div class="gap-card needed">
+          <div class="gap-label">Needed Full Hourly Rate</div>
+          <div class="gap-value" id="res-needed-hourly">€0/hr</div>
+          <div class="gap-note" id="res-needed-note">To hit your goal</div>
         </div>
       </div>
       <div class="insight-banner" id="insight-banner">
         <p id="insight-text"></p>
       </div>
-      <div class="breakdown-rows">
-        <div class="brow"><span>Total cost per wedding</span><strong id="bd-cost-per-wedding">€0</strong></div>
-        <div class="brow"><span>Pre-Tax Profit per wedding</span><strong id="bd-take-home">€0</strong></div>
-        <div class="brow"><span>Total hours per wedding</span><strong id="bd-hours">0 hrs</strong></div>
-        <div class="brow"><span>Your hourly rate</span><strong id="bd-hourly">€0/hr</strong></div>
-        <div class="brow"><span>Income goal</span><strong id="bd-income">€0</strong></div>
-        <div class="brow"><span>Weddings per year</span><strong id="bd-weddings">0</strong></div>
-      </div>
-      <div class="pkg-variations">
-        <div class="pkg-var basic"><div class="pkg-var-name">Base Package</div><div class="pkg-var-mult">Reach income goal</div><div class="pkg-var-price" id="pv-basic">€0</div></div>
-        <div class="pkg-var standard"><div class="pkg-var-name">Standard Package</div><div class="pkg-var-mult">× 1.25</div><div class="pkg-var-price" id="pv-standard">€0</div></div>
-        <div class="pkg-var premium"><div class="pkg-var-name">Premium Package</div><div class="pkg-var-mult">× 1.6</div><div class="pkg-var-price" id="pv-premium">€0</div></div>
+      <div class="foundation-stats">
+        <div class="foundation-stat">
+          <div class="fs-label">Total annual costs</div>
+          <div class="fs-value" id="fs-annual">€0</div>
+        </div>
+        <div class="foundation-stat">
+          <div class="fs-label">Total hours per wedding</div>
+          <div class="fs-value" id="fs-hours">0 hrs</div>
+        </div>
+        <div class="foundation-stat">
+          <div class="fs-label">Take-home per wedding</div>
+          <div class="fs-value" id="fs-takehome">€0</div>
+        </div>
       </div>
     </div>
 
-    <button class="reset-btn" id="reset-btn" style="display:none;">Start Over</button>
   </div>
 </div>
 
 <script>
+// ════════════════════════════════════════════════════════════════════
+// SUPABASE SETUP
+// ════════════════════════════════════════════════════════════════════
 var SB_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
 var SB_KEY = "sb_publishable_CS3XLLfWaZNA-B2oE37N-g_z2FMWCzq";
 if (!window._wbwSb) {
@@ -350,15 +553,41 @@ var user = null;
 var currency = 'EUR';
 var SYMS = { EUR:'€', GBP:'£', USD:'$', AUD:'A$', CAD:'C$' };
 var saveTimer = null;
+var savedQuotes = [];
+var loadedQuoteId = null; // Track which saved quote is being edited
+var currentRates = { full: 0, reduced: 0 };
 
-var FIELDS = ['incomeGoal','currentPrice','weddingCount','equipment','otherExpenses',
-              'monthlySubscriptions','monthlyOther','travelCosts','accommodation',
-              'extraCosts','coverageHours','editingHours','adminHours'];
+// Foundation fields (the strategic calculator)
+var FOUNDATION_FIELDS = ['incomeGoal','weddingCount','annualExpenses','monthlyExpenses','extraExpenses',
+                         'prepHours','dayHours','postHours','reducedRate','currentPrice'];
 
+// Quote rate selections (default state)
+var quoteRates = {
+  pre: 'full',
+  day: 'full',
+  post: 'full',
+  admin: 'reduced'
+};
+
+// Travel mode
+var travelMode = 'set'; // or 'distance'
+
+// ────────────────────────────────────────────────────────────────────
+// HELPERS
+// ────────────────────────────────────────────────────────────────────
 function sym() { return SYMS[currency] || '€'; }
 function fmt(n) { if (!n && n !== 0) return sym()+'0'; return sym() + Math.round(n).toLocaleString('en-IE'); }
+function fmtPrecise(n) { if (!n && n !== 0) return sym()+'0'; return sym() + n.toFixed(2).replace(/\.00$/, ''); }
+function g(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function gStr(id) { return (document.getElementById(id).value || '').trim(); }
+function todayISO() { return new Date().toISOString().slice(0,10); }
+function genId() { return Date.now().toString(16) + Math.random().toString(16).slice(2); }
+function esc(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function fmtDate(iso) { if (!iso) return "—"; var p=iso.split("-"); return p[2]+"/"+p[1]+"/"+p[0]; }
 
-// ── AUTH ──────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────────────────
+// AUTH
+// ────────────────────────────────────────────────────────────────────
 function switchTab(t) {
   document.getElementById('form-in').style.display = t==='in'?'':'none';
   document.getElementById('form-up').style.display = t==='up'?'':'none';
@@ -381,14 +610,14 @@ document.getElementById('signup-btn').onclick = function() {
     });
 };
 document.getElementById('signout-btn').onclick = function() { sb.auth.signOut(); };
-document.getElementById('reset-btn').onclick = resetCalc;
 
 function boot(u) {
   user = u;
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app-screen').style.display = 'block';
   document.getElementById('nav-user').textContent = u.email;
-  loadSaved();
+  loadFoundation();
+  loadSavedQuotes();
 }
 sb.auth.getSession().then(function(r) { if (r.data&&r.data.session&&r.data.session.user) boot(r.data.session.user); });
 sb.auth.onAuthStateChange(function(event, session) {
@@ -399,116 +628,232 @@ sb.auth.onAuthStateChange(function(event, session) {
   }
 });
 
-// ── CURRENCY ──────────────────────────────────────────────
-function onCurrencyChange() {
-  currency = document.getElementById('currency').value;
+// ────────────────────────────────────────────────────────────────────
+// CURRENCY
+// ────────────────────────────────────────────────────────────────────
+function updateCurrencySymbols() {
   var s = sym();
-  ['sym-goal','sym-price','sym-equip','sym-other','sym-subs','sym-monthly','sym-travel','sym-accomm','sym-extra'].forEach(function(id) {
+  ['sym-goal','sym-annual','sym-monthly','sym-extra','sym-reduced','sym-current',
+   'sym-travel-set','sym-travel-rate','sym-materials','sym-assistant','sym-other-q'].forEach(function(id) {
     var el = document.getElementById(id); if (el) el.textContent = s;
   });
-  calc();
-  queueSave();
 }
-document.getElementById('currency').onchange = onCurrencyChange;
+document.getElementById('currency').onchange = function() {
+  currency = this.value;
+  updateCurrencySymbols();
+  calcFoundation();
+  calcQuote();
+  queueSave();
+};
 
-// ── CALC ──────────────────────────────────────────────────
-function g(id) { return parseFloat(document.getElementById(id).value) || 0; }
+// ────────────────────────────────────────────────────────────────────
+// FOUNDATION CALCULATION (strategic calculator)
+// ────────────────────────────────────────────────────────────────────
+function calcFoundation() {
+  var incomeGoal      = g('incomeGoal');
+  var weddingCount    = Math.max(1, g('weddingCount') || 1);
+  var annualExpenses  = g('annualExpenses');
+  var monthlyExpenses = g('monthlyExpenses');
+  var extraExpenses   = g('extraExpenses');
+  var prepHours       = g('prepHours');
+  var dayHours        = g('dayHours');
+  var postHours       = g('postHours');
+  var reducedRate     = g('reducedRate');
+  var currentPrice    = g('currentPrice');
 
-function calc() {
-  var incomeGoal    = g('incomeGoal');
-  var currentPrice  = g('currentPrice');
-  var weddingCount  = Math.max(1, g('weddingCount') || 1);
-  var equipment     = g('equipment');
-  var otherExpenses = g('otherExpenses');
-  var monthlySubs   = g('monthlySubscriptions');
-  var monthlyOther  = g('monthlyOther');
-  var travelCosts   = g('travelCosts');
-  var accommodation = g('accommodation');
-  var extraCosts    = g('extraCosts');
-  var coverageHrs   = g('coverageHours');
-  var editingHrs    = g('editingHours');
-  var adminHrs      = g('adminHours');
+  var totalHours      = prepHours + dayHours + postHours;
+  var totalAnnual     = annualExpenses + (monthlyExpenses * 12);
+  var perWedding      = extraExpenses;
+  var overheadPerWed  = totalAnnual / weddingCount;
+  var neededPrice     = (totalAnnual + incomeGoal) / weddingCount + perWedding;
+  var fullHourlyRate  = totalHours > 0 ? (neededPrice - perWedding) / totalHours : 0;
+  var currentHourly   = totalHours > 0 ? currentPrice / totalHours : 0;
+  var takeHome        = incomeGoal / weddingCount;
+  var priceGap        = neededPrice - currentPrice;
 
-  var totalHours    = coverageHrs + editingHrs + adminHrs;
-  var annualFixed   = equipment + otherExpenses;
-  var annualMonthly = (monthlySubs + monthlyOther) * 12;
-  var totalAnnual   = annualFixed + annualMonthly;
-  var perWedding    = travelCosts + accommodation + extraCosts;
-  var overheadPerWedding = totalAnnual / weddingCount;
-  var neededPrice   = (totalAnnual + incomeGoal) / weddingCount + perWedding;
-  var currentHourly = totalHours > 0 ? currentPrice / totalHours : 0;
-  var neededHourly  = totalHours > 0 ? neededPrice  / totalHours : 0;
-  var totalRequired = totalAnnual + incomeGoal;
-  var weddingsAtCurrent = currentPrice > perWedding ? Math.ceil(totalRequired / (currentPrice - perWedding)) : 999;
-  var priceGap = neededPrice - currentPrice;
+  // Update current rates for Quick Quote
+  currentRates.full = fullHourlyRate;
+  currentRates.reduced = reducedRate;
 
-  document.getElementById('total-hours-display').textContent = totalHours + ' hrs';
+  // Show/hide warning if no rates
+  document.getElementById('hours-no-rate-warning').style.display =
+    (currentRates.full <= 0 && currentRates.reduced <= 0) ? 'block' : 'none';
 
-  if (incomeGoal > 0 || currentPrice > 0) {
+  // Show result strip if income goal set
+  if (incomeGoal > 0 && weddingCount > 0 && totalHours > 0) {
     document.getElementById('result-strip').classList.add('show');
-    document.getElementById('reset-btn').style.display = 'block';
   }
 
-  document.getElementById('res-needed-price').textContent   = fmt(neededPrice);
-  document.getElementById('res-needed-sub').textContent     = 'Based on ' + weddingCount + ' weddings · ' + totalHours + ' hrs each';
-  document.getElementById('res-current-hourly').textContent  = totalHours > 0 ? fmt(currentHourly)+'/hr' : '—';
-  document.getElementById('res-current-note').textContent   = 'At '+fmt(currentPrice)+' per wedding';
-  document.getElementById('res-needed-hourly').textContent   = totalHours > 0 ? fmt(neededHourly)+'/hr' : '—';
-  document.getElementById('res-needed-note').textContent    = 'At '+fmt(neededPrice)+' per wedding';
-  document.getElementById('res-weddings-needed').textContent = weddingsAtCurrent < 500 ? weddingsAtCurrent + ' weddings' : '500+ weddings';
-  document.getElementById('res-weddings-goal').textContent   = weddingCount + ' weddings';
-  document.getElementById('res-price-gap').textContent      = priceGap >= 0 ? '+'+fmt(priceGap) : fmt(priceGap);
+  // Populate gap analysis
+  document.getElementById('res-needed-price').textContent = fmt(neededPrice);
+  document.getElementById('res-needed-sub').textContent = 'Based on ' + weddingCount + ' weddings · ' + totalHours + ' hrs each';
+  document.getElementById('res-current-hourly').textContent = totalHours > 0 ? fmt(currentHourly) + '/hr' : '—';
+  document.getElementById('res-current-note').textContent = 'At ' + fmt(currentPrice) + ' per wedding';
+  document.getElementById('res-needed-hourly').textContent = totalHours > 0 ? fmt(fullHourlyRate) + '/hr' : '—';
+  document.getElementById('res-needed-note').textContent = 'At ' + fmt(neededPrice) + ' per wedding';
 
+  // Insight banner
   var banner = document.getElementById('insight-banner');
-  var text   = document.getElementById('insight-text');
+  var text = document.getElementById('insight-text');
   if (currentPrice > 0 && incomeGoal > 0) {
     if (priceGap > 0) {
       banner.className = 'insight-banner gap';
-      text.innerHTML = 'At <strong>'+fmt(currentPrice)+'</strong> you would need to do <strong>'+weddingsAtCurrent+' weddings</strong> to hit your goal — raising your price to <strong>'+fmt(neededPrice)+'</strong> means you only need <strong>'+weddingCount+'</strong>.';
+      text.innerHTML = 'There\'s a <strong>' + fmt(priceGap) + ' gap</strong> per wedding between what you charge and what you need to charge to hit your goal. That\'s ' + fmt(priceGap * weddingCount) + ' across ' + weddingCount + ' weddings — money you\'re leaving on the table every year.';
     } else if (priceGap < 0) {
       banner.className = 'insight-banner ok';
-      text.innerHTML = 'Your current price of <strong>'+fmt(currentPrice)+'</strong> already covers your goal at <strong>'+weddingCount+' weddings</strong>. You are charging above your minimum — keep it there.';
+      text.innerHTML = 'Your current price of <strong>' + fmt(currentPrice) + '</strong> already covers your goal at <strong>' + weddingCount + ' weddings</strong>. Keep it there — or raise it if you want to grow.';
     } else {
       banner.className = 'insight-banner ok';
-      text.innerHTML = 'Your current price is exactly at your minimum. You are covering your costs and hitting your goal at <strong>'+weddingCount+' weddings</strong>.';
+      text.innerHTML = 'Your current price is exactly at your minimum — covering costs and hitting your goal.';
     }
   } else {
     banner.className = 'insight-banner gap';
-    text.innerHTML = 'Enter your income goal and current price above to see your full picture.';
+    text.innerHTML = 'Enter your annual income goal and current price to see your full picture.';
   }
 
-  var takeHomePerWedding  = incomeGoal / weddingCount;
-  var totalCostPerWedding = overheadPerWedding + perWedding;
-  document.getElementById('bd-cost-per-wedding').textContent = fmt(totalCostPerWedding);
-  document.getElementById('bd-take-home').textContent        = fmt(takeHomePerWedding);
-  document.getElementById('bd-hours').textContent            = totalHours + ' hrs';
-  document.getElementById('bd-hourly').textContent           = totalHours > 0 ? fmt(neededHourly) + '/hr' : '—';
-  document.getElementById('bd-income').textContent           = fmt(incomeGoal);
-  document.getElementById('bd-weddings').textContent         = weddingCount;
-  document.getElementById('pv-basic').textContent            = fmt(neededPrice);
-  document.getElementById('pv-standard').textContent         = fmt(neededPrice * 1.25);
-  document.getElementById('pv-premium').textContent          = fmt(neededPrice * 1.6);
+  document.getElementById('fs-annual').textContent = fmt(totalAnnual);
+  document.getElementById('fs-hours').textContent = totalHours + ' hrs';
+  document.getElementById('fs-takehome').textContent = fmt(takeHome);
+
+  // Sync to localStorage for Income Goal tool
+  if (user) {
+    try {
+      localStorage.setItem('wbw-pfp-' + user.id, JSON.stringify({
+        incomeGoal: incomeGoal,
+        currentPrice: currentPrice,
+        weddingCount: weddingCount,
+        currency: currency,
+        neededPrice: neededPrice,
+        minPrice: neededPrice,
+        fullHourlyRate: fullHourlyRate,
+        reducedRate: reducedRate
+      }));
+    } catch(e) {}
+  }
 }
 
-// ── INPUT LISTENERS ───────────────────────────────────────
-FIELDS.forEach(function(id) {
+// ────────────────────────────────────────────────────────────────────
+// QUOTE CALCULATION
+// ────────────────────────────────────────────────────────────────────
+function getRate(which) {
+  return which === 'full' ? currentRates.full : currentRates.reduced;
+}
+
+function calcQuote() {
+  var preHours    = g('q-pre-hours');
+  var dayHours    = g('q-day-hours');
+  var postHours   = g('q-post-hours');
+  var adminHours  = g('q-admin-hours');
+
+  var preSubtotal   = preHours   * getRate(quoteRates.pre);
+  var daySubtotal   = dayHours   * getRate(quoteRates.day);
+  var postSubtotal  = postHours  * getRate(quoteRates.post);
+  var adminSubtotal = adminHours * getRate(quoteRates.admin);
+
+  document.getElementById('q-pre-subtotal').textContent   = preSubtotal > 0 ? fmt(preSubtotal) : '—';
+  document.getElementById('q-day-subtotal').textContent   = daySubtotal > 0 ? fmt(daySubtotal) : '—';
+  document.getElementById('q-post-subtotal').textContent  = postSubtotal > 0 ? fmt(postSubtotal) : '—';
+  document.getElementById('q-admin-subtotal').textContent = adminSubtotal > 0 ? fmt(adminSubtotal) : '—';
+
+  var hoursTotal = preSubtotal + daySubtotal + postSubtotal + adminSubtotal;
+
+  // Travel
+  var travel = 0;
+  if (travelMode === 'set') {
+    travel = g('q-travel-set');
+  } else {
+    travel = g('q-travel-km') * g('q-travel-rate');
+  }
+
+  var materials = g('q-materials');
+  var assistant = g('q-assistant');
+  var other     = g('q-other-costs');
+
+  var grandTotal = hoursTotal + travel + materials + assistant + other;
+
+  document.getElementById('q-total').textContent = fmt(grandTotal);
+
+  if (grandTotal > 0) {
+    document.getElementById('q-total-sub').textContent = 'Quote built from your saved rates';
+    var bd = document.getElementById('q-breakdown');
+    var rows = [];
+    if (preSubtotal > 0)   rows.push(['Pre-wedding prep ('+preHours+'h × '+quoteRates.pre+')',   fmt(preSubtotal)]);
+    if (daySubtotal > 0)   rows.push(['Wedding day ('+dayHours+'h × '+quoteRates.day+')',         fmt(daySubtotal)]);
+    if (postSubtotal > 0)  rows.push(['Post-wedding prep ('+postHours+'h × '+quoteRates.post+')', fmt(postSubtotal)]);
+    if (adminSubtotal > 0) rows.push(['Admin ('+adminHours+'h × '+quoteRates.admin+')',           fmt(adminSubtotal)]);
+    if (travel > 0)        rows.push(['Travel', fmt(travel)]);
+    if (materials > 0)     rows.push(['Materials', fmt(materials)]);
+    if (assistant > 0)     rows.push(['Assistant', fmt(assistant)]);
+    if (other > 0)         rows.push(['Other costs', fmt(other)]);
+    bd.innerHTML = rows.map(function(r) { return '<div class="quote-bd-row"><span>'+r[0]+'</span><strong>'+r[1]+'</strong></div>'; }).join('');
+    bd.style.display = 'grid';
+  } else {
+    document.getElementById('q-total-sub').textContent = 'Add hours and extras above to build your quote';
+    document.getElementById('q-breakdown').style.display = 'none';
+  }
+}
+
+// ────────────────────────────────────────────────────────────────────
+// FIELD LISTENERS
+// ────────────────────────────────────────────────────────────────────
+FOUNDATION_FIELDS.forEach(function(id) {
   var el = document.getElementById(id);
-  if (el) el.oninput = function() { calc(); queueSave(); };
+  if (el) el.oninput = function() { calcFoundation(); calcQuote(); queueSave(); };
 });
 
-// ── SAVE TO SUPABASE ──────────────────────────────────────
+// Quote inputs
+['q-name','q-wedding-date','q-pre-hours','q-day-hours','q-post-hours','q-admin-hours',
+ 'q-travel-set','q-travel-km','q-travel-rate','q-materials','q-assistant','q-other-costs'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) el.oninput = calcQuote;
+});
+
+// Rate toggle buttons
+document.querySelectorAll('.rate-toggle').forEach(function(toggle) {
+  var key = toggle.getAttribute('data-rate-for').replace('q-','').replace('-rate','');
+  toggle.querySelectorAll('button').forEach(function(btn) {
+    btn.onclick = function() {
+      toggle.querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      quoteRates[key] = btn.getAttribute('data-rate');
+      calcQuote();
+    };
+  });
+});
+
+// Travel toggle
+document.getElementById('travel-set').onclick = function() {
+  travelMode = 'set';
+  this.classList.add('active');
+  document.getElementById('travel-distance').classList.remove('active');
+  document.getElementById('travel-set-row').style.display = '';
+  document.getElementById('travel-distance-row').style.display = 'none';
+  calcQuote();
+};
+document.getElementById('travel-distance').onclick = function() {
+  travelMode = 'distance';
+  this.classList.add('active');
+  document.getElementById('travel-set').classList.remove('active');
+  document.getElementById('travel-set-row').style.display = 'none';
+  document.getElementById('travel-distance-row').style.display = '';
+  calcQuote();
+};
+
+// ────────────────────────────────────────────────────────────────────
+// SAVE FOUNDATION (auto-save)
+// ────────────────────────────────────────────────────────────────────
 function queueSave() {
   var pill = document.getElementById('save-pill');
   pill.className = 'save-pill saving'; pill.textContent = '⏳ Saving…';
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveData, 1500);
+  saveTimer = setTimeout(saveFoundation, 1500);
 }
 
-async function saveData() {
+async function saveFoundation() {
   if (!user) return;
   var pill = document.getElementById('save-pill');
   var data = { currency: currency };
-  FIELDS.forEach(function(f) {
+  FOUNDATION_FIELDS.forEach(function(f) {
     var el = document.getElementById(f);
     data[f] = el ? (parseFloat(el.value) || null) : null;
   });
@@ -521,29 +866,16 @@ async function saveData() {
     if (result.error) throw result.error;
     pill.className = 'save-pill saved'; pill.textContent = '✓ Saved';
     setTimeout(function() { pill.className='save-pill'; pill.textContent='✦ Auto-saves'; }, 2500);
-
-    // Also keep localStorage in sync for Income Goals tool
-    try {
-      var incomeGoal   = data.incomeGoal   || 0;
-      var currentPrice = data.currentPrice || 0;
-      var weddingCount = Math.max(1, data.weddingCount || 1);
-      var totalAnnual  = (data.equipment||0) + (data.otherExpenses||0) + ((data.monthlySubscriptions||0)+(data.monthlyOther||0))*12;
-      var perWedding   = (data.travelCosts||0) + (data.accommodation||0) + (data.extraCosts||0);
-      var neededPrice  = (totalAnnual + incomeGoal) / weddingCount + perWedding;
-      localStorage.setItem('wbw-pfp-' + user.id, JSON.stringify({
-        incomeGoal: incomeGoal, currentPrice: currentPrice, weddingCount: weddingCount,
-        currency: currency, neededPrice: neededPrice, minPrice: neededPrice,
-        basic: neededPrice, standard: neededPrice*1.25, premium: neededPrice*1.6
-      }));
-    } catch(e) {}
   } catch(e) {
     pill.className = 'save-pill'; pill.textContent = '⚠ Save failed';
     console.log('Save error:', e);
   }
 }
 
-// ── LOAD FROM SUPABASE ────────────────────────────────────
-async function loadSaved() {
+// ────────────────────────────────────────────────────────────────────
+// LOAD FOUNDATION
+// ────────────────────────────────────────────────────────────────────
+async function loadFoundation() {
   if (!user) return;
   try {
     var result = await sb.from('price_for_profit').select('data').eq('user_id', user.id).single();
@@ -552,48 +884,383 @@ async function loadSaved() {
       if (d.currency) {
         currency = d.currency;
         document.getElementById('currency').value = d.currency;
-        var s = sym();
-        ['sym-goal','sym-price','sym-equip','sym-other','sym-subs','sym-monthly','sym-travel','sym-accomm','sym-extra'].forEach(function(id) {
-          var el = document.getElementById(id); if (el) el.textContent = s;
-        });
       }
-      FIELDS.forEach(function(f) {
+      FOUNDATION_FIELDS.forEach(function(f) {
         var el = document.getElementById(f);
         if (el && d[f] != null) el.value = d[f];
       });
-      calc();
+      updateCurrencySymbols();
+      calcFoundation();
+      calcQuote();
     }
   } catch(e) {
-    // No saved data yet — that's fine
-    console.log('No saved data:', e);
+    console.log('No saved foundation:', e);
   }
 }
 
-// ── RESET ─────────────────────────────────────────────────
-function resetCalc() {
-  FIELDS.forEach(function(id) {
+// ────────────────────────────────────────────────────────────────────
+// SAVED QUOTES
+// ────────────────────────────────────────────────────────────────────
+async function loadSavedQuotes() {
+  if (!user) return;
+  try {
+    var result = await sb.from('quotes').select('*').eq('user_id', user.id).order('updated_at', { ascending: false });
+    savedQuotes = (result.data || []).map(function(r) { return Object.assign({ _row_id: r.id }, r.data || {}, { lead_id: r.lead_id }); });
+    renderSavedQuotes();
+  } catch(e) {
+    savedQuotes = [];
+    renderSavedQuotes();
+    console.log('Load quotes error:', e);
+  }
+}
+
+function renderSavedQuotes() {
+  document.getElementById('saved-quotes-count').textContent = savedQuotes.length;
+  var list = document.getElementById('saved-quotes-list');
+  if (!savedQuotes.length) {
+    list.innerHTML = '<div style="text-align:center;padding:18px;color:var(--muted);font-size:13px;font-weight:600;">No saved quotes yet</div>';
+    return;
+  }
+  list.innerHTML = savedQuotes.map(function(q) {
+    var dateStr = q.weddingDate ? fmtDate(q.weddingDate) : 'No date';
+    var linkedBadge = q.lead_id ? '<span class="sqi-linked">In Lead Tracker</span>' : '';
+    return '<div class="saved-quote-item">'+
+      '<div class="sqi-info">'+
+        '<div class="sqi-name">'+esc(q.coupleName || 'Unnamed couple')+linkedBadge+'</div>'+
+        '<div class="sqi-meta">Wedding: '+dateStr+' · Saved '+fmtDate(q.savedDate || todayISO())+'</div>'+
+      '</div>'+
+      '<div class="sqi-price">'+fmt(q.total || 0)+'</div>'+
+      '<div class="sqi-actions">'+
+        '<button class="sqi-load" data-load="'+q._row_id+'">Open</button>'+
+        '<button class="sqi-del" data-del="'+q._row_id+'">✕</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  list.querySelectorAll('[data-load]').forEach(function(b) { b.onclick = function() { loadQuoteIntoForm(b.getAttribute('data-load')); }; });
+  list.querySelectorAll('[data-del]').forEach(function(b) { b.onclick = function() { deleteQuote(b.getAttribute('data-del')); }; });
+}
+
+document.getElementById('saved-quotes-toggle').onclick = function() {
+  var list = document.getElementById('saved-quotes-list');
+  var arrow = document.getElementById('saved-quotes-arrow');
+  list.classList.toggle('show');
+  arrow.textContent = list.classList.contains('show') ? '▴' : '▾';
+};
+
+function buildQuoteData() {
+  var preHours    = g('q-pre-hours');
+  var dayHours    = g('q-day-hours');
+  var postHours   = g('q-post-hours');
+  var adminHours  = g('q-admin-hours');
+  var preSubtotal   = preHours   * getRate(quoteRates.pre);
+  var daySubtotal   = dayHours   * getRate(quoteRates.day);
+  var postSubtotal  = postHours  * getRate(quoteRates.post);
+  var adminSubtotal = adminHours * getRate(quoteRates.admin);
+  var travel = travelMode === 'set' ? g('q-travel-set') : g('q-travel-km') * g('q-travel-rate');
+  var materials = g('q-materials');
+  var assistant = g('q-assistant');
+  var other = g('q-other-costs');
+  var total = preSubtotal + daySubtotal + postSubtotal + adminSubtotal + travel + materials + assistant + other;
+
+  return {
+    coupleName: gStr('q-name'),
+    weddingDate: gStr('q-wedding-date'),
+    preHours: preHours, preRate: quoteRates.pre, preSubtotal: preSubtotal,
+    dayHours: dayHours, dayRate: quoteRates.day, daySubtotal: daySubtotal,
+    postHours: postHours, postRate: quoteRates.post, postSubtotal: postSubtotal,
+    adminHours: adminHours, adminRate: quoteRates.admin, adminSubtotal: adminSubtotal,
+    travelMode: travelMode,
+    travelSet: g('q-travel-set'),
+    travelKm: g('q-travel-km'),
+    travelRate: g('q-travel-rate'),
+    travelTotal: travel,
+    materials: materials,
+    assistant: assistant,
+    other: other,
+    total: total,
+    currency: currency,
+    savedDate: todayISO(),
+    fullRate: currentRates.full,
+    reducedRate: currentRates.reduced
+  };
+}
+
+function setQuoteMsg(text, type) {
+  var el = document.getElementById('q-msg');
+  el.textContent = text;
+  el.className = 'quote-msg ' + (type || '');
+  if (type === 'ok') setTimeout(function() { el.textContent=''; }, 4000);
+}
+
+async function saveQuote() {
+  if (!user) return;
+  var name = gStr('q-name');
+  if (!name) { setQuoteMsg("Add the couple's name before saving.", 'err'); return; }
+  var data = buildQuoteData();
+  if (data.total <= 0) { setQuoteMsg("Add some hours or costs before saving.", 'err'); return; }
+
+  try {
+    if (loadedQuoteId) {
+      // Update existing
+      var result = await sb.from('quotes').update({
+        data: data,
+        updated_at: new Date().toISOString()
+      }).eq('id', loadedQuoteId).eq('user_id', user.id);
+      if (result.error) throw result.error;
+      setQuoteMsg('✓ Quote updated', 'ok');
+    } else {
+      // Create new
+      var result = await sb.from('quotes').insert({
+        user_id: user.id,
+        data: data
+      }).select().single();
+      if (result.error) throw result.error;
+      loadedQuoteId = result.data.id;
+      setQuoteMsg('✓ Quote saved', 'ok');
+    }
+    await loadSavedQuotes();
+  } catch(e) {
+    console.log('Save quote error:', e);
+    setQuoteMsg('Save failed: ' + (e.message || 'unknown error'), 'err');
+  }
+}
+
+async function deleteQuote(rowId) {
+  if (!confirm('Delete this saved quote?')) return;
+  try {
+    await sb.from('quotes').delete().eq('id', rowId).eq('user_id', user.id);
+    if (loadedQuoteId === rowId) {
+      loadedQuoteId = null;
+      clearQuoteForm();
+    }
+    await loadSavedQuotes();
+  } catch(e) {
+    alert('Could not delete: ' + e.message);
+  }
+}
+
+function loadQuoteIntoForm(rowId) {
+  var q = savedQuotes.find(function(x) { return x._row_id === rowId; });
+  if (!q) return;
+
+  document.getElementById('q-name').value = q.coupleName || '';
+  document.getElementById('q-wedding-date').value = q.weddingDate || '';
+  document.getElementById('q-pre-hours').value = q.preHours || '';
+  document.getElementById('q-day-hours').value = q.dayHours || '';
+  document.getElementById('q-post-hours').value = q.postHours || '';
+  document.getElementById('q-admin-hours').value = q.adminHours || '';
+
+  // Restore rate selections
+  ['pre','day','post','admin'].forEach(function(key) {
+    var rate = q[key+'Rate'] || (key === 'admin' ? 'reduced' : 'full');
+    quoteRates[key] = rate;
+    var toggle = document.querySelector('[data-rate-for="q-'+key+'-rate"]');
+    if (toggle) {
+      toggle.querySelectorAll('button').forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-rate') === rate);
+      });
+    }
+  });
+
+  // Travel
+  travelMode = q.travelMode || 'set';
+  if (travelMode === 'set') {
+    document.getElementById('travel-set').click();
+  } else {
+    document.getElementById('travel-distance').click();
+  }
+  document.getElementById('q-travel-set').value = q.travelSet || '';
+  document.getElementById('q-travel-km').value = q.travelKm || '';
+  document.getElementById('q-travel-rate').value = q.travelRate || '';
+  document.getElementById('q-materials').value = q.materials || '';
+  document.getElementById('q-assistant').value = q.assistant || '';
+  document.getElementById('q-other-costs').value = q.other || '';
+
+  loadedQuoteId = rowId;
+  calcQuote();
+
+  // Scroll to top of quote card
+  document.querySelector('.quote-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setQuoteMsg('Quote loaded — make changes and save again to update.', 'ok');
+}
+
+function clearQuoteForm() {
+  ['q-name','q-wedding-date','q-pre-hours','q-day-hours','q-post-hours','q-admin-hours',
+   'q-travel-set','q-travel-km','q-travel-rate','q-materials','q-assistant','q-other-costs'].forEach(function(id) {
     var el = document.getElementById(id); if (el) el.value = '';
   });
-  document.getElementById('result-strip').classList.remove('show');
-  document.getElementById('reset-btn').style.display = 'none';
-  document.getElementById('total-hours-display').textContent = '0 hrs';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  queueSave();
+  // Reset rates to defaults
+  quoteRates = { pre:'full', day:'full', post:'full', admin:'reduced' };
+  document.querySelectorAll('.rate-toggle').forEach(function(toggle) {
+    var key = toggle.getAttribute('data-rate-for').replace('q-','').replace('-rate','');
+    toggle.querySelectorAll('button').forEach(function(b) {
+      b.classList.toggle('active', b.getAttribute('data-rate') === quoteRates[key]);
+    });
+  });
+  // Reset travel mode
+  travelMode = 'set';
+  document.getElementById('travel-set').click();
+
+  loadedQuoteId = null;
+  calcQuote();
+  setQuoteMsg('', '');
 }
+
+// ────────────────────────────────────────────────────────────────────
+// SEND TO LEAD TRACKER
+// ────────────────────────────────────────────────────────────────────
+function getFirstFollowUpDate(enquiryDate) {
+  var d = new Date(enquiryDate || todayISO());
+  d.setDate(d.getDate() + 2); // 2 days from enquiry, matching Lead Tracker
+  return d.toISOString().slice(0,10);
+}
+
+async function findExistingLead(coupleName) {
+  if (!user || !coupleName) return null;
+  try {
+    var result = await sb.from('leads').select('*').eq('user_id', user.id);
+    if (result.error || !result.data) return null;
+    var nameLower = coupleName.toLowerCase().trim();
+    var matches = result.data
+      .map(function(r) { return r.data || r; })
+      .filter(function(l) { return l && l.name && l.name.toLowerCase().trim() === nameLower; });
+    return matches.length > 0 ? matches[0] : null;
+  } catch(e) {
+    console.log('Find lead error:', e);
+    return null;
+  }
+}
+
+async function sendToLeadTracker() {
+  if (!user) return;
+  var name = gStr('q-name');
+  if (!name) { setQuoteMsg("Add the couple's name first.", 'err'); return; }
+
+  var data = buildQuoteData();
+  if (data.total <= 0) { setQuoteMsg("Build a quote total before sending.", 'err'); return; }
+
+  // First save the quote
+  await saveQuote();
+
+  // Then check if a matching lead exists
+  var existing = await findExistingLead(name);
+
+  if (existing) {
+    showLeadConfirmModal(existing, data);
+  } else {
+    // Create new lead
+    await createNewLead(data);
+  }
+}
+
+async function createNewLead(quoteData) {
+  var leadId = genId();
+  var enquiryDate = todayISO();
+  var lead = {
+    id: leadId,
+    createdAt: new Date().toISOString(),
+    name: quoteData.coupleName,
+    enquiry: enquiryDate,
+    wedding: quoteData.weddingDate || '',
+    venue: '',
+    email: '',
+    source: 'Other',
+    status: 'Replied',
+    priceQuoted: Math.round(quoteData.total),
+    depositPaid: 0,
+    instalments: [],
+    nextFollowUp: getFirstFollowUpDate(enquiryDate),
+    followupStep: 1
+  };
+
+  try {
+    await sb.from('leads').upsert({
+      id: leadId,
+      user_id: user.id,
+      data: lead,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'id' });
+
+    // Link this quote to the lead
+    if (loadedQuoteId) {
+      await sb.from('quotes').update({ lead_id: leadId }).eq('id', loadedQuoteId).eq('user_id', user.id);
+    }
+
+    setQuoteMsg('✓ New lead created in Lead Tracker — follow-up scheduled for ' + fmtDate(lead.nextFollowUp), 'ok');
+    await loadSavedQuotes();
+  } catch(e) {
+    console.log('Create lead error:', e);
+    setQuoteMsg('Quote saved, but couldn\'t create lead: ' + (e.message || 'unknown'), 'err');
+  }
+}
+
+async function updateExistingLead(existingLead, quoteData) {
+  existingLead.priceQuoted = Math.round(quoteData.total);
+  if (quoteData.weddingDate && !existingLead.wedding) {
+    existingLead.wedding = quoteData.weddingDate;
+  }
+
+  try {
+    await sb.from('leads').upsert({
+      id: existingLead.id,
+      user_id: user.id,
+      data: existingLead,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'id' });
+
+    if (loadedQuoteId) {
+      await sb.from('quotes').update({ lead_id: existingLead.id }).eq('id', loadedQuoteId).eq('user_id', user.id);
+    }
+
+    setQuoteMsg('✓ Quote updated on existing lead in Lead Tracker', 'ok');
+    await loadSavedQuotes();
+  } catch(e) {
+    console.log('Update lead error:', e);
+    setQuoteMsg('Could not update lead: ' + (e.message || 'unknown'), 'err');
+  }
+}
+
+function showLeadConfirmModal(existingLead, quoteData) {
+  var overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.innerHTML =
+    '<div class="modal">'+
+      '<div class="modal-title">Match Found in Lead Tracker</div>'+
+      '<div class="modal-body">'+
+        'You already have a lead for <strong>'+esc(existingLead.name)+'</strong>'+
+        (existingLead.wedding ? ' (wedding ' + fmtDate(existingLead.wedding) + ')' : '') +
+        '. Their current quoted price is <strong>'+fmt(existingLead.priceQuoted || 0)+'</strong>.'+
+        '<br><br>What would you like to do?'+
+      '</div>'+
+      '<div class="modal-btns">'+
+        '<button class="mbtn-primary" id="m-update">Update existing lead</button>'+
+        '<button class="mbtn-secondary" id="m-new">Create as new lead</button>'+
+        '<button class="mbtn-ghost" id="m-cancel">Cancel</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(overlay);
+  var close = function() { overlay.remove(); };
+  overlay.querySelector('#m-cancel').onclick = close;
+  overlay.querySelector('#m-update').onclick = async function() {
+    close();
+    await updateExistingLead(existingLead, quoteData);
+  };
+  overlay.querySelector('#m-new').onclick = async function() {
+    close();
+    await createNewLead(quoteData);
+  };
+}
+
+// ────────────────────────────────────────────────────────────────────
+// QUOTE BUTTONS
+// ────────────────────────────────────────────────────────────────────
+document.getElementById('q-save-btn').onclick = saveQuote;
+document.getElementById('q-send-btn').onclick = sendToLeadTracker;
+document.getElementById('q-clear-btn').onclick = function() {
+  if (loadedQuoteId && !confirm('Clear the form? Your saved quote will stay safe in the list.')) return;
+  clearQuoteForm();
+};
+
 </script>
 </body>
 </html>
-
-<!--
-SUPABASE TABLE — run once in your SQL editor:
-
-CREATE TABLE IF NOT EXISTS price_for_profit (
-  id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id    UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL UNIQUE,
-  data       JSONB DEFAULT '{}',
-  updated_at TIMESTAMPTZ DEFAULT now()
-);
-ALTER TABLE price_for_profit ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Users manage own price for profit" ON price_for_profit
-  FOR ALL USING (auth.uid() = user_id);
--->
