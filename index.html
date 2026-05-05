@@ -36,6 +36,12 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .auth-msg { margin-top:12px; font-size:13px; font-weight:700; text-align:center; min-height:18px; }
 .auth-msg.error { color:#c0392b; }
 .auth-msg.success { color:#27ae60; }
+.auth-forgot-row { text-align:right; margin-top:-4px; margin-bottom:4px; }
+.auth-forgot-link { font-size:12px; font-weight:700; color:var(--muted); background:none; border:none; cursor:pointer; padding:0; font-family:'Montserrat',sans-serif; text-decoration:underline; transition:color .2s; }
+.auth-forgot-link:hover { color:var(--pink); }
+.auth-back-link { display:block; margin-top:14px; font-size:12px; font-weight:700; color:var(--muted); background:none; border:none; cursor:pointer; padding:0; font-family:'Montserrat',sans-serif; text-align:center; width:100%; transition:color .2s; }
+.auth-back-link:hover { color:var(--navy); }
+.auth-intro { font-size:13px; font-weight:600; color:var(--muted); line-height:1.65; margin-bottom:18px; }
 #app-screen { display:none; }
 .topnav { background:var(--navy); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:64px; position:sticky; top:0; z-index:100; }
 .nav-logo { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:#fff; }
@@ -172,22 +178,37 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
   <div class="auth-card">
     <div class="auth-logo">Wedding Business Workspace</div>
     <div class="auth-tagline">Welcome back to your wedding business control centre.</div>
-    <div class="auth-tabs">
+    <div class="auth-tabs" id="auth-tabs-row">
       <button class="auth-tab active" id="tab-in">Sign In</button>
       <button class="auth-tab" id="tab-up">Create Account</button>
     </div>
+
+    <!-- SIGN IN -->
     <div id="form-in">
       <div class="auth-field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com"></div>
       <div class="auth-field"><label>Password</label><input type="password" id="in-pass" placeholder="Your password"></div>
+      <div class="auth-forgot-row"><button type="button" class="auth-forgot-link" id="forgot-link">Forgot password?</button></div>
       <button class="auth-submit" id="signin-btn">Sign In</button>
       <div class="auth-msg" id="in-msg"></div>
     </div>
+
+    <!-- SIGN UP -->
     <div id="form-up" style="display:none;">
       <div class="auth-field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
       <div class="auth-field"><label>Password</label><input type="password" id="up-pass" placeholder="Choose a password (min 6 chars)"></div>
       <button class="auth-submit" id="signup-btn">Create Account</button>
       <div class="auth-msg" id="up-msg"></div>
     </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div id="form-forgot" style="display:none;">
+      <div class="auth-intro">No worries — enter the email address you signed up with and we'll send you a link to reset your password.</div>
+      <div class="auth-field"><label>Email</label><input type="email" id="forgot-email" placeholder="you@example.com"></div>
+      <button class="auth-submit" id="forgot-btn">Send reset link</button>
+      <div class="auth-msg" id="forgot-msg"></div>
+      <button type="button" class="auth-back-link" id="forgot-back">← Back to sign in</button>
+    </div>
+
   </div>
 </div>
 
@@ -347,17 +368,36 @@ if (!window._wbwSb) {
 }
 const sb = window._wbwSb;
 
+// Reset password redirect — points back to the reset page on the live site
+const RESET_REDIRECT_URL = window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + 'reset-password.html';
+
 document.getElementById("tab-in").onclick = function() { switchTab("in"); };
 document.getElementById("tab-up").onclick = function() { switchTab("up"); };
 document.getElementById("signin-btn").onclick = signIn;
 document.getElementById("signup-btn").onclick = signUp;
 document.getElementById("signout-btn").onclick = signOut;
+document.getElementById("forgot-link").onclick = showForgot;
+document.getElementById("forgot-back").onclick = function() { switchTab("in"); };
+document.getElementById("forgot-btn").onclick = sendResetEmail;
 
 function switchTab(t) {
-  document.getElementById("form-in").style.display = t === "in" ? "" : "none";
-  document.getElementById("form-up").style.display = t === "up" ? "" : "none";
+  document.getElementById("form-in").style.display     = t === "in"     ? "" : "none";
+  document.getElementById("form-up").style.display     = t === "up"     ? "" : "none";
+  document.getElementById("form-forgot").style.display = t === "forgot" ? "" : "none";
+  document.getElementById("auth-tabs-row").style.display = (t === "forgot") ? "none" : "flex";
   document.getElementById("tab-in").classList.toggle("active", t === "in");
   document.getElementById("tab-up").classList.toggle("active", t === "up");
+  // clear messages
+  document.getElementById("in-msg").textContent = "";
+  document.getElementById("up-msg").textContent = "";
+  document.getElementById("forgot-msg").textContent = "";
+}
+
+function showForgot() {
+  // Pre-fill forgot email with whatever is in the sign-in email field
+  var current = document.getElementById("in-email").value.trim();
+  if (current) document.getElementById("forgot-email").value = current;
+  switchTab("forgot");
 }
 
 async function signIn() {
@@ -383,11 +423,39 @@ async function signUp() {
   if (pass.length < 6) { showMsg(msg, "Password must be at least 6 characters.", "error"); return; }
   btn.disabled = true;
   btn.textContent = "Creating account...";
-  var result = await sb.auth.signUp({ email: email, password: pass });
+  var result = await sb.auth.signUp({
+    email: email,
+    password: pass,
+    options: { emailRedirectTo: RESET_REDIRECT_URL.replace('reset-password.html', 'index.html') }
+  });
   btn.disabled = false;
   btn.textContent = "Create Account";
-  if (result.error) { showMsg(msg, result.error.message, "error"); }
-  else { showMsg(msg, "Account created! Please sign in.", "success"); switchTab("in"); }
+  if (result.error) {
+    showMsg(msg, result.error.message, "error");
+  } else {
+    showMsg(msg, "Almost there! Check your inbox to confirm your email, then sign in.", "success");
+    document.getElementById("up-email").value = "";
+    document.getElementById("up-pass").value = "";
+  }
+}
+
+async function sendResetEmail() {
+  var email = document.getElementById("forgot-email").value.trim();
+  var msg = document.getElementById("forgot-msg");
+  var btn = document.getElementById("forgot-btn");
+  if (!email) { showMsg(msg, "Please enter your email address.", "error"); return; }
+  btn.disabled = true;
+  btn.textContent = "Sending...";
+  var result = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: RESET_REDIRECT_URL
+  });
+  btn.disabled = false;
+  btn.textContent = "Send reset link";
+  if (result.error) {
+    showMsg(msg, result.error.message, "error");
+  } else {
+    showMsg(msg, "✓ Check your inbox for a reset link. It may take a minute to arrive.", "success");
+  }
 }
 
 async function signOut() {
