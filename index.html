@@ -178,7 +178,7 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
   <div class="auth-card">
     <div class="auth-logo">Wedding Business Workspace</div>
     <div class="auth-tagline">Welcome back to your wedding business control centre.</div>
-    <div class="auth-tabs" id="auth-tabs-row">
+    <div class="auth-tabs" id="auth-tabs-row" style="display:none;">
       <button class="auth-tab active" id="tab-in">Sign In</button>
       <button class="auth-tab" id="tab-up">Create Account</button>
     </div>
@@ -380,11 +380,22 @@ document.getElementById("forgot-link").onclick = showForgot;
 document.getElementById("forgot-back").onclick = function() { switchTab("in"); };
 document.getElementById("forgot-btn").onclick = sendResetEmail;
 
+// Show signup tab only if URL contains ?signup=true (admin/test access)
+var _signupModeEnabled = new URLSearchParams(window.location.search).get('signup') === 'true';
+if (_signupModeEnabled) {
+  document.getElementById("auth-tabs-row").style.display = "flex";
+}
+
 function switchTab(t) {
   document.getElementById("form-in").style.display     = t === "in"     ? "" : "none";
   document.getElementById("form-up").style.display     = t === "up"     ? "" : "none";
   document.getElementById("form-forgot").style.display = t === "forgot" ? "" : "none";
-  document.getElementById("auth-tabs-row").style.display = (t === "forgot") ? "none" : "flex";
+  // Tabs row only ever shows in signup mode AND not in forgot view
+  if (_signupModeEnabled) {
+    document.getElementById("auth-tabs-row").style.display = (t === "forgot") ? "none" : "flex";
+  } else {
+    document.getElementById("auth-tabs-row").style.display = "none";
+  }
   document.getElementById("tab-in").classList.toggle("active", t === "in");
   document.getElementById("tab-up").classList.toggle("active", t === "up");
   // clear messages
