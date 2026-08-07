@@ -1,3 +1,5 @@
+
+Price for profit · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -109,7 +111,7 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
 .brow { display:flex; justify-content:space-between; align-items:center; }
 .brow span { font-size:12px; font-weight:600; color:rgba(255,255,255,.7); }
 .brow strong { font-size:12px; font-weight:800; color:rgba(255,255,255,.88); }
-.pkg-variations { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+.pkg-variations { display:grid; grid-template-columns:1fr; max-width:260px; margin:0 auto; gap:12px; }
 .pkg-var { border-radius:14px; padding:16px; text-align:center; }
 .pkg-var.basic { background:rgba(255,255,255,.12); border:1.5px solid rgba(255,255,255,.25); }
 .pkg-var.standard { background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.15); }
@@ -154,6 +156,7 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
 .quote-actions button { padding:13px 18px; border-radius:13px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; cursor:pointer; border:none; }
 .qa-save { background:var(--gold); color:var(--navy); flex:1; min-width:140px; }
 .qa-send { background:var(--pink); color:var(--white); flex:1; min-width:170px; }
+.qa-download { background:var(--navy); color:#fff; flex:1; min-width:150px; }
 .qa-clear { background:transparent; color:var(--muted); border:1.5px solid var(--border) !important; }
 .quote-actions button:hover { opacity:.88; }
 .quote-msg { font-size:13px; font-weight:700; margin-top:10px; min-height:18px; }
@@ -440,7 +443,8 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
         <p id="insight-text"></p>
       </div>
       <div class="breakdown-rows">
-        <div class="brow"><span>Total cost per wedding</span><strong id="bd-cost-per-wedding">€0</strong></div>
+        <div class="brow"><span>Business overhead</span><strong id="bd-overhead">€0</strong></div>
+        <div class="brow"><span>Average travel &amp; extras</span><strong id="bd-travel">€0</strong></div>
         <div class="brow"><span>Pre-Tax Profit per wedding</span><strong id="bd-take-home">€0</strong></div>
         <div class="brow"><span>Total hours per wedding</span><strong id="bd-hours">0 hrs</strong></div>
         <div class="brow"><span>Full hourly rate</span><strong id="bd-hourly">€0/hr</strong></div>
@@ -448,11 +452,11 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
         <div class="brow"><span>Weddings per year</span><strong id="bd-weddings">0</strong></div>
       </div>
       <div class="pkg-variations">
-        <div class="pkg-var basic"><div class="pkg-var-name">Base Package</div><div class="pkg-var-mult">Reach income goal</div><div class="pkg-var-price" id="pv-basic">€0</div></div>
-        <div class="pkg-var standard"><div class="pkg-var-name">Standard Package</div><div class="pkg-var-mult">× 1.25</div><div class="pkg-var-price" id="pv-standard">€0</div></div>
-        <div class="pkg-var premium"><div class="pkg-var-name">Premium Package</div><div class="pkg-var-mult">× 1.6</div><div class="pkg-var-price" id="pv-premium">€0</div></div>
+        <div class="pkg-var basic"><div class="pkg-var-name">Base Package Price</div><div class="pkg-var-mult">Reach income goal</div><div class="pkg-var-price" id="pv-basic">€0</div></div>
       </div>
+      <p style="font-size:11px;font-weight:600;color:rgba(255,255,255,.55);text-align:center;margin-top:14px;line-height:1.6;">Includes your average travel &amp; extras above. Need more for a specific wedding? Build a custom quote below.</p>
     </div>
+    <p id="rate-reassurance" style="font-size:12px;font-weight:600;color:var(--muted);text-align:center;margin:-8px 0 20px;line-height:1.6;"></p>
     <button class="reset-btn" id="reset-btn" style="display:none;">Start Over</button>
     <!-- QUOTE FOR A BESPOKE WEDDING -->
     <div class="card quote-card">
@@ -592,6 +596,7 @@ input:focus, select:focus { outline:none; border-color:var(--gold); }
       </div>
       <div class="quote-actions">
         <button class="qa-save" id="q-save-btn">💾 Save Quote</button>
+        <button class="qa-download" id="q-download-btn">⬇️ Download Quote</button>
         <button class="qa-send" id="q-send-btn">📤 Save + Send to Lead Tracker</button>
         <button class="qa-clear" id="q-clear-btn">Clear</button>
       </div>
@@ -616,6 +621,7 @@ var fRates = { admin:'half', day:'full', editing:'full', delivery:'half' };
 var qRates = { admin:'half', day:'full', editing:'full' };
 var fullRate = 0;
 var halfRate = 0;
+var overheadPerWedding = 0;
 var draftSaveTimer = null;
 function sym() { return SYMS[currency] || '€'; }
 function fmt(n) { if (!n && n !== 0) return sym()+'0'; return sym() + Math.round(n).toLocaleString('en-IE'); }
@@ -721,12 +727,13 @@ function calc() {
   var monthlyTotal  = (monthlySubs + monthlyOther) * 12;
   var businessCostsTotal = yearlyTotal + monthlyTotal + businessExtras;
   var perWedding    = travelCosts + accommodation + extraCosts;
-  var overheadPerWedding = businessCostsTotal / weddingCount;
-  var neededPrice = (businessCostsTotal + incomeGoal) / weddingCount + perWedding;
+  overheadPerWedding = businessCostsTotal / weddingCount;
+  var incomeGoalPerWedding = incomeGoal / weddingCount;
+  var neededPrice = overheadPerWedding + incomeGoalPerWedding + perWedding;
   var fullRateHours = (fRates.admin==='full'?adminHrs:0) + (fRates.day==='full'?dayHrs:0) + (fRates.editing==='full'?editingHrs:0) + (fRates.delivery==='full'?deliveryHrs:0);
   var halfRateHours = (fRates.admin==='half'?adminHrs:0) + (fRates.day==='half'?dayHrs:0) + (fRates.editing==='half'?editingHrs:0) + (fRates.delivery==='half'?deliveryHrs:0);
   var weightedHours = fullRateHours + (halfRateHours / 2);
-  fullRate = weightedHours > 0 ? (neededPrice - perWedding) / weightedHours : 0;
+  fullRate = weightedHours > 0 ? incomeGoalPerWedding / weightedHours : 0;
   halfRate = fullRate / 2;
   function getRate(side) { return side === 'full' ? fullRate : halfRate; }
   var adminSub    = adminHrs    * getRate(fRates.admin);
@@ -774,16 +781,15 @@ function calc() {
     text.innerHTML = 'Enter your income goal and current price above to see your full picture.';
   }
   var takeHomePerWedding = incomeGoal / weddingCount;
-  var totalCostPerWedding = overheadPerWedding + perWedding;
-  document.getElementById('bd-cost-per-wedding').textContent = fmt(totalCostPerWedding);
+  document.getElementById('bd-overhead').textContent         = fmt(overheadPerWedding);
+  document.getElementById('bd-travel').textContent           = fmt(perWedding);
   document.getElementById('bd-take-home').textContent        = fmt(takeHomePerWedding);
   document.getElementById('bd-hours').textContent            = totalHours + ' hrs';
   document.getElementById('bd-hourly').textContent           = totalHours > 0 ? fmt(fullRate) + '/hr' : '—';
   document.getElementById('bd-income').textContent           = fmt(incomeGoal);
   document.getElementById('bd-weddings').textContent         = weddingCount;
   document.getElementById('pv-basic').textContent      = fmt(neededPrice);
-  document.getElementById('pv-standard').textContent   = fmt(neededPrice * 1.25);
-  document.getElementById('pv-premium').textContent    = fmt(neededPrice * 1.6);
+  document.getElementById('rate-reassurance').textContent = fullRate > 0 ? 'If ' + fmt(fullRate) + '/hr feels too high at the moment, you can either reduce your income goal or increase the number of weddings. As your business grows, you can readjust.' : '';
   document.getElementById('quote-no-rate-warning').style.display = (fullRate <= 0) ? 'block' : 'none';
   if (user) {
     try {
@@ -861,12 +867,13 @@ function calcQuote() {
   var travelTotal = fuel + transport + accommodation + travelExtras;
   var secondShooter = g('q-second-shooter');
   var other = g('q-other-costs');
-  var grandTotal = hoursTotal + travelTotal + secondShooter + other;
+  var grandTotal = overheadPerWedding + hoursTotal + travelTotal + secondShooter + other;
   document.getElementById('q-total').textContent = fmt(grandTotal);
   if (grandTotal > 0) {
     document.getElementById('q-total-sub').textContent = 'Quote built from your saved rates';
     var bd = document.getElementById('q-breakdown');
     var rows = [];
+    rows.push(['Business overhead (your share)', fmt(overheadPerWedding)]);
     if (adminSub > 0) rows.push(['Admin time ('+adminH+'h × '+qRates.admin+')', fmt(adminSub)]);
     if (daySub > 0)   rows.push(['Wedding day ('+dayH+'h × '+qRates.day+')', fmt(daySub)]);
     if (editSub > 0)  rows.push(['Editing hours ('+editH+'h × '+qRates.editing+')', fmt(editSub)]);
@@ -962,10 +969,11 @@ function buildQuoteData() {
   var travelExtras = g('q-travel-extras');
   var secondShooter = g('q-second-shooter');
   var other = g('q-other-costs');
-  var total = adminSub + daySub + editSub + fuel + transport + accommodation + travelExtras + secondShooter + other;
+  var total = overheadPerWedding + adminSub + daySub + editSub + fuel + transport + accommodation + travelExtras + secondShooter + other;
   return {
     coupleName: gStr('q-name'),
     weddingDate: gStr('q-wedding-date'),
+    overheadPerWedding: overheadPerWedding,
     adminHours: adminH, adminRate: qRates.admin, adminSubtotal: adminSub,
     dayHours: dayH, dayRate: qRates.day, daySubtotal: daySub,
     editingHours: editH, editingRate: qRates.editing, editingSubtotal: editSub,
@@ -975,6 +983,50 @@ function buildQuoteData() {
     total: total, currency: currency, savedDate: todayISO(),
     fullRate: fullRate, halfRate: halfRate
   };
+}
+function downloadQuote() {
+  var name = gStr('q-name');
+  if (!name) { setQuoteMsg("Add the couple's name before downloading.", 'err'); return; }
+  var data = buildQuoteData();
+  if (data.total <= 0) { setQuoteMsg("Build a quote total before downloading.", 'err'); return; }
+  var rows = [];
+  rows.push(['Business overhead (your share)', fmt(data.overheadPerWedding)]);
+  if (data.adminSubtotal > 0)   rows.push(['Admin time ('+data.adminHours+'h)', fmt(data.adminSubtotal)]);
+  if (data.daySubtotal > 0)     rows.push(['Wedding day ('+data.dayHours+'h)', fmt(data.daySubtotal)]);
+  if (data.editingSubtotal > 0) rows.push(['Editing hours ('+data.editingHours+'h)', fmt(data.editingSubtotal)]);
+  if (data.fuelTotal > 0)       rows.push(['Fuel', fmt(data.fuelTotal)]);
+  if (data.transport > 0)       rows.push(['Transport / flights', fmt(data.transport)]);
+  if (data.accommodation > 0)   rows.push(['Accommodation', fmt(data.accommodation)]);
+  if (data.travelExtras > 0)    rows.push(['Travel extras', fmt(data.travelExtras)]);
+  if (data.secondShooter > 0)   rows.push(['Second shooter', fmt(data.secondShooter)]);
+  if (data.other > 0)           rows.push(['Other costs', fmt(data.other)]);
+  var rowsHtml = rows.map(function(r) {
+    return '<tr><td style="padding:9px 0;color:#666;font-size:13px;border-bottom:1px solid #eee;">'+esc(r[0])+'</td><td style="padding:9px 0;text-align:right;font-weight:700;color:#2A2B4A;font-size:13px;border-bottom:1px solid #eee;">'+r[1]+'</td></tr>';
+  }).join('');
+  var dateStr = data.weddingDate ? fmtDate(data.weddingDate) : '';
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Quote for '+esc(name)+'</title>'+
+    '<style>'+
+    'body{font-family:Georgia,serif;color:#2A2B4A;max-width:640px;margin:40px auto;padding:0 24px;}'+
+    'h1{font-size:22px;color:#3B3C6D;margin-bottom:4px;}'+
+    '.sub{font-size:13px;color:#888;margin-bottom:28px;}'+
+    'table{width:100%;border-collapse:collapse;margin-bottom:20px;}'+
+    '.total-row td{padding-top:16px;font-size:20px;font-weight:900;color:#3B3C6D;border-top:2px solid #3B3C6D;border-bottom:none;}'+
+    '.footer{font-size:11px;color:#999;margin-top:32px;line-height:1.6;}'+
+    '@media print{body{margin:0;padding:24px;}}'+
+    '</style></head><body>'+
+    '<h1>Wedding Quote — '+esc(name)+'</h1>'+
+    '<div class="sub">'+(dateStr ? 'Wedding date: '+dateStr+' · ' : '')+'Prepared '+fmtDate(todayISO())+'</div>'+
+    '<table>'+rowsHtml+
+    '<tr class="total-row"><td>Total</td><td style="text-align:right;">'+fmt(data.total)+'</td></tr>'+
+    '</table>'+
+    '<div class="footer">This quote is valid for 30 days from the date above. Figures are guidance based on your Price for Profit calculations and do not include tax or VAT unless stated.</div>'+
+    '</body></html>';
+  var win = window.open('', '_blank');
+  if (!win) { setQuoteMsg('Please allow pop-ups to download the quote.', 'err'); return; }
+  win.document.write(html);
+  win.document.close();
+  win.focus();
+  setTimeout(function() { win.print(); }, 350);
 }
 function setQuoteMsg(text, type) {
   var el = document.getElementById('q-msg');
@@ -1239,6 +1291,7 @@ function clearQuoteForm() {
   setQuoteMsg('', '');
 }
 document.getElementById('q-save-btn').onclick = saveQuote;
+document.getElementById('q-download-btn').onclick = downloadQuote;
 document.getElementById('q-send-btn').onclick = sendToLeadTracker;
 document.getElementById('q-clear-btn').onclick = function() {
   if (loadedQuoteId && !confirm('Clear the form? Your saved quote will stay safe in the list.')) return;
