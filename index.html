@@ -117,8 +117,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .footer-logo { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:700; color:var(--navy); }
 .footer-logo span { color:var(--pink); }
 .footer-copy { font-size:12px; font-weight:600; color:var(--muted); }
-
-
 /* ── PROFILE MODAL ────────────────────────────────────── */
 .profile-overlay { position:fixed; inset:0; background:rgba(20,20,50,.75); display:flex; align-items:center; justify-content:center; padding:24px; z-index:9999; backdrop-filter:blur(4px); }
 .profile-modal { background:var(--white); border-radius:24px; padding:40px; width:100%; max-width:460px; box-shadow:0 24px 60px rgba(0,0,0,.25); }
@@ -132,7 +130,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 .pm-btn { width:100%; padding:14px; background:var(--navy); color:#fff; border:none; border-radius:14px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:opacity .2s; }
 .pm-btn:hover { opacity:.88; }
 .pm-btn:disabled { opacity:.45; cursor:not-allowed; }
-
 /* ── WELCOME BANNER ───────────────────────────────────── */
 .welcome-banner { background:linear-gradient(135deg,var(--navy) 0%,#5B5C9D 100%); border-radius:20px; padding:28px 32px; margin-bottom:28px; display:none; position:relative; overflow:hidden; }
 .welcome-banner.show { display:block; }
@@ -173,7 +170,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
 </style>
 </head>
 <body>
-
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">Wedding Business Workspace</div>
@@ -182,7 +178,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       <button class="auth-tab active" id="tab-in">Sign In</button>
       <button class="auth-tab" id="tab-up">Create Account</button>
     </div>
-
     <!-- SIGN IN -->
     <div id="form-in">
       <div class="auth-field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com"></div>
@@ -191,7 +186,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       <button class="auth-submit" id="signin-btn">Sign In</button>
       <div class="auth-msg" id="in-msg"></div>
     </div>
-
     <!-- SIGN UP -->
     <div id="form-up" style="display:none;">
       <div class="auth-field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
@@ -199,7 +193,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       <button class="auth-submit" id="signup-btn">Create Account</button>
       <div class="auth-msg" id="up-msg"></div>
     </div>
-
     <!-- FORGOT PASSWORD -->
     <div id="form-forgot" style="display:none;">
       <div class="auth-intro">No worries — enter the email address you signed up with and we'll send you a link to reset your password.</div>
@@ -208,29 +201,24 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       <div class="auth-msg" id="forgot-msg"></div>
       <button type="button" class="auth-back-link" id="forgot-back">← Back to sign in</button>
     </div>
-
   </div>
 </div>
-
 <div id="app-screen">
   <nav class="topnav">
     <div class="nav-logo">Wedding Business <span>Workspace</span></div>
    <div class="nav-right">
   <div class="nav-user" id="nav-user"></div>
-  <a href="https://www.helloweddingpro.com/courses/wedding-business-workspace/dashboard" target="_blank" rel="noopener" style="padding:8px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:rgba(255,255,255,.8);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;">📺 Help Videos</a>
+  <a href="https://www.weddingcontentcreatorcoach.com/courses/wedding-content-business-builders-membership/dashboard" target="_blank" rel="noopener" style="padding:8px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:rgba(255,255,255,.8);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;">🏠 Membership</a>
   <button onclick="openEditProfile()" style="padding:8px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:rgba(255,255,255,.8);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">My Profile</button>
   <button class="nav-signout" id="signout-btn">Sign out</button>
 </div>
   </nav>
-
   <div class="main">
-
     <div class="hero">
       <div class="hero-greeting" id="hero-greeting">Good morning</div>
       <h1 class="hero-title">Welcome back to your wedding business control centre.</h1>
       <p class="hero-sub">Your snapshot updates as you use your tools. The more you use them, the clearer your picture becomes.</p>
     </div>
-
     <div class="welcome-banner" id="welcome-banner">
       <div class="wb-eyebrow">👋 Welcome to the Wedding Business Workspace</div>
       <div class="wb-title">Before you do anything else — start here.</div>
@@ -239,7 +227,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
         <a href="where-to-start.html" class="wb-btn">Take the assessment now →</a>
       </div>
     </div>
-
     <div class="snapshot-card">
       <div class="snapshot-header">
         <div>
@@ -249,7 +236,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       </div>
       <div class="snapshot-grid" id="snapshot-grid"></div>
     </div>
-
     <div class="wts-card">
       <div class="wts-card-header">
         <div class="wts-card-title">Where To Start</div>
@@ -262,8 +248,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
         </div>
       </div>
     </div>
-
-
     <div class="followup-card" id="followup-card">
       <div>
         <div class="followup-eyebrow">📋 Lead Tracker — Action Required</div>
@@ -272,7 +256,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       </div>
       <a href="lead-tracker.html" class="followup-btn">Open Lead Tracker →</a>
     </div>
-
     <div class="ig-prompt-card" id="ig-prompt-card">
       <div class="ig-prompt-left">
         <div class="ig-prompt-eyebrow">📸 Today's Instagram Prompt</div>
@@ -281,7 +264,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
       </div>
       <a href="instagram-ready.html" class="ig-prompt-btn">Open Instagram Ready →</a>
     </div>
-
     <div class="category">
       <div class="category-header"><div class="cat-label">Income &amp; Pricing</div><div class="cat-line"></div></div>
       <div class="tools-grid">
@@ -311,7 +293,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
         </a>
       </div>
     </div>
-
     <div class="category">
       <div class="category-header"><div class="cat-label">Lead &amp; Client Management</div><div class="cat-line"></div></div>
       <div class="tools-grid">
@@ -331,7 +312,6 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
         </a>
       </div>
     </div>
-
     <div class="category">
       <div class="category-header"><div class="cat-label">Marketing &amp; Social Media</div><div class="cat-line"></div></div>
       <div class="tools-grid">
@@ -344,20 +324,16 @@ body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: v
         </a>
       </div>
     </div>
-
     <div class="category" id="yearly-section" style="display:none;padding:0 2px;">
       <div class="category-header"><div class="cat-label">Bookings Pipeline — All Years</div><div class="cat-line"></div></div>
       <div id="yearly-breakdown" style="padding:0 2px;"></div>
     </div>
-
   </div>
-
   <footer class="dash-footer">
     <div class="footer-logo">Wedding Business <span>Workspace</span></div>
     <div class="footer-copy">Hello Wedding Pro 2025</div>
   </footer>
 </div>
-
 <script>
 const SUPABASE_URL = "https://mbvdmvmwduidwmirndvu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_CS3XLLfWaZNA-B2oE37N-g_z2FMWCzq";
@@ -367,10 +343,8 @@ if (!window._wbwSb) {
   });
 }
 const sb = window._wbwSb;
-
 // Reset password redirect — points back to the reset page on the live site
 const RESET_REDIRECT_URL = window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + 'reset-password.html';
-
 document.getElementById("tab-in").onclick = function() { switchTab("in"); };
 document.getElementById("tab-up").onclick = function() { switchTab("up"); };
 document.getElementById("signin-btn").onclick = signIn;
@@ -379,13 +353,11 @@ document.getElementById("signout-btn").onclick = signOut;
 document.getElementById("forgot-link").onclick = showForgot;
 document.getElementById("forgot-back").onclick = function() { switchTab("in"); };
 document.getElementById("forgot-btn").onclick = sendResetEmail;
-
 // Show signup tab only if URL contains ?signup=true (admin/test access)
 var _signupModeEnabled = new URLSearchParams(window.location.search).get('signup') === 'true';
 if (_signupModeEnabled) {
   document.getElementById("auth-tabs-row").style.display = "flex";
 }
-
 function switchTab(t) {
   document.getElementById("form-in").style.display     = t === "in"     ? "" : "none";
   document.getElementById("form-up").style.display     = t === "up"     ? "" : "none";
@@ -403,14 +375,12 @@ function switchTab(t) {
   document.getElementById("up-msg").textContent = "";
   document.getElementById("forgot-msg").textContent = "";
 }
-
 function showForgot() {
   // Pre-fill forgot email with whatever is in the sign-in email field
   var current = document.getElementById("in-email").value.trim();
   if (current) document.getElementById("forgot-email").value = current;
   switchTab("forgot");
 }
-
 async function signIn() {
   var email = document.getElementById("in-email").value.trim();
   var pass = document.getElementById("in-pass").value;
@@ -424,7 +394,6 @@ async function signIn() {
   btn.textContent = "Sign In";
   if (result.error) { showMsg(msg, result.error.message, "error"); }
 }
-
 async function signUp() {
   var email = document.getElementById("up-email").value.trim();
   var pass = document.getElementById("up-pass").value;
@@ -449,7 +418,6 @@ async function signUp() {
     document.getElementById("up-pass").value = "";
   }
 }
-
 async function sendResetEmail() {
   var email = document.getElementById("forgot-email").value.trim();
   var msg = document.getElementById("forgot-msg");
@@ -468,31 +436,25 @@ async function sendResetEmail() {
     showMsg(msg, "✓ Check your inbox for a reset link. It may take a minute to arrive.", "success");
   }
 }
-
 async function signOut() {
   await sb.auth.signOut();
   document.getElementById("app-screen").style.display = "none";
   document.getElementById("auth-screen").style.display = "flex";
 }
-
 function showMsg(el, text, type) {
   el.textContent = text;
   el.className = "auth-msg " + type;
 }
-
 var _appInitialised = false;
-
 async function initApp(user) {
   if (_appInitialised) return;
   _appInitialised = true;
   document.getElementById("auth-screen").style.display = "none";
   document.getElementById("app-screen").style.display = "block";
   document.getElementById("nav-user").textContent = user.email;
-
   var h = new Date().getHours();
   var greeting = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
   document.getElementById("hero-greeting").textContent = greeting + " ✨";
-
   // Populate service dropdown
   var sel = document.getElementById('pm-service');
   SERVICES.forEach(function(s) {
@@ -500,7 +462,6 @@ async function initApp(user) {
     opt.value = s; opt.textContent = s;
     sel.appendChild(opt);
   });
-
   // Load profile
   var profile = await loadProfile(user.id);
   _currentUserId  = user.id;
@@ -514,7 +475,6 @@ async function initApp(user) {
   }
   renderIGPrompt();
   document.getElementById("wts-results-area").innerHTML = '<div style="padding:16px 0; font-size:13px; font-weight:700; color:var(--muted);">Loading your results...</div>';
-
   try {
     var igRaw = localStorage.getItem("wbw-ig-" + user.id);
     if (igRaw) {
@@ -527,16 +487,13 @@ async function initApp(user) {
       snapData.currency = igData.currency || "EUR";
     }
   } catch(e) {}
-
   await Promise.all([loadWTSResults(user.id), loadLeadData(user.id)]);
 }
-
 sb.auth.getSession().then(function(result) {
   if (result.data && result.data.session && result.data.session.user) {
     initApp(result.data.session.user);
   }
 });
-
 sb.auth.onAuthStateChange(function(event, session) {
   if (event === "SIGNED_IN" && session && session.user) {
     _appInitialised = false;
@@ -547,13 +504,11 @@ sb.auth.onAuthStateChange(function(event, session) {
     document.getElementById("auth-screen").style.display = "flex";
   }
 });
-
 var snapData = {
   incomeGoal: null, avgPrice: null, weddingsNeeded: null,
   bookedCount: 0, incomeReceived: 0, projectedIncome: 0, stillNeeded: null,
   totalLeads: 0, followupsDue: 0, currency: "EUR"
 };
-
 function renderSnapshot() {
   var d = snapData;
   var grid = document.getElementById("snapshot-grid");
@@ -567,14 +522,12 @@ function renderSnapshot() {
   var bookedPct = needed ? Math.min(100, Math.round((booked / needed) * 100)) : 0;
   var projectedPct = goal ? Math.min(100, Math.round((projectedIncome / goal) * 100)) : 0;
   var incomePct = goal ? Math.min(100, Math.round((incomeReceived / goal) * 100)) : 0;
-
   var CURR = { EUR:"€", USD:"$", GBP:"£", AUD:"A$", CAD:"C$" };
   function fmt(n) {
     if (n === null || n === undefined) return null;
     var s = CURR[d.currency] || "€";
     return s + Number(Math.round(n)).toLocaleString("en-IE");
   }
-
   var stats = [
     { label:"Income Goal",          value:fmt(goal)||"--",              valueClass:"amber", meta:goal ? "Your target for this year" : "Set in Income Goals",       progress:null, unlock:!goal?"income-planner.html":null },
     { label:"Weddings Needed",       value:needed||"--",                 valueClass:"",      meta:needed ? "To hit your income goal" : "Set in Income Goals",        progress:null, unlock:!needed?"income-planner.html":null },
@@ -583,7 +536,6 @@ function renderSnapshot() {
     { label:"Income Received",       value:fmt(incomeReceived)||"--",    valueClass:"green", meta:"Actual payments received so far",                                progress:goal?{pct:incomePct,color:"#52d68a"}:null, unlock:null },
     { label:"Bookings Still Needed", value:still !== null ? still : "--", valueClass:still===0?"green":"", meta:still===0 ? "🎉 Goal reached!" : (still!==null ? "to hit your income goal" : "Set up Income Goals"), progress:null, unlock:null }
   ];
-
   var html = "";
   for (var i = 0; i < stats.length; i++) {
     var s = stats[i];
@@ -600,7 +552,6 @@ function renderSnapshot() {
     html += '</div>';
   }
   grid.innerHTML = html;
-
   requestAnimationFrame(function() {
     var fills = grid.querySelectorAll(".snap-progress-fill");
     fills.forEach(function(el) {
@@ -609,13 +560,11 @@ function renderSnapshot() {
     });
   });
 }
-
 async function loadLeadData(userId) {
   try {
     var result = await sb.from("leads").select("data").eq("user_id", userId);
     if (result.data && result.data.length > 0) {
       var leads = result.data.map(function(r) { return r.data; }).filter(Boolean);
-
       var currentYear = new Date().getFullYear();
       var today = new Date().toISOString().slice(0, 10);
       var bookedThisYear = leads.filter(function(l) {
@@ -624,23 +573,19 @@ async function loadLeadData(userId) {
         if (!wDate) return true; // no date set — include it
         return new Date(wDate).getFullYear() === currentYear;
       });
-
       // Follow-ups: any active lead with a nextFollowUp date set
       var followupsDue = leads.filter(function(l) {
         var st = l.status || '';
         if (st === "Booked" || st === "Lost" || st === "Deposit Paid") return false;
         return l.nextFollowUp;
       }).length;
-
       snapData.bookedCount    = bookedThisYear.length;
       snapData.totalLeads     = leads.length;
       snapData.followupsDue   = followupsDue;
-
       // Projected income = total quoted from this year's booked weddings
       snapData.projectedIncome = bookedThisYear.reduce(function(s, l) {
         return s + Number(l.priceQuoted || 0);
       }, 0);
-
       // Income received = all deposits + instalments across all leads
       snapData.incomeReceived = leads.reduce(function(s, l) {
         var deposit     = Number(l.depositPaid || 0);
@@ -649,11 +594,9 @@ async function loadLeadData(userId) {
         }, 0);
         return s + deposit + instalments;
       }, 0);
-
       if (snapData.weddingsNeeded) {
         snapData.stillNeeded = Math.max(0, snapData.weddingsNeeded - bookedThisYear.length);
       }
-
       // Build yearly breakdown from all booked/deposit paid leads
       var allBooked = leads.filter(function(l) {
         return l.status === "Booked" || l.status === "Deposit Paid";
@@ -674,21 +617,17 @@ async function loadLeadData(userId) {
     renderFollowUpPrompt(snapData.followupsDue);
   }
 }
-
 function renderYearlyBreakdown(yearMap, currency) {
   var el      = document.getElementById('yearly-breakdown');
   var section = document.getElementById('yearly-section');
   var years   = Object.keys(yearMap).sort();
   if (!years.length) { section.style.display = 'none'; return; }
-
   var CURR = { EUR:'€', GBP:'£', USD:'$', AUD:'A$', CAD:'C$' };
   var sym = CURR[currency] || '€';
   var currentYear = new Date().getFullYear();
-
   // Update snapshot subtitle with current year
   var sub = document.getElementById('snapshot-sub');
   if (sub) sub.textContent = currentYear + ' — updates automatically as you use your tools';
-
   var html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;width:100%;box-sizing:border-box;margin-bottom:16px;">';
   years.forEach(function(yr) {
     var d = yearMap[yr];
@@ -711,7 +650,6 @@ function renderYearlyBreakdown(yearMap, currency) {
   el.innerHTML = html;
   section.style.display = 'block';
 }
-
 var SCORE_META = {
   pricing: { label:"Pricing Confidence",     color:"#FB478E", tool:"Income & Pricing Planner", url:"#" },
   leads:   { label:"Lead Tracking",           color:"#FF6B1A", tool:"Lead Tracker",             url:"lead-tracker.html" },
@@ -719,7 +657,6 @@ var SCORE_META = {
   social:  { label:"Social Media",            color:"#7C3AED", tool:"Instagram Ready",           url:"instagram-ready.html" },
   income:  { label:"Income Goals",            color:"#F5A800", tool:"Income & Pricing Planner", url:"income-planner.html" }
 };
-
 async function loadWTSResults(userId) {
   try {
     var result = await sb.from("where_to_start").select("*").eq("user_id", userId).order("updated_at", { ascending: false }).limit(1);
@@ -741,12 +678,10 @@ async function loadWTSResults(userId) {
     document.getElementById("wts-results-area").innerHTML = '<div style="padding:16px 0;font-size:13px;font-weight:700;color:var(--muted);">Unable to load results — please refresh the page.</div>';
   }
 }
-
 function showWTSEmpty() {
   document.getElementById("wts-results-area").innerHTML = '<div class="wts-empty"><p>Answer 10 quick questions across 5 areas of your business. We will score each area and show you exactly where to focus first for the fastest results.</p><a href="where-to-start.html" class="wts-start-btn">Take the assessment</a></div>';
   document.getElementById('welcome-banner').classList.add('show');
 }
-
 function renderWTSResults(scores) {
   var area = document.getElementById("wts-results-area");
   var items = [];
@@ -760,7 +695,6 @@ function renderWTSResults(scores) {
   }
   items.sort(function(a, b) { return a.pct - b.pct; });
   var weakest = items[0];
-
   var barsHtml = "";
   for (var j = 0; j < items.length; j++) {
     var s = items[j];
@@ -770,7 +704,6 @@ function renderWTSResults(scores) {
     barsHtml += '<div class="score-pct" style="color:' + s.color + ';">' + s.pct + '%</div>';
     barsHtml += '</div>';
   }
-
   var recHtml = "";
   if (weakest) {
     var btnHtml = weakest.url !== "#"
@@ -778,9 +711,7 @@ function renderWTSResults(scores) {
       : '<a href="where-to-start.html" class="rec-btn">View full results</a>';
     recHtml = '<div class="rec-banner" style="margin-top:20px;"><div><div class="rec-eyebrow">Start here first</div><div class="rec-tool">' + weakest.tool + '</div><div class="rec-why">Your lowest score is ' + weakest.label + ' at ' + weakest.pct + '% — this is where you will see the fastest results.</div></div>' + btnHtml + '</div>';
   }
-
   area.innerHTML = '<div class="score-bars">' + barsHtml + '</div>' + recHtml + '<div style="text-align:right; margin-top:14px;"><a href="where-to-start.html" style="font-size:12px; font-weight:700; color:var(--muted); text-decoration:none; border:1px solid var(--border); padding:6px 12px; border-radius:9px;">View full results &amp; retake</a></div>';
-
   requestAnimationFrame(function() {
     var fills = area.querySelectorAll(".score-fill");
     fills.forEach(function(el) {
@@ -789,38 +720,31 @@ function renderWTSResults(scores) {
     });
   });
 }
-
 // ── FOLLOWUP PROMPT ───────────────────────────────────────────
 function renderFollowUpPrompt(count) {
   if (!count || count < 1) return;
   var card  = document.getElementById('followup-card');
   var title = document.getElementById('followup-title');
   var sub   = document.getElementById('followup-sub');
-
   // Check how many are actually overdue vs upcoming
   var today = new Date().toISOString().slice(0, 10);
-
   title.textContent = count === 1
     ? 'You have 1 lead with a follow-up pending'
     : 'You have ' + count + ' leads with follow-ups pending';
   sub.textContent = 'Don\'t let warm leads go cold — open your Lead Tracker and check your follow-up list now.';
   card.classList.add('visible');
 }
-
 // ── IG DAILY PROMPT ───────────────────────────────────────────
 function renderIGPrompt() {
   var day = new Date().getDay(); // 0=Sun,1=Mon,...6=Sat
   var card = document.getElementById('ig-prompt-card');
   var title = document.getElementById('ig-prompt-title');
   var sub   = document.getElementById('ig-prompt-sub');
-
   var postDays = { 1: true, 3: true, 5: true };
-
   if (!postDays[day]) {
     document.getElementById('ig-prompt-card').style.display = 'none';
     return;
   }
-
   var prompts = {
     1: {
       title: "Today's IG Post — Your Work at the Wedding 🎬",
@@ -835,12 +759,10 @@ function renderIGPrompt() {
       sub: "Share a moment that features the couple — a reaction, a look, a quiet moment between them. Use your <strong>venue name + location</strong> keywords. Tag the couple if they're happy to be tagged. ⏰ Best posting time: 6pm – 9pm."
     }
   };
-
   var p = prompts[day];
   title.textContent = p.title;
   sub.innerHTML = p.sub;
 }
-
 // ── PROFILE ───────────────────────────────────────────────────
 var SERVICES = [
   "Photographer",
@@ -863,7 +785,6 @@ var SERVICES = [
   "Wedding Cars & Coaches",
   "Other"
 ];
-
 async function loadProfile(userId) {
   try {
     var result = await sb.from('profiles').select('*').eq('user_id', userId).single();
@@ -871,7 +792,6 @@ async function loadProfile(userId) {
   } catch(e) {}
   return null;
 }
-
 async function saveProfile(userId, firstName, service, location) {
   try {
     await sb.from('profiles').upsert({
@@ -885,7 +805,6 @@ async function saveProfile(userId, firstName, service, location) {
     if (service) localStorage.setItem('wbw-service-type', service);
   } catch(e) { console.log('Profile save error:', e); }
 }
-
 function applyProfile(profile, user) {
   if (!profile) return;
   var name = profile.first_name || '';
@@ -896,11 +815,9 @@ function applyProfile(profile, user) {
     document.getElementById('nav-user').textContent = name;
   }
 }
-
 function showProfileModal(userId, existingProfile) {
   var overlay = document.getElementById('profile-overlay');
   var isEdit  = !!(existingProfile && existingProfile.first_name);
-
   // Update modal title for edit vs new
   document.querySelector('.pm-eyebrow').textContent = isEdit ? '✏️ Edit Your Profile' : '👋 Welcome to Hello Wedding Pro';
   document.querySelector('.pm-title').textContent   = isEdit ? 'Update your details' : 'Let\'s set up your profile';
@@ -908,19 +825,15 @@ function showProfileModal(userId, existingProfile) {
     ? 'Your name and service are used across all tools in your workspace.'
     : 'This takes 30 seconds and personalises everything in your workspace — your greeting, your templates, your tools.';
   document.getElementById('pm-save-btn').textContent = isEdit ? 'Save changes →' : 'Let\'s go →';
-
   // Show close button only when editing (not on first login)
   document.getElementById('pm-close-btn').style.display = isEdit ? 'block' : 'none';
-
   overlay.style.display = 'flex';
-
   // Pre-fill if editing existing
   if (existingProfile) {
     document.getElementById('pm-name').value     = existingProfile.first_name || '';
     document.getElementById('pm-service').value  = existingProfile.service    || '';
     document.getElementById('pm-location').value = existingProfile.location   || '';
   }
-
   var btn = document.getElementById('pm-save-btn');
   btn.onclick = async function() {
     var firstName = document.getElementById('pm-name').value.trim();
@@ -938,24 +851,18 @@ function showProfileModal(userId, existingProfile) {
     btn.disabled = false;
     btn.textContent = isEdit ? 'Save changes →' : 'Let\'s go →';
   };
-
   document.getElementById('pm-name').onkeydown = function(e) {
     if (e.key === 'Enter') btn.click();
   };
 }
-
 var _currentProfile = null;
 var _currentUserId  = null;
-
 function openEditProfile() {
   if (_currentUserId) {
     showProfileModal(_currentUserId, _currentProfile);
   }
 }
-
-
 </script>
-
 <div id="profile-overlay" class="profile-overlay" style="display:none;">
   <div class="profile-modal">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
@@ -983,6 +890,5 @@ function openEditProfile() {
     <button class="pm-btn" id="pm-save-btn">Let's go →</button>
   </div>
 </div>
-
 </body>
 </html>
