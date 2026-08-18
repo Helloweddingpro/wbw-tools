@@ -358,9 +358,9 @@ Without You Even Knowing We Are There!</div>
         <p>Now build yours.</p>
       </div>
 
-      <!-- BIO BUILDER -->
+      <!-- NAME SECTION BUILDER -->
       <div class="builder-card">
-        <div class="builder-title">Bio Builder</div>
+        <div class="builder-title">Name Section (Bold Text)</div>
 
         <div class="ki-row" style="margin-bottom:20px;">
           <div class="ki-field">
@@ -379,28 +379,30 @@ Without You Even Knowing We Are There!</div>
           </div>
         </div>
 
-        <div class="field-group">
-          <label>What emotion do you capture? <span style="font-weight:600;text-transform:none;letter-spacing:0;">(think feelings, not services)</span></label>
-          <div class="field-hint" style="margin-bottom:8px;">⚠️ Instagram limits your bio text to <strong>150 characters total</strong> — this includes your Call to Action. Keep it short and punchy.</div>
-          <textarea id="emotion" rows="2" placeholder="e.g. The laughter, the tears, the quiet moments between just the two of you" oninput="updateBioPreview()"></textarea>
-          <div class="field-hint">Think about what a couple would feel watching your work back. Write that.</div>
+        <div class="bio-output" id="name-output">
+          <div class="bio-output-label">Your Name Section — ready to copy</div>
+          <div class="bio-name-result" id="bio-name-result"></div>
+          <button class="btn-copy" id="copy-name-btn" onclick="copyName()">Copy Name Section</button>
         </div>
+      </div>
+
+      <!-- BIO TEXT BUILDER -->
+      <div class="builder-card">
+        <div class="builder-title">Bio Text</div>
 
         <div class="field-group">
-          <label>Your Call to Action</label>
-          <input type="text" id="cta" placeholder="e.g. Check Availability 👇" oninput="updateBioPreview()">
-          <div class="field-hint">Keep it short and direct. Link your CTA to your enquiry form — not your homepage.</div>
+          <label>What emotion do you capture? <span style="font-weight:600;text-transform:none;letter-spacing:0;">(think feelings, not services)</span></label>
+          <div class="field-hint" style="margin-bottom:8px;">⚠️ Instagram limits your bio text to <strong>150 characters total</strong>. Keep it short and punchy.</div>
+          <textarea id="emotion" rows="2" placeholder="e.g. The laughter, the tears, the quiet moments between just the two of you" oninput="updateBioPreview()"></textarea>
+          <div class="field-hint">Think about what a couple would feel watching your work back. Write that.</div>
         </div>
 
         <div class="field-hint" id="bio-char-count" style="text-align:right;margin-top:-8px;margin-bottom:12px;">0 / 150 characters</div>
 
         <div class="bio-output" id="bio-output">
-          <div class="bio-output-label">Your Instagram Bio — ready to copy</div>
-          <div class="bio-name-result" id="bio-name-result"></div>
+          <div class="bio-output-label">Your Bio Text — ready to copy</div>
           <div class="bio-text-result" id="bio-text-result"></div>
-          <div class="bio-cta-result" id="bio-cta-result"></div>
-          <div class="bio-loc-result" id="bio-loc-result"></div>
-          <button class="btn-copy" id="copy-bio-btn" onclick="copyBio()">Copy Bio</button>
+          <button class="btn-copy" id="copy-bio-btn" onclick="copyBio()">Copy Bio Text</button>
         </div>
       </div>
 
@@ -419,8 +421,8 @@ Without You Even Knowing We Are There!</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)" data-key="check-bio">
           <div class="check-box"></div>
-          <div class="check-text">Bio text written with emotion + USP + CTA
-            <span>Paste your bio from the builder above. Keep it under 150 characters.</span>
+          <div class="check-text">Name section and bio text written and pasted into Instagram
+            <span>Copy your name section and bio text from the builders above. Keep the bio text under 150 characters.</span>
           </div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)" data-key="check-link">
@@ -755,7 +757,9 @@ function goChapter(idx) {
   currentChapter = idx;
   document.getElementById('ch-'+idx).classList.add('active');
   document.getElementById('chtab-'+idx).classList.add('active');
-  window.scrollTo({ top:0, behavior:'smooth' });
+  const nav = document.querySelector('.chapter-nav');
+  const targetY = nav.getBoundingClientRect().top + window.scrollY - 64;
+  window.scrollTo({ top: targetY, behavior:'smooth' });
 }
 
 // ── BIO BUILDER ───────────────────────────────────────────────
@@ -764,11 +768,9 @@ function updateBioPreview() {
   const loc1     = document.getElementById('location-1').value.trim();
   const loc2     = document.getElementById('location-2').value.trim();
   const emotion  = document.getElementById('emotion').value.trim();
-  const cta      = document.getElementById('cta').value.trim();
 
-  // Character count — bio text + CTA capped at 150
-  const bioText = emotion + (emotion && cta ? '\n' : '') + cta;
-  const charCount = bioText.length;
+  // Character count — bio text capped at 150
+  const charCount = emotion.length;
   const counter = document.getElementById('bio-char-count');
   if (counter) {
     counter.textContent = charCount + ' / 150 characters';
@@ -782,31 +784,43 @@ function updateBioPreview() {
     emotionEl.style.borderColor = '';
   }
 
-  if (!service && !loc1) { document.getElementById('bio-output').classList.remove('visible'); return; }
+  if (service || loc1) {
+    let nameField = service;
+    if (loc1) nameField += ' - ' + loc1;
+    if (loc2) nameField += ' | ' + loc2;
+    document.getElementById('bio-name-result').textContent = nameField;
+    document.getElementById('name-output').classList.add('visible');
+  } else {
+    document.getElementById('name-output').classList.remove('visible');
+  }
 
-  let nameField = service;
-  if (loc1) nameField += ' - ' + loc1;
-  if (loc2) nameField += ' | ' + loc2;
-
-  document.getElementById('bio-name-result').textContent = nameField;
-  document.getElementById('bio-text-result').textContent = emotion || '(Add your emotional bio text above)';
-  document.getElementById('bio-cta-result').textContent  = cta || 'Check Availability 👇';
-  document.getElementById('bio-loc-result').textContent  = loc1 ? '📍 ' + loc1 + (loc2 ? ', Ireland' : '') : '';
-  document.getElementById('bio-output').classList.add('visible');
+  if (emotion) {
+    document.getElementById('bio-text-result').textContent = emotion;
+    document.getElementById('bio-output').classList.add('visible');
+  } else {
+    document.getElementById('bio-output').classList.remove('visible');
+  }
 
   queueSave();
 }
 
+function copyName() {
+  const name = document.getElementById('bio-name-result').textContent;
+  navigator.clipboard.writeText(name).then(() => {
+    const btn = document.getElementById('copy-name-btn');
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent='Copy Name Section'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+
 function copyBio() {
-  const name    = document.getElementById('bio-name-result').textContent;
-  const text    = document.getElementById('bio-text-result').textContent;
-  const cta     = document.getElementById('bio-cta-result').textContent;
-  const full    = name + '\n\n' + text + '\n' + cta;
-  navigator.clipboard.writeText(full).then(() => {
+  const text = document.getElementById('bio-text-result').textContent;
+  navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById('copy-bio-btn');
     btn.textContent = 'Copied ✓';
     btn.classList.add('copied');
-    setTimeout(() => { btn.textContent='Copy Bio'; btn.classList.remove('copied'); }, 2500);
+    setTimeout(() => { btn.textContent='Copy Bio Text'; btn.classList.remove('copied'); }, 2500);
   });
 }
 
@@ -875,7 +889,6 @@ function syncFormToData() {
   toolData.location1   = document.getElementById('location-1').value;
   toolData.location2   = document.getElementById('location-2').value;
   toolData.emotion     = document.getElementById('emotion').value;
-  toolData.cta         = document.getElementById('cta').value;
   toolData.kwVenue     = document.getElementById('kw-venue').value;
   toolData.kwLocation  = document.getElementById('kw-location').value;
 }
@@ -885,7 +898,6 @@ function restoreFormFromData() {
   if (toolData.location1)   document.getElementById('location-1').value   = toolData.location1;
   if (toolData.location2)   document.getElementById('location-2').value   = toolData.location2;
   if (toolData.emotion)     document.getElementById('emotion').value       = toolData.emotion;
-  if (toolData.cta)         document.getElementById('cta').value           = toolData.cta;
   if (toolData.kwVenue)     document.getElementById('kw-venue').value      = toolData.kwVenue;
   if (toolData.kwLocation)  document.getElementById('kw-location').value   = toolData.kwLocation;
   updateBioPreview();
