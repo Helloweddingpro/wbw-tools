@@ -414,7 +414,13 @@ Without You Even Knowing We Are There!</div>
       <div class="builder-card">
         <div class="builder-title">Name Section (Bold Text)</div>
 
-        <div class="ki-row" style="margin-bottom:20px;">
+        <div class="field-group">
+          <label>Your First Name</label>
+          <input type="text" id="first-name" placeholder="e.g. Darina" oninput="updateBioPreview()">
+          <div class="field-hint">Adding your first name makes your profile feel like a real person, not just a service — couples book people, not just businesses. e.g. <strong style="color:var(--navy);">Darina | Wedding Content Creator - Waterford | Kilkenny</strong></div>
+        </div>
+
+        <div class="ki-row" style="margin-bottom:20px;margin-top:20px;">
           <div class="ki-field">
             <label>Your Service Type</label>
             <input type="text" id="service-type" placeholder="e.g. Wedding Photographer" oninput="updateBioPreview()">
@@ -802,6 +808,7 @@ function goChapter(idx) {
 
 // ── BIO BUILDER ───────────────────────────────────────────────
 function updateBioPreview() {
+  const firstName = document.getElementById('first-name').value.trim();
   const service  = document.getElementById('service-type').value.trim();
   const loc1     = document.getElementById('location-1').value.trim();
   const loc2     = document.getElementById('location-2').value.trim();
@@ -822,8 +829,8 @@ function updateBioPreview() {
     emotionEl.style.borderColor = '';
   }
 
-  if (service || loc1) {
-    let nameField = service;
+  if (firstName || service || loc1) {
+    let nameField = firstName ? firstName + ' | ' + service : service;
     if (loc1) nameField += ' - ' + loc1;
     if (loc2) nameField += ' | ' + loc2;
     document.getElementById('bio-name-result').textContent = nameField;
@@ -1263,6 +1270,7 @@ function queueSave() {
 }
 
 function syncFormToData() {
+  toolData.firstName   = document.getElementById('first-name').value;
   toolData.serviceType = document.getElementById('service-type').value;
   toolData.location1   = document.getElementById('location-1').value;
   toolData.location2   = document.getElementById('location-2').value;
@@ -1271,6 +1279,7 @@ function syncFormToData() {
 }
 
 function restoreFormFromData() {
+  if (toolData.firstName)   document.getElementById('first-name').value   = toolData.firstName;
   if (toolData.serviceType) document.getElementById('service-type').value = toolData.serviceType;
   if (toolData.location1)   document.getElementById('location-1').value   = toolData.location1;
   if (toolData.location2)   document.getElementById('location-2').value   = toolData.location2;
