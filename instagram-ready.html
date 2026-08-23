@@ -199,6 +199,66 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
 .toast { position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--navy); color:#fff; padding:12px 24px; border-radius:12px; font-size:13px; font-weight:700; opacity:0; pointer-events:none; transition:all .3s; z-index:999; }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
+/* ── CONTENT CALENDAR ─────────────────────────────────── */
+.cal-week { background:var(--white); border-radius:20px; border:1.5px solid var(--border); box-shadow:0 2px 16px rgba(59,60,109,.06); padding:26px 28px; margin-bottom:24px; }
+.cal-week-header { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+.cal-week-title { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:var(--navy); }
+.cal-week-pill { font-size:10px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:var(--purple); background:var(--pu-light); padding:4px 10px; border-radius:20px; }
+.cal-week-meta { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px; padding-bottom:20px; border-bottom:1px dashed var(--border); }
+.cal-week-meta .ki-field label { display:block; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+.cal-week-meta .ki-field input { width:100%; padding:11px 14px; background:var(--cream); border:1.5px solid var(--border); border-radius:10px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:var(--text); outline:none; transition:border-color .2s; }
+.cal-week-meta .ki-field input:focus { border-color:var(--purple); background:var(--white); }
+.cal-posts { display:flex; flex-direction:column; gap:14px; }
+.cal-post { background:var(--cream); border-radius:14px; padding:18px 20px; border:1.5px solid var(--border); }
+.cal-post-top { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+.cal-post-day { font-size:10px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+.fmt-badge { font-size:10px; font-weight:900; letter-spacing:.06em; text-transform:uppercase; padding:4px 10px; border-radius:20px; display:inline-block; }
+.fmt-highlight { background:rgba(251,71,142,.14); color:#c22468; }
+.fmt-short     { background:var(--pu-light); color:var(--purple); }
+.fmt-carousel  { background:rgba(59,60,109,.1); color:var(--navy); }
+.fmt-shoutout  { background:rgba(0,168,120,.12); color:#00805c; }
+.cal-post-title { font-size:15px; font-weight:800; color:var(--navy); margin-bottom:6px; }
+.cal-post-desc { font-size:12.5px; font-weight:600; color:var(--muted); line-height:1.6; margin-bottom:12px; }
+.cal-extra-field { margin-bottom:12px; }
+.cal-extra-field label { display:block; font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.cal-extra-field input { width:100%; padding:10px 13px; background:var(--white); border:1.5px solid var(--border); border-radius:10px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:600; color:var(--text); outline:none; transition:border-color .2s; }
+.cal-extra-field input:focus { border-color:var(--purple); }
+.cal-caption-toggle { font-size:11px; font-weight:800; color:var(--purple); cursor:pointer; display:inline-block; margin-top:2px; margin-bottom:4px; user-select:none; }
+.cal-caption-body { display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--pu-mid); }
+.cal-caption-body.open { display:block; }
+.cal-caption-text { background:var(--navy); border-radius:12px; padding:16px 18px; font-size:12.5px; font-weight:600; color:rgba(255,255,255,.85); line-height:1.7; white-space:pre-line; margin-bottom:10px; }
+.cal-caption-text .cap-hash { color:var(--pink); font-weight:700; }
+.btn-copy-sm { padding:7px 16px; background:var(--pu-light); color:var(--purple); border:1.5px solid var(--pu-mid); border-radius:9px; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:800; cursor:pointer; transition:all .2s; }
+.btn-copy-sm:hover { background:var(--purple); color:#fff; }
+.btn-copy-sm.copied { background:rgba(39,174,96,.15); border-color:rgba(39,174,96,.4); color:#1f8b4c; }
+.cal-tick-row { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+.cal-tick { display:flex; align-items:center; gap:8px; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:9px 14px; cursor:pointer; font-size:12px; font-weight:800; color:var(--navy); transition:all .2s; }
+.cal-tick input[type="checkbox"] { width:16px; height:16px; accent-color:var(--purple); cursor:pointer; }
+.cal-tick.on { border-color:var(--purple); background:var(--pu-light); }
+.cal-tick.on.posted { border-color:#00805c; background:rgba(0,168,120,.12); }
+.cal-progress-bar { height:8px; background:var(--border); border-radius:6px; overflow:hidden; margin-top:8px; }
+.cal-progress-fill { height:100%; background:var(--purple); transition:width .3s; }
+
+/* ── VISUAL CALENDAR (AT-A-GLANCE) ────────────────────── */
+.viscal { background:var(--white); border-radius:20px; border:1.5px solid var(--border); box-shadow:0 2px 16px rgba(59,60,109,.06); padding:24px; margin-bottom:28px; overflow-x:auto; }
+.viscal-title { font-size:11px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; color:var(--purple); margin-bottom:16px; }
+.viscal-grid { display:grid; grid-template-columns:64px repeat(3, 1fr); gap:8px; min-width:520px; }
+.viscal-head { font-size:10px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); text-align:center; padding:4px; align-self:center; }
+.viscal-weeklabel { display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:700; color:var(--navy); background:var(--cream); border-radius:10px; text-align:center; padding:6px 2px; }
+.viscal-cell { border-radius:12px; padding:10px 10px; min-height:70px; display:flex; flex-direction:column; justify-content:center; gap:3px; position:relative; border:1.5px solid transparent; transition:border-color .2s; }
+.viscal-cell-icon { font-size:14px; line-height:1; }
+.viscal-cell-title { font-size:10.5px; font-weight:800; color:var(--navy); line-height:1.3; }
+.viscal-cell.fmt-highlight-bg { background:rgba(251,71,142,.12); }
+.viscal-cell.fmt-short-bg     { background:var(--pu-light); }
+.viscal-cell.fmt-carousel-bg  { background:rgba(59,60,109,.08); }
+.viscal-cell.fmt-shoutout-bg  { background:rgba(0,168,120,.1); }
+.viscal-cell.is-posted    { border-color:#00805c; }
+.viscal-cell.is-scheduled:not(.is-posted) { border-color:var(--purple); }
+.viscal-status { position:absolute; top:6px; right:8px; font-size:11px; }
+.viscal-legend { display:flex; flex-wrap:wrap; gap:14px; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
+.viscal-legend span { font-size:11px; font-weight:700; color:var(--navy); display:inline-flex; align-items:center; gap:6px; }
+.viscal-swatch { width:12px; height:12px; border-radius:4px; display:inline-block; }
+
 /* ── RESPONSIVE ───────────────────────────────────────── */
 @media(max-width:768px) {
   .topnav { padding:0 20px; }
@@ -254,22 +314,14 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
   <div class="page-hero">
     <div class="hero-eyebrow" style="color:#FB478E;">Wedding Business Workspace</div>
     <h1>Get your Instagram<br><em>working for you.</em></h1>
-    <p>A proven system from a wedding videographer with 20+ years in the industry. Three chapters. Set it up once, use it every week.</p>
+    <p>A proven system from a wedding business expert with 20 years in the industry. A full content calendar with everything you need to post effectively and stay consistent.</p>
   </div>
 
   <div class="chapter-nav">
-    <div class="ch-tab active" id="chtab-0" onclick="goChapter(0)">
-      <span class="ch-num">Introduction</span>Start Here
-    </div>
-    <div class="ch-tab" id="chtab-1" onclick="goChapter(1)">
-      <span class="ch-num" style="color:#FB478E;">Chapter 1</span>Your Bio
-    </div>
-    <div class="ch-tab" id="chtab-2" onclick="goChapter(2)">
-      <span class="ch-num" style="color:#7C3AED;">Chapter 2</span>The 3-Post Formula
-    </div>
-    <div class="ch-tab" id="chtab-3" onclick="goChapter(3)">
-      <span class="ch-num" style="color:#00A878;">Chapter 3</span>The Daily Habit
-    </div>
+    <div class="ch-tab active" id="chtab-0" onclick="goChapter(0)">Start Here</div>
+    <div class="ch-tab" id="chtab-1" onclick="goChapter(1)">Bio Builder</div>
+    <div class="ch-tab" id="chtab-2" onclick="goChapter(2)">Content Calendar</div>
+    <div class="ch-tab" id="chtab-3" onclick="goChapter(3)">Stay Consistent</div>
   </div>
 
   <div class="main">
@@ -289,7 +341,7 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
       <div class="lesson-intro">
         <h2>Instagram doesn't have<br>to be complicated.</h2>
         <p>The algorithm changes, the trends change, and it can feel like you need to post every day just to keep up. That leads to burnout — and most wedding suppliers either give up entirely or post randomly with no real strategy behind it.</p>
-        <p>Here's the truth: for a wedding business working in your local area, you don't need to become a full-time content creator. You don't need to go viral. You don't need to master every new feature Instagram throws at you.</p>
+        <p>Here's the truth: for a wedding business working in your local area, you don't need to go viral. You don't need to master every new feature Instagram throws at you.</p>
         <p>You need a simple, repeatable system that does three things.</p>
       </div>
 
@@ -322,7 +374,7 @@ body { font-family:'Montserrat',sans-serif; background:var(--cream); color:var(-
           <div class="dot"></div>
           <div class="dot"></div>
         </div>
-        <button class="btn-next" onclick="goChapter(1)">Start: Your Bio →</button>
+        <button class="btn-next" onclick="goChapter(1)">Start: Bio Builder →</button>
       </div>
     </div>
 
@@ -451,118 +503,104 @@ Without You Even Knowing We Are There!</div>
           <div class="dot"></div>
           <div class="dot"></div>
         </div>
-        <button class="btn-next" onclick="goChapter(2)">Next: The 3-Post Formula →</button>
+        <button class="btn-next" onclick="goChapter(2)">Next: Content Calendar →</button>
       </div>
     </div>
 
-    <!-- ══ CHAPTER 2: THE 3-POST FORMULA ════════════════════ -->
+    <!-- ══ CHAPTER 2: YOUR CONTENT CALENDAR ═════════════════ -->
     <div class="chapter" id="ch-2">
 
       <div class="lesson-intro">
-        <h2>Three posts a week.<br>One simple formula.</h2>
+        <h2>Three posts a week.<br>Four weeks planned out.</h2>
         <p>Every post you make should do one thing: put your work in front of couples getting married at your best venues. The way you do that is by using the <strong>venue name and location as keywords</strong> — in the on-screen text of your video and in the first line of your caption.</p>
-        <p>When a couple searches "wedding photographer Ashford Castle" on Instagram, they find suppliers who use those words consistently. That's the entire strategy.</p>
+        <p><strong>Instagram wants to see at least 10 posts a month to rank you.</strong> Three posts a week gets you to 12 — comfortably over that line, without burning you out.</p>
+        <p>Below is your full <strong>4-week content calendar</strong> — three posts a week, already planned out for you. Here's the whole month at a glance, then scroll down for the details on each post.</p>
       </div>
+
+      <!-- VISUAL CALENDAR — AT-A-GLANCE REFERENCE -->
+      <div class="viscal">
+        <div class="viscal-title">Your Month at a Glance</div>
+        <div id="visual-calendar" class="viscal-grid"></div>
+        <div class="viscal-legend">
+          <span><span class="viscal-swatch fmt-highlight-bg"></span>🎬 Highlight Reel</span>
+          <span><span class="viscal-swatch fmt-short-bg"></span>⚡ Short Reel</span>
+          <span><span class="viscal-swatch fmt-carousel-bg"></span>🖼️ Carousel</span>
+          <span><span class="viscal-swatch fmt-shoutout-bg"></span>💬 Shout-Out</span>
+        </div>
+      </div>
+
+      <!-- FORMAT LEGEND -->
+      <div class="keyword-inputs" style="margin-bottom:32px;">
+        <div class="ki-title">How the calendar works — your 4 post formats</div>
+        <div class="post-cards" style="gap:12px;margin:0;">
+          <div class="post-card" style="padding:16px 20px;">
+            <div class="post-title" style="font-size:14px;margin-bottom:4px;">🎬 Highlight Reel</div>
+            <div class="post-desc" style="margin-bottom:0;">Your full highlights reel from the wedding — the whole story of the day, in one video.</div>
+          </div>
+          <div class="post-card" style="padding:16px 20px;">
+            <div class="post-title" style="font-size:14px;margin-bottom:4px;">⚡ Short Reel</div>
+            <div class="post-desc" style="margin-bottom:0;"><strong style="color:var(--navy);">7–10 seconds max.</strong> One moment, one feeling. Shorter reels get watched to the end — and that's what tells Instagram to show it to more people.</div>
+          </div>
+          <div class="post-card" style="padding:16px 20px;">
+            <div class="post-title" style="font-size:14px;margin-bottom:4px;">🖼️ Carousel Post</div>
+            <div class="post-desc" style="margin-bottom:0;">Multiple slides in one post. A carousel can be made of <strong style="color:var(--navy);">images, video clips, text slides, or a mix of all three</strong> — swiped through one at a time.</div>
+          </div>
+          <div class="post-card" style="padding:16px 20px;">
+            <div class="post-title" style="font-size:14px;margin-bottom:4px;">💬 Shout-Out / Feature</div>
+            <div class="post-desc" style="margin-bottom:0;">Featured bride & groom, supplier shout-outs, and venue shout-outs are flexible — each one <strong style="color:var(--navy);">can be a reel, a carousel, or a single image</strong>. Use whatever footage or photo you have.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAPTION + ON-SCREEN TEXT FORMULA — TEACH ONLY, BUILDING HAPPENS PER POST BELOW -->
+      <div class="lesson-intro" style="margin-top:8px;">
+        <h2>Two things every post needs.</h2>
+        <p>Instagram decides who to show your content to based on what it can <em>read</em> — your on-screen text and your caption. Get these two things right and you'll get found. Here's the formula for each — you'll fill both in for every post in the calendar below.</p>
+      </div>
+
+      <div class="insight-box" style="margin-bottom:20px;">
+        <p><strong>On-screen text</strong> — the text overlay on your video or carousel slide. Use the <em>couple's names + venue + location</em> as keywords.</p>
+        <p style="margin-top:8px;margin-bottom:0;"><em>Example: "Sarah &amp; Tom getting ready at The Grand Palm Hotel, Kilkenny"</em></p>
+        <p style="margin-top:8px;margin-bottom:0;">⚠️ <strong>Mix up the wording each time</strong> — if every post says the exact same thing, it looks repetitive and lazy. Change the order, the phrasing, the emoji. Same keywords, different sentence.</p>
+      </div>
+
+      <div class="caption-structure" style="margin-top:0;padding-top:0;border-top:none;margin-bottom:8px;">
+        <div class="cs-label" style="margin-bottom:12px;">Caption — the 5-part formula</div>
+        <div class="cs-row"><span class="cs-num">1</span><span class="cs-text"><strong>Keywords</strong> — the venue name + location, used naturally in the first line so couples searching that venue can find you.</span></div>
+        <div class="cs-row"><span class="cs-num">2</span><span class="cs-text"><strong>Story</strong> — one or two honest sentences about what happened or how it felt. Not a play-by-play — just the feeling.</span></div>
+        <div class="cs-row"><span class="cs-num">3</span><span class="cs-text"><strong>Shout-out</strong> — tag the supplier, venue, or couple where relevant. Builds relationships and gets you reshared.</span></div>
+        <div class="cs-row"><span class="cs-num">4</span><span class="cs-text"><strong>CTA</strong> — a clear, simple call to action: "Check availability" or "Link in bio to enquire."</span></div>
+        <div class="cs-row"><span class="cs-num">5</span><span class="cs-text"><strong>Hashtags</strong> — 3–5 targeted hashtags using your venue + location as keywords for search.</span></div>
+      </div>
+
+      <div class="example-box">
+        <div class="example-label">Example — Bridal Prep Reel</div>
+        <div class="cal-caption-text" style="background:transparent;padding:0;margin-bottom:0;">Getting ready at The Grand Palm Hotel, Kilkenny 💍 <span class="cap-hash" style="color:#B7EFC5;">[Keywords]</span>
+
+The nerves, the laughter, and her mum crying before she'd even zipped up her dress — mornings like this are why I love this job. <span class="cap-hash" style="color:#B7EFC5;">[Story]</span>
+
+Shoutout to @glambybridget for keeping the energy (and the mascara) flawless all morning. <span class="cap-hash" style="color:#B7EFC5;">[Shout-out]</span>
+
+Getting ready at The Grand Palm Hotel? Tap the link in my bio to check if I'm free for your date. <span class="cap-hash" style="color:#B7EFC5;">[CTA]</span>
+
+#weddingcontentcreatorKilkenny #brideprepGrandPalmHotel #kilkennywedding <span class="cap-hash" style="color:#B7EFC5;">[Hashtags]</span></div>
+      </div>
+
+      <div class="insight-box" style="margin-bottom:32px;">
+        <p>Now scroll down to your calendar — <strong>each post has its own space</strong> to write its on-screen text and build its caption using this formula, ready to copy straight into Instagram.</p>
+      </div>
+
+      <!-- CALENDAR SUMMARY -->
+      <div class="keyword-inputs" style="margin-bottom:28px;">
+        <div class="ki-title">This month's progress</div>
+        <div id="calendar-progress" style="font-size:13px;font-weight:700;color:var(--navy);">0 of 12 posts scheduled · 0 of 12 posted</div>
+      </div>
+
+      <!-- CALENDAR ROOT (built by JS) -->
+      <div id="calendar-root"></div>
 
       <div class="insight-box">
-        <p>You don't need to write a long caption. You need the <em>right words in the right places</em>. The venue name and location in the first line of your caption is worth more than a paragraph of generic text.</p>
-      </div>
-
-      <div class="insight-box" style="margin-bottom:24px;">
-        <p><strong>Get into the habit of capturing content on every wedding day.</strong> You don't need to film anything elaborate — a few quick clips or photos of what's going on around you is enough. Create a folder on your phone and label it with the couple's name and venue (e.g. "Sarah & Tom — Ashford Castle"). This makes it easy to find your content when you're ready to post, and you can reuse it across all three posts that week.</p>
-      </div>
-
-      <!-- KEYWORD INPUTS -->
-      <div class="keyword-inputs">
-        <div class="ki-title">Enter your keywords for this week</div>
-        <div class="ki-row">
-          <div class="ki-field">
-            <label>Venue Name</label>
-            <input type="text" id="kw-venue" placeholder="e.g. Ashford Castle" oninput="updatePostCards()">
-          </div>
-          <div class="ki-field">
-            <label>Location</label>
-            <input type="text" id="kw-location" placeholder="e.g. Mayo" oninput="updatePostCards()">
-          </div>
-        </div>
-      </div>
-
-      <!-- POST CARDS -->
-      <div class="post-cards">
-
-        <div class="post-card">
-          <div class="post-day">Monday — Post 1</div>
-          <div class="post-title">Your Work at the Wedding</div>
-          <div class="post-desc">Use a 10–15 second behind-the-scenes video or a collection of still images from a wedding you worked at. This is your work — let it speak for itself.</div>
-          <div class="keyword-strip">
-            <div class="keyword-strip-label">Where to use your keywords</div>
-            <div class="keyword-row" id="kw-post1">
-              <div class="keyword-item">On-screen text: <em style="color:var(--purple);margin-left:4px;" id="kw1-screen">Wedding at Venue, Location</em></div>
-              <div class="keyword-item">First line of caption: <em style="color:var(--purple);margin-left:4px;" id="kw1-caption">Wedding at Venue, Location</em></div>
-              <div class="keyword-item">Hashtags: <em style="color:var(--purple);margin-left:4px;" id="kw1-hash">#Venue #Location #Locationwedding</em></div>
-            </div>
-            <div class="tag-note">Tag: <strong>the venue's Instagram account</strong></div>
-          </div>
-          <div class="caption-structure">
-            <div class="cs-label">Caption Structure</div>
-            <div class="cs-row"><span class="cs-num">1</span><span class="cs-text"><strong>Hook</strong> — First line with venue + location keywords. This is what stops the scroll.</span></div>
-            <div class="cs-row"><span class="cs-num">2</span><span class="cs-text"><strong>Emotional text</strong> — One or two sentences about what this moment meant. Write how it felt, not what happened.</span></div>
-            <div class="cs-row"><span class="cs-num">3</span><span class="cs-text"><strong>CTA</strong> — "Check availability" or "Link in bio to enquire" — short and direct.</span></div>
-            <div class="cs-row"><span class="cs-num">4</span><span class="cs-text"><strong>Hashtags</strong> — Add venue + location hashtags at the end.</span></div>
-            <div class="cs-row"><span class="cs-num">5</span><span class="cs-text"><strong>When posting</strong> — Add the venue as a location tag and tag the venue account in the post settings.</span></div>
-          </div>
-        </div>
-
-        <div class="post-card">
-          <div class="post-day">Wednesday — Post 2</div>
-          <div class="post-title">Supplier Shout-Out or Venue Feature</div>
-          <div class="post-desc">Use a 10–15 second behind-the-scenes video or still images. Either shout out a supplier you worked alongside on the day — the florist, the band, the cake maker — or feature the venue itself. Both work well for this post.</div>
-          <div class="keyword-strip">
-            <div class="keyword-strip-label">Where to use your keywords</div>
-            <div class="keyword-row">
-              <div class="keyword-item">On-screen text: <em style="color:var(--purple);margin-left:4px;" id="kw2-screen">Wedding at Venue, Location</em></div>
-              <div class="keyword-item">First line of caption: <em style="color:var(--purple);margin-left:4px;" id="kw2-caption">Wedding at Venue, Location</em></div>
-              <div class="keyword-item">Hashtags: <em style="color:var(--purple);margin-left:4px;" id="kw2-hash">#Venue #Location #Locationwedding</em></div>
-            </div>
-            <div class="tag-note">Tag: <strong>the supplier you're featuring</strong> — they will reshare it to their audience. If featuring the venue, tag the venue account instead.</div>
-          </div>
-          <div class="caption-structure">
-            <div class="cs-label">Caption Structure</div>
-            <div class="cs-row"><span class="cs-num">1</span><span class="cs-text"><strong>Hook</strong> — First line with venue + location keywords.</span></div>
-            <div class="cs-row"><span class="cs-num">2</span><span class="cs-text"><strong>Emotional text</strong> — Say something genuine about the supplier's work or the venue and what it brought to the day.</span></div>
-            <div class="cs-row"><span class="cs-num">3</span><span class="cs-text"><strong>CTA</strong> — "Check availability" or "Link in bio to enquire."</span></div>
-            <div class="cs-row"><span class="cs-num">4</span><span class="cs-text"><strong>Hashtags</strong> — Venue + location hashtags at the end.</span></div>
-            <div class="cs-row"><span class="cs-num">5</span><span class="cs-text"><strong>When posting</strong> — Add the venue as a location tag and tag the supplier in the post settings.</span></div>
-          </div>
-        </div>
-
-        <div class="post-card">
-          <div class="post-day">Friday — Post 3</div>
-          <div class="post-title">Shout Out the Couple</div>
-          <div class="post-desc">Use a 10–15 second behind-the-scenes video or still images featuring the couple — a moment, a reaction, a look between them. Celebrate them. Always ask for permission before posting.</div>
-          <div class="keyword-strip">
-            <div class="keyword-strip-label">Where to use your keywords</div>
-            <div class="keyword-row">
-              <div class="keyword-item">On-screen text: <em style="color:var(--purple);margin-left:4px;" id="kw3-screen">Wedding at Venue, Location</em></div>
-              <div class="keyword-item">First line of caption: <em style="color:var(--purple);margin-left:4px;" id="kw3-caption">Wedding at Venue, Location</em></div>
-              <div class="keyword-item">Hashtags: <em style="color:var(--purple);margin-left:4px;" id="kw3-hash">#Venue #Location #Locationwedding</em></div>
-            </div>
-            <div class="tag-note">Tag: <strong>the couple</strong> if they are happy to be tagged</div>
-          </div>
-          <div class="caption-structure">
-            <div class="cs-label">Caption Structure</div>
-            <div class="cs-row"><span class="cs-num">1</span><span class="cs-text"><strong>Hook</strong> — First line with venue + location keywords.</span></div>
-            <div class="cs-row"><span class="cs-num">2</span><span class="cs-text"><strong>Emotional text</strong> — Write about this couple and what made their day special. Make it personal.</span></div>
-            <div class="cs-row"><span class="cs-num">3</span><span class="cs-text"><strong>CTA</strong> — "Check availability" or "Link in bio to enquire."</span></div>
-            <div class="cs-row"><span class="cs-num">4</span><span class="cs-text"><strong>Hashtags</strong> — Venue + location hashtags at the end.</span></div>
-            <div class="cs-row"><span class="cs-num">5</span><span class="cs-text"><strong>When posting</strong> — Add the venue as a location tag and tag the couple if they've given permission.</span></div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="insight-box">
-        <p>You don't need to write a long caption. Open with the keyword line. Add one or two sentences about what's in the video. Add your hashtags. That's it. The video does the work — the keywords make sure the right people find it.</p>
+        <p>You don't need to write a long caption. Open with the keyword line — venue + location. Add one or two sentences about what's in the post. Add your CTA — "check availability" or "link in bio to enquire." Add your hashtags. That's it. The content does the work — the keywords make sure the right people find it.</p>
       </div>
 
       <div class="chapter-footer">
@@ -572,7 +610,7 @@ Without You Even Knowing We Are There!</div>
           <div class="dot active"></div>
           <div class="dot"></div>
         </div>
-        <button class="btn-next" onclick="goChapter(3)">Next: The Daily Habit →</button>
+        <button class="btn-next" onclick="goChapter(3)">Next: Stay Consistent →</button>
       </div>
     </div>
 
@@ -633,19 +671,19 @@ Without You Even Knowing We Are There!</div>
       <div class="checklist">
         <div class="check-item" onclick="toggleCheck(this)" data-key="w-post1">
           <div class="check-box"></div>
-          <div class="check-text">Monday — Posted your work video with venue + location keywords</div>
+          <div class="check-text">Sunday — Posted this week's Sunday post from your Content Calendar, with on-screen text + caption</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)" data-key="w-post2">
           <div class="check-box"></div>
-          <div class="check-text">Wednesday — Posted a supplier shoutout with venue + location keywords</div>
+          <div class="check-text">Tuesday — Posted this week's Tuesday post from your Content Calendar, with on-screen text + caption</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)" data-key="w-post3">
           <div class="check-box"></div>
-          <div class="check-text">Friday — Posted a couple shoutout with venue + location keywords</div>
+          <div class="check-text">Thursday — Posted this week's Thursday post from your Content Calendar, with on-screen text + caption</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)" data-key="w-stories">
           <div class="check-box"></div>
-          <div class="check-text">Posted Stories on the days between your posts</div>
+          <div class="check-text">Posted Stories on the days between your posts (Monday, Wednesday, Friday, Saturday)</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)" data-key="w-engage">
           <div class="check-box"></div>
@@ -824,30 +862,370 @@ function copyBio() {
   });
 }
 
-// ── POST CARD KEYWORDS ────────────────────────────────────────
-function updatePostCards() {
-  const venue = document.getElementById('kw-venue').value.trim();
-  const loc   = document.getElementById('kw-location').value.trim();
+// ── CONTENT CALENDAR ─────────────────────────────────────────
+// 4 weeks × 3 posts (Sun / Tue / Thu), matching the batching system:
+// pick one wedding, split into sections, post across the week.
+const CALENDAR_CONFIG = [
+  { week:1, posts:[
+    { key:'w1-sun', day:'Sunday',   format:'highlight', fmtLabel:'Highlight Reel', title:'Full Highlights Reel', desc:'Post your complete highlight reel from a recent wedding — the whole story of the day, in one video.' },
+    { key:'w1-tue', day:'Tuesday',  format:'carousel',  fmtLabel:'Carousel — Educational', title:'Educational Carousel', desc:'Teach your audience something about being a WCC — slides of images, clips, or text explaining a topic your couples want to know.', hasTopic:true },
+    { key:'w1-thu', day:'Thursday', format:'short',     fmtLabel:'Short Reel — Bridal Prep', title:'Short Reel — Bridal Prep', desc:'A 7–10 second clip capturing the energy of getting ready — hair, makeup, nerves, excitement.' },
+  ]},
+  { week:2, posts:[
+    { key:'w2-sun', day:'Sunday',   format:'short',     fmtLabel:'Short Reel — Ceremony', title:'Short Reel — Ceremony', desc:'A 7–10 second clip from the ceremony — the "I do", a tear, a look between them.' },
+    { key:'w2-tue', day:'Tuesday',  format:'carousel',  fmtLabel:'Carousel — Highlights Recap', title:'Carousel — Highlights Recap', desc:'Turn your highlight reel into a scroll-stopping carousel — one slide per section of the day (prep, ceremony, photos, party).' },
+    { key:'w2-thu', day:'Thursday', format:'shoutout',  fmtLabel:'Venue Shout-Out', title:'Venue Shout-Out', desc:'Feature the venue from a recent wedding — give them a free reel, carousel, or image of their space in action.', hasShoutout:true, shoutoutLabel:'Venue' },
+  ]},
+  { week:3, posts:[
+    { key:'w3-sun', day:'Sunday',   format:'short',     fmtLabel:'Short Reel — Photo Shoot', title:'Short Reel — Photo Shoot', desc:'A 7–10 second clip from the couple\'s portraits — golden hour, romantic, or just them being silly together.' },
+    { key:'w3-tue', day:'Tuesday',  format:'carousel',  fmtLabel:'Carousel — Educational', title:'Educational Carousel', desc:'Another educational carousel — pick a new topic your ideal couples are searching for.', hasTopic:true },
+    { key:'w3-thu', day:'Thursday', format:'shoutout',  fmtLabel:'Supplier Shout-Out', title:'Supplier Shout-Out', desc:'Shout out a supplier you worked alongside — the florist, the band, the planner, the photographer.', hasShoutout:true, shoutoutLabel:'Supplier' },
+  ]},
+  { week:4, posts:[
+    { key:'w4-sun', day:'Sunday',   format:'short',     fmtLabel:'Short Reel — Dancing', title:'Short Reel — Dancing', desc:'A 7–10 second clip of the dance floor — music, movement, crowd energy.' },
+    { key:'w4-tue', day:'Tuesday',  format:'carousel',  fmtLabel:'Carousel — Venue Feature', title:'Carousel — Venue Feature', desc:'A multi-slide carousel dedicated to the venue — the details, the setting, the atmosphere.', hasShoutout:true, shoutoutLabel:'Venue' },
+    { key:'w4-thu', day:'Thursday', format:'shoutout',  fmtLabel:'Featured Bride & Couple', title:'Featured Bride & Couple', desc:'Celebrate the couple — a moment, a reaction, a look between them. Always ask permission before posting.', hasShoutout:true, shoutoutLabel:'Couple' },
+  ]},
+];
 
-  const vDisplay  = venue || 'Venue Name';
-  const lDisplay  = loc   || 'Location';
-  const vSlug     = venue.replace(/\s+/g,'') || 'VenueName';
-  const lSlug     = loc.replace(/\s+/g,'')   || 'Location';
+const FMT_BADGE_CLASS = { highlight:'fmt-highlight', short:'fmt-short', carousel:'fmt-carousel', shoutout:'fmt-shoutout' };
+const FMT_ICON = { highlight:'🎬', short:'⚡', carousel:'🖼️', shoutout:'💬' };
 
-  const screenKw  = `Wedding at ${vDisplay}, ${lDisplay}`;
-  const captionKw = `Wedding at ${vDisplay}, ${lDisplay}`;
-  const hashKw    = `#${vSlug} #${lSlug} #${lSlug}wedding`;
+function buildVisualCalendar() {
+  const root = document.getElementById('visual-calendar');
+  if (!root) return;
+  let html = `
+    <div class="viscal-head"></div>
+    <div class="viscal-head">Sunday</div>
+    <div class="viscal-head">Tuesday</div>
+    <div class="viscal-head">Thursday</div>`;
 
-  ['kw1','kw2','kw3'].forEach(prefix => {
-    const s = document.getElementById(prefix+'-screen');
-    const c = document.getElementById(prefix+'-caption');
-    const h = document.getElementById(prefix+'-hash');
-    if (s) s.textContent = screenKw;
-    if (c) c.textContent = captionKw;
-    if (h) h.textContent = hashKw;
+  CALENDAR_CONFIG.forEach(weekObj => {
+    html += `<div class="viscal-weeklabel">Week ${weekObj.week}</div>`;
+    weekObj.posts.forEach(post => {
+      const bgClass = FMT_BADGE_CLASS[post.format] + '-bg';
+      const icon = FMT_ICON[post.format];
+      html += `<div class="viscal-cell ${bgClass}" id="viscell-${post.key}">
+        <span class="viscal-status" id="visstatus-${post.key}"></span>
+        <span class="viscal-cell-icon">${icon}</span>
+        <span class="viscal-cell-title">${post.title}</span>
+      </div>`;
+    });
   });
+  root.innerHTML = html;
+}
 
+function updateVisualCalendarStatus(key) {
+  const cell = document.getElementById('viscell-'+key);
+  const status = document.getElementById('visstatus-'+key);
+  if (!cell || !status) return;
+  const d = (toolData.calendar && toolData.calendar[key]) || {};
+  cell.classList.toggle('is-posted', !!d.posted);
+  cell.classList.toggle('is-scheduled', !!d.scheduled);
+  status.textContent = d.posted ? '✅' : d.scheduled ? '🗓️' : '';
+}
+
+function refreshVisualCalendarAll() {
+  CALENDAR_CONFIG.forEach(w => w.posts.forEach(p => updateVisualCalendarStatus(p.key)));
+}
+
+function builderDefaultsFor(key) {
+  const D = {
+    'w1-sun': { onscreen:"Sarah & Tom's wedding day at Ashford Castle, Mayo", keywords:"Sarah & Tom's wedding at Ashford Castle, Mayo 🥹", story:"Morning prep → emotional vows → golden hour photos → the dance floor came alive.", shoutout:"Captured alongside @photographer and @florist", cta:"If you're planning your wedding at Ashford Castle, I'd love to capture moments like these for you. Tap the link in my bio to check availability.", hashtags:"#weddingcontentcreatorMayo #weddingAshfordCastle #weddingdaycontentcreatorMayo" },
+    'w1-tue': { onscreen:"What does a wedding content creator actually do?", keywords:"Ever wondered what a wedding content creator actually does?", story:"Here's what nobody tells you — swipe through for the full breakdown.", shoutout:"", cta:"Got a wedding coming up? Tap the link in my bio to check if I'm free for your date.", hashtags:"#weddingcontentcreatorMayo #weddingtips #weddingplanning2027" },
+    'w1-thu': { onscreen:"Sarah getting ready at Ashford Castle, Mayo", keywords:"Sarah and her girls getting ready at Ashford Castle, Mayo", story:"The nerves, the laughter, her mum crying before she'd even zipped up her dress.", shoutout:"Shoutout to @makeupartist for keeping the glam flawless all morning", cta:"Getting ready at Ashford Castle? Click the link in my bio to check availability.", hashtags:"#weddingcontentcreatorMayo #brideprepAshfordCastle #weddingmorningMayo" },
+    'w2-sun': { onscreen:"Sarah & Tom said 'I do' at Ashford Castle", keywords:"There wasn't a dry eye in the room at Ashford Castle, Mayo", story:"She gave her mum a little nod before walking down the aisle.", shoutout:"Captured alongside @photographer at one of the most emotional ceremonies I've shot this season", cta:"Planning your wedding at Ashford Castle? Tap the link in my bio to check availability.", hashtags:"#weddingcontentcreatorMayo #weddingceremonyAshfordCastle #weddingMayo" },
+    'w2-tue': { onscreen:"A day at Ashford Castle, Mayo 🤍", keywords:"Sarah & Tom's wedding at Ashford Castle, Mayo 🥹", story:"Morning prep → emotional vows → golden hour photos → the dance floor came alive. Here's a little peek at the day.", shoutout:"Captured alongside @photographer and @florist", cta:"If you're planning your wedding at Ashford Castle, I'd love to capture moments like these for you.", hashtags:"#weddingcontentcreatorMayo #weddingAshfordCastle #weddingdaycontentcreatorMayo" },
+    'w2-thu': { onscreen:"Loved shooting at Ashford Castle, Mayo", keywords:"Ashford Castle is honestly one of my favourite venues to work at", story:"The light in that courtyard at golden hour is unreal — here's why.", shoutout:"Massive thanks to the team at @ashfordcastle for having me", cta:"Getting married at Ashford Castle? Tap the link in my bio to check availability.", hashtags:"#weddingcontentcreatorMayo #weddingAshfordCastle #Maywedding" },
+    'w3-sun': { onscreen:"Golden hour at Ashford Castle, Mayo", keywords:"Golden hour portraits at Ashford Castle, Mayo = actual magic ✨", story:"Sarah & Tom couldn't stop laughing — you can feel how much fun they were having just being together.", shoutout:"@photographer and I captured so many beautiful in-between moments", cta:"Getting married next year? Reach out and let's see if your date's free — link in bio.", hashtags:"#weddingcontentcreatorMayo #goldenhourAshfordCastle #weddingphotographyMayo" },
+    'w3-tue': { onscreen:"Pricing tips every WCC needs to know", keywords:"Ever wondered how wedding content creators price their packages?", story:"Here's what nobody tells you — swipe through for the full breakdown.", shoutout:"", cta:"Got a wedding coming up? Tap the link in my bio to check if I'm free for your date.", hashtags:"#weddingcontentcreatorMayo #weddingtips #weddingbusiness" },
+    'w3-thu': { onscreen:"Working alongside @floristname at Ashford Castle", keywords:"Huge shoutout to @floristname — the florist behind this beautiful day at Ashford Castle", story:"The flowers made the whole room — here's what they added to the day.", shoutout:"It's teams like this that make weddings unforgettable", cta:"Planning your wedding at Ashford Castle? Tap the link in my bio to check availability.", hashtags:"#weddingcontentcreatorMayo #weddingAshfordCastle #Maywedding" },
+    'w4-sun': { onscreen:"The dance floor at Ashford Castle, Mayo", keywords:"When the band kicked off the party at Ashford Castle, the dance floor was immediately full 🔥", story:"The flower girl did a full spin to Beyoncé — weddings like this are why I love this job.", shoutout:"", cta:"Getting married in Mayo? Click the link in my bio to check availability.", hashtags:"#weddingcontentcreatorMayo #weddingpartyAshfordCastle #firstdanceMayo" },
+    'w4-tue': { onscreen:"Inside Ashford Castle, Mayo", keywords:"Ashford Castle deserves its own post 🤍", story:"Swipe through for a look at the space, the details, and the atmosphere that made this day so special.", shoutout:"Tag someone getting married at Ashford Castle 👇", cta:"Planning your day here? Tap the link in my bio to check availability.", hashtags:"#weddingcontentcreatorMayo #weddingAshfordCastle #Maywedding" },
+    'w4-thu': { onscreen:"Sarah & Tom, married at Ashford Castle", keywords:"Sarah & Tom — this one's for you 🥹", story:"The way Tom looked at her when she walked in — a moment I'll never forget capturing.", shoutout:"Thank you both for trusting me with your day at Ashford Castle", cta:"Getting married in Mayo? Tap the link in my bio to check if your date's free.", hashtags:"#weddingcontentcreatorMayo #weddingAshfordCastle #Maywedding" },
+  };
+  return D[key] || { onscreen:'', keywords:'', story:'', shoutout:'', cta:'', hashtags:'' };
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderCaptionHtml(text) {
+  // Highlight hashtag lines in pink, keep the rest as-is
+  return text.split('\n').map(line => {
+    const escaped = escapeHtml(line);
+    if (line.trim().startsWith('#')) return `<span class="cap-hash">${escaped}</span>`;
+    return escaped;
+  }).join('\n');
+}
+
+function buildCalendarHTML() {
+  const root = document.getElementById('calendar-root');
+  if (!root) return;
+  let html = '';
+  CALENDAR_CONFIG.forEach(weekObj => {
+    const w = weekObj.week;
+    html += `<div class="cal-week">
+      <div class="cal-week-header">
+        <div class="cal-week-title">Week ${w}</div>
+        <div class="cal-week-pill">3 posts</div>
+      </div>
+      <div class="cal-week-meta">
+        <div class="ki-field">
+          <label>Featured Wedding</label>
+          <input type="text" id="fw-w${w}" placeholder="e.g. Sarah &amp; Tom" oninput="queueSave()">
+        </div>
+        <div class="ki-field">
+          <label>Wedding Day / Venue Details</label>
+          <input type="text" id="wd-w${w}" placeholder="e.g. Ashford Castle, Mayo — 12 June" oninput="queueSave()">
+        </div>
+      </div>
+      <div class="cal-posts">`;
+
+    weekObj.posts.forEach(post => {
+      const badgeClass = FMT_BADGE_CLASS[post.format];
+      const icon = FMT_ICON[post.format];
+      const def = builderDefaultsFor(post.key);
+      html += `<div class="cal-post">
+        <div class="cal-post-top">
+          <div class="cal-post-day">${post.day}</div>
+          <div class="fmt-badge ${badgeClass}">${icon} ${post.fmtLabel}</div>
+        </div>
+        <div class="cal-post-title">${post.title}</div>
+        <div class="cal-post-desc">${post.desc}</div>`;
+
+      if (post.hasShoutout) {
+        html += `<div class="cal-extra-field">
+          <label>${post.shoutoutLabel} Name / @handle</label>
+          <input type="text" id="sh-${post.key}" placeholder="e.g. @venuehandle or supplier name" oninput="queueSave()">
+        </div>`;
+      }
+      if (post.hasTopic) {
+        html += `<div class="cal-extra-field">
+          <label>Educational Topic</label>
+          <input type="text" id="tp-${post.key}" placeholder="e.g. What does a WCC actually do?" oninput="queueSave()">
+        </div>`;
+      }
+
+      // On-screen text — always visible, quick single field
+      html += `<div class="cal-extra-field">
+          <label>On-Screen Text <span style="font-weight:600;text-transform:none;letter-spacing:0;">— couple's names + venue + location. Mix up the wording each time.</span></label>
+          <input type="text" id="ontext-${post.key}" placeholder="e.g. ${def.onscreen}" oninput="queueSave()">
+        </div>`;
+
+      // Cover photo — simple tip + tick, no upload needed
+      html += `<label class="cal-tick" id="ticklabel-cover-${post.key}" style="margin-bottom:12px;">
+          <input type="checkbox" id="cover-${post.key}" onchange="toggleTick('${post.key}','coverPhoto')">
+          📸 Cover photo chosen &amp; marked ⭐ favourite in camera roll
+        </label>`;
+
+      // Per-post caption builder (collapsible)
+      html += `<div class="cal-caption-toggle" onclick="toggleCaption('${post.key}')">Write your caption ▾</div>
+        <div class="cal-caption-body" id="capbody-${post.key}">
+          <div class="field-group" style="margin-bottom:12px;">
+            <label>1. Keywords</label>
+            <input type="text" id="cb-${post.key}-kw" placeholder="e.g. ${def.keywords}" oninput="updatePostCaption('${post.key}')">
+          </div>
+          <div class="field-group" style="margin-bottom:12px;">
+            <label>2. Story</label>
+            <textarea id="cb-${post.key}-story" rows="2" placeholder="e.g. ${def.story}" oninput="updatePostCaption('${post.key}')"></textarea>
+          </div>
+          <div class="field-group" style="margin-bottom:12px;">
+            <label>3. Shout-out</label>
+            <input type="text" id="cb-${post.key}-shout" placeholder="e.g. ${def.shoutout || 'Shoutout to @supplierhandle'}" oninput="updatePostCaption('${post.key}')">
+          </div>
+          <div class="field-group" style="margin-bottom:12px;">
+            <label>4. CTA</label>
+            <input type="text" id="cb-${post.key}-cta" placeholder="e.g. ${def.cta}" oninput="updatePostCaption('${post.key}')">
+          </div>
+          <div class="field-group" style="margin-bottom:14px;">
+            <label>5. Hashtags</label>
+            <input type="text" id="cb-${post.key}-hash" placeholder="e.g. ${def.hashtags}" oninput="updatePostCaption('${post.key}')">
+          </div>
+          <div class="bio-output" id="cbout-${post.key}" style="margin-top:0;">
+            <div class="bio-output-label">Your caption — ready to copy</div>
+            <div class="cal-caption-text" id="cbprev-${post.key}" style="background:transparent;padding:0;margin-bottom:0;"></div>
+            <button class="btn-copy" id="cbcopy-${post.key}" onclick="copyPostCaption('${post.key}')">Copy Caption</button>
+          </div>
+        </div>`;
+
+      html += `<div class="cal-tick-row">
+          <label class="cal-tick" id="ticklabel-scheduled-${post.key}">
+            <input type="checkbox" id="sch-${post.key}" onchange="toggleTick('${post.key}','scheduled')"> Scheduled
+          </label>
+          <label class="cal-tick" id="ticklabel-posted-${post.key}">
+            <input type="checkbox" id="pst-${post.key}" onchange="toggleTick('${post.key}','posted')"> Posted
+          </label>
+        </div>`;
+
+      html += `</div>`; // .cal-post
+    });
+
+    html += `</div></div>`; // .cal-posts .cal-week
+  });
+  root.innerHTML = html;
+}
+
+function toggleCaption(key) {
+  const el = document.getElementById('capbody-'+key);
+  if (el) el.classList.toggle('open');
+}
+
+function findPostByKey(key) {
+  for (const w of CALENDAR_CONFIG) {
+    for (const p of w.posts) {
+      if (p.key === key) return p;
+    }
+  }
+  return null;
+}
+
+function updatePostCaption(key) {
+  const kw    = (document.getElementById('cb-'+key+'-kw')    || {}).value || '';
+  const story = (document.getElementById('cb-'+key+'-story') || {}).value || '';
+  const shout = (document.getElementById('cb-'+key+'-shout') || {}).value || '';
+  const cta   = (document.getElementById('cb-'+key+'-cta')   || {}).value || '';
+  const hash  = (document.getElementById('cb-'+key+'-hash')  || {}).value || '';
+
+  const parts = [kw, story, shout, cta, hash].map(s=>s.trim()).filter(Boolean);
+  const preview = document.getElementById('cbprev-'+key);
+  const output  = document.getElementById('cbout-'+key);
+  if (preview && output) {
+    if (parts.length) {
+      preview.innerHTML = renderCaptionHtml(parts.join('\n\n'));
+      output.classList.add('visible');
+    } else {
+      output.classList.remove('visible');
+    }
+  }
   queueSave();
+}
+
+function copyPostCaption(key) {
+  const kw    = (document.getElementById('cb-'+key+'-kw')    || {}).value || '';
+  const story = (document.getElementById('cb-'+key+'-story') || {}).value || '';
+  const shout = (document.getElementById('cb-'+key+'-shout') || {}).value || '';
+  const cta   = (document.getElementById('cb-'+key+'-cta')   || {}).value || '';
+  const hash  = (document.getElementById('cb-'+key+'-hash')  || {}).value || '';
+  const fullText = [kw, story, shout, cta, hash].map(s=>s.trim()).filter(Boolean).join('\n\n');
+  navigator.clipboard.writeText(fullText).then(() => {
+    const btn = document.getElementById('cbcopy-'+key);
+    if (!btn) return;
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy Caption'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+
+function toggleTick(key, type) {
+  if (!toolData.calendar) toolData.calendar = {};
+  if (!toolData.calendar[key]) toolData.calendar[key] = {};
+  const idPrefix = type==='scheduled' ? 'sch-' : type==='posted' ? 'pst-' : 'cover-';
+  const checkbox = document.getElementById(idPrefix+key);
+  const label = document.getElementById('ticklabel-'+type+'-'+key);
+  const isOn = checkbox.checked;
+  toolData.calendar[key][type] = isOn;
+  if (label) {
+    label.classList.toggle('on', isOn);
+    if (type === 'posted') label.classList.toggle('posted', isOn);
+  }
+  updateVisualCalendarStatus(key);
+  updateCalendarProgress();
+  queueSave();
+}
+
+function updateCalendarProgress() {
+  const el = document.getElementById('calendar-progress');
+  if (!el) return;
+  let scheduled = 0, posted = 0;
+  const total = CALENDAR_CONFIG.reduce((n,w)=>n+w.posts.length,0);
+  CALENDAR_CONFIG.forEach(w => w.posts.forEach(p => {
+    const d = (toolData.calendar && toolData.calendar[p.key]) || {};
+    if (d.scheduled) scheduled++;
+    if (d.posted) posted++;
+  }));
+  el.textContent = `${scheduled} of ${total} posts scheduled · ${posted} of ${total} posted`;
+}
+
+function syncCalendarToData() {
+  if (!toolData.calendar) toolData.calendar = {};
+  if (!toolData.weekMeta) toolData.weekMeta = {};
+  CALENDAR_CONFIG.forEach(weekObj => {
+    const w = weekObj.week;
+    const fw = document.getElementById('fw-w'+w);
+    const wd = document.getElementById('wd-w'+w);
+    toolData.weekMeta['w'+w] = {
+      featuredWedding: fw ? fw.value : '',
+      weddingDay: wd ? wd.value : '',
+    };
+    weekObj.posts.forEach(post => {
+      if (!toolData.calendar[post.key]) toolData.calendar[post.key] = {};
+      const entry = toolData.calendar[post.key];
+      const shEl = document.getElementById('sh-'+post.key);
+      const tpEl = document.getElementById('tp-'+post.key);
+      const onEl = document.getElementById('ontext-'+post.key);
+      const covEl = document.getElementById('cover-'+post.key);
+      const schEl = document.getElementById('sch-'+post.key);
+      const pstEl = document.getElementById('pst-'+post.key);
+      if (shEl) entry.shoutout = shEl.value;
+      if (tpEl) entry.topic = tpEl.value;
+      if (onEl) entry.onscreen = onEl.value;
+      if (covEl) entry.coverPhoto = covEl.checked;
+      if (schEl) entry.scheduled = schEl.checked;
+      if (pstEl) entry.posted = pstEl.checked;
+      entry.caption = {
+        keywords: (document.getElementById('cb-'+post.key+'-kw')    || {}).value || '',
+        story:    (document.getElementById('cb-'+post.key+'-story') || {}).value || '',
+        shoutout: (document.getElementById('cb-'+post.key+'-shout') || {}).value || '',
+        cta:      (document.getElementById('cb-'+post.key+'-cta')   || {}).value || '',
+        hashtags: (document.getElementById('cb-'+post.key+'-hash')  || {}).value || '',
+      };
+    });
+  });
+}
+
+function restoreCalendarFromData() {
+  CALENDAR_CONFIG.forEach(weekObj => {
+    const w = weekObj.week;
+    const meta = (toolData.weekMeta && toolData.weekMeta['w'+w]) || {};
+    const fw = document.getElementById('fw-w'+w);
+    const wd = document.getElementById('wd-w'+w);
+    if (fw && meta.featuredWedding) fw.value = meta.featuredWedding;
+    if (wd && meta.weddingDay) wd.value = meta.weddingDay;
+
+    weekObj.posts.forEach(post => {
+      const d = (toolData.calendar && toolData.calendar[post.key]) || {};
+      const shEl = document.getElementById('sh-'+post.key);
+      const tpEl = document.getElementById('tp-'+post.key);
+      const onEl = document.getElementById('ontext-'+post.key);
+      const covEl = document.getElementById('cover-'+post.key);
+      const schEl = document.getElementById('sch-'+post.key);
+      const pstEl = document.getElementById('pst-'+post.key);
+      if (shEl && d.shoutout) shEl.value = d.shoutout;
+      if (tpEl && d.topic) tpEl.value = d.topic;
+      if (onEl && d.onscreen) onEl.value = d.onscreen;
+      if (covEl) { covEl.checked = !!d.coverPhoto; const l=document.getElementById('ticklabel-cover-'+post.key); if(l) l.classList.toggle('on', !!d.coverPhoto); }
+      if (schEl) { schEl.checked = !!d.scheduled; const l=document.getElementById('ticklabel-scheduled-'+post.key); if(l) l.classList.toggle('on', !!d.scheduled); }
+      if (pstEl) { pstEl.checked = !!d.posted; const l=document.getElementById('ticklabel-posted-'+post.key); if(l){ l.classList.toggle('on', !!d.posted); l.classList.toggle('posted', !!d.posted);} }
+
+      if (d.caption) {
+        const kwEl = document.getElementById('cb-'+post.key+'-kw');
+        const stEl = document.getElementById('cb-'+post.key+'-story');
+        const shoEl = document.getElementById('cb-'+post.key+'-shout');
+        const ctaEl = document.getElementById('cb-'+post.key+'-cta');
+        const hashEl = document.getElementById('cb-'+post.key+'-hash');
+        if (kwEl && d.caption.keywords) kwEl.value = d.caption.keywords;
+        if (stEl && d.caption.story) stEl.value = d.caption.story;
+        if (shoEl && d.caption.shoutout) shoEl.value = d.caption.shoutout;
+        if (ctaEl && d.caption.cta) ctaEl.value = d.caption.cta;
+        if (hashEl && d.caption.hashtags) hashEl.value = d.caption.hashtags;
+      }
+      updatePostCaption(post.key);
+    });
+  });
+  updateCalendarProgress();
+  refreshVisualCalendarAll();
 }
 
 // ── CHECKLIST ─────────────────────────────────────────────────
@@ -889,8 +1267,7 @@ function syncFormToData() {
   toolData.location1   = document.getElementById('location-1').value;
   toolData.location2   = document.getElementById('location-2').value;
   toolData.emotion     = document.getElementById('emotion').value;
-  toolData.kwVenue     = document.getElementById('kw-venue').value;
-  toolData.kwLocation  = document.getElementById('kw-location').value;
+  syncCalendarToData();
 }
 
 function restoreFormFromData() {
@@ -898,11 +1275,11 @@ function restoreFormFromData() {
   if (toolData.location1)   document.getElementById('location-1').value   = toolData.location1;
   if (toolData.location2)   document.getElementById('location-2').value   = toolData.location2;
   if (toolData.emotion)     document.getElementById('emotion').value       = toolData.emotion;
-  if (toolData.kwVenue)     document.getElementById('kw-venue').value      = toolData.kwVenue;
-  if (toolData.kwLocation)  document.getElementById('kw-location').value   = toolData.kwLocation;
   updateBioPreview();
-  updatePostCards();
   restoreChecks();
+  buildVisualCalendar();
+  buildCalendarHTML();
+  restoreCalendarFromData();
 }
 
 async function saveToolData() {
@@ -919,7 +1296,8 @@ async function saveToolData() {
 
 async function loadToolData() {
   const { data } = await sb.from('instagram_ready').select('data').eq('user_id', currentUser.id).single();
-  if (data && data.data) { toolData = data.data; restoreFormFromData(); }
+  if (data && data.data) { toolData = data.data; }
+  restoreFormFromData();
 
   // Connect to Where To Start — check social score
   try {
